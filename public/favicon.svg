@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="cmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="50%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="26" fill="url(#cmGrad)" />
+  <!-- Phone handset -->
+  <path d="M30 38 C30 33 33 29 38 29 L41 29 C44 29 46 31 47 34 L49 40 C50 42 49 45 47 47 L44 50 C46 54 50 58 54 60 L57 57 C59 55 62 54 64 55 L70 57 C73 58 75 60 75 63 L75 66 C75 71 71 74 66 74 C46 74 30 58 30 38 Z" fill="#ffffff" />
+  <!-- Gemini 4-point star / Sparkle -->
+  <path d="M68 22 C68 28 64 32 58 32 C64 32 68 36 68 42 C68 36 72 32 78 32 C72 32 68 28 68 22 Z" fill="#38bdf8" />
+</svg>

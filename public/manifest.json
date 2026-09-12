@@ -1,0 +1,62 @@
+{
+  "id": "/",
+  "name": "CM Dialer AI - Smart Call Recorder & Dialer",
+  "short_name": "CM Dialer",
+  "description": "Lightweight Gemini-inspired light dialer with silent auto call recording without announcement, Google Contacts sync, scheduled calls, auto WhatsApp replies, and T9 keypad.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#ffffff",
+  "background_color": "#f8fafd",
+  "categories": ["communication", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Keypad Dial",
+      "short_name": "Keypad",
+      "description": "Directly open CM Dialer keypad",
+      "url": "/?tab=keypad",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Call Recordings",
+      "short_name": "Recordings",
+      "description": "View silent auto call recordings",
+      "url": "/?tab=recordings",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Scheduled Calls",
+      "short_name": "Scheduler",
+      "description": "Scheduled calls and auto WhatsApp",
+      "url": "/?tab=scheduler",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

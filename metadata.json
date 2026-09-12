@@ -1,0 +1,6 @@
+{
+  "name": "CM Dialer AI",
+  "description": "A Gemini-inspired light dialer with silent auto call recording, Google Contacts sync, scheduled calls, auto WhatsApp messages, and Play Store package readiness.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
