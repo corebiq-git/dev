@@ -26,20 +26,20 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
   const handleScreenClick = () => {
     setIsScreening(true);
     setScreeningTranscript([
-      'CoreBIQ AI: "Hi, I am screening this call for CoreBIQ. Who is speaking and what is this regarding?"',
+      'CM Dialer AI: "Hi, I am screening this call for CM Dialer. Who is speaking and what is this regarding?"',
     ]);
 
     setTimeout(() => {
       setScreeningTranscript((prev) => [
         ...prev,
-        `${caller.name}: "Hi! It's ${caller.name} from ${caller.company || 'CoreBIQ Team'}. Calling about the release build deployment."`,
+        `${caller.name}: "Hi! It's ${caller.name} from ${caller.company || 'Engineering Team'}. Calling about the release build deployment."`,
       ]);
     }, 1800);
 
     setTimeout(() => {
       setScreeningTranscript((prev) => [
         ...prev,
-        'CoreBIQ AI: "Verified high-priority contact. Summary: Deployment synchronization."',
+        'CM Dialer AI: "Verified high-priority contact. Summary: Deployment synchronization."',
       ]);
     }, 3200);
   };
@@ -54,7 +54,7 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
         {/* Incoming Label */}
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-blue-700 text-xs font-semibold mb-4">
           <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
-          <span>Incoming CoreBIQ Call</span>
+          <span>Incoming CM Dialer Call</span>
         </div>
 
         {/* Caller Avatar */}

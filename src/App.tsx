@@ -39,7 +39,7 @@ export default function App() {
   // Local storage persisted state
   const [contacts, setContacts] = useState<Contact[]>(() => {
     try {
-      const saved = localStorage.getItem('corebiq_contacts');
+      const saved = localStorage.getItem('cmdialer_contacts_v2');
       return saved ? JSON.parse(saved) : INITIAL_CONTACTS;
     } catch {
       return INITIAL_CONTACTS;
@@ -48,7 +48,7 @@ export default function App() {
 
   const [calls, setCalls] = useState<CallRecord[]>(() => {
     try {
-      const saved = localStorage.getItem('corebiq_calls');
+      const saved = localStorage.getItem('cmdialer_calls_v2');
       return saved ? JSON.parse(saved) : INITIAL_CALL_RECORDS;
     } catch {
       return INITIAL_CALL_RECORDS;
@@ -57,7 +57,7 @@ export default function App() {
 
   const [voicemails, setVoicemails] = useState<VoicemailItem[]>(() => {
     try {
-      const saved = localStorage.getItem('corebiq_voicemails');
+      const saved = localStorage.getItem('cmdialer_voicemails_v2');
       return saved ? JSON.parse(saved) : INITIAL_VOICEMAILS;
     } catch {
       return INITIAL_VOICEMAILS;
@@ -66,7 +66,7 @@ export default function App() {
 
   const [recordings, setRecordings] = useState<CallRecording[]>(() => {
     try {
-      const saved = localStorage.getItem('corebiq_recordings');
+      const saved = localStorage.getItem('cmdialer_recordings_v2');
       return saved ? JSON.parse(saved) : INITIAL_RECORDINGS;
     } catch {
       return INITIAL_RECORDINGS;
@@ -75,7 +75,7 @@ export default function App() {
 
   const [tasks, setTasks] = useState<ScheduledTask[]>(() => {
     try {
-      const saved = localStorage.getItem('corebiq_tasks');
+      const saved = localStorage.getItem('cmdialer_tasks_v2');
       return saved ? JSON.parse(saved) : INITIAL_SCHEDULED_TASKS;
     } catch {
       return INITIAL_SCHEDULED_TASKS;
@@ -84,7 +84,7 @@ export default function App() {
 
   const [settings, setSettings] = useState<DialerSettings>(() => {
     try {
-      const saved = localStorage.getItem('corebiq_settings');
+      const saved = localStorage.getItem('cmdialer_settings_v2');
       return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
     } catch {
       return INITIAL_SETTINGS;
@@ -117,7 +117,7 @@ export default function App() {
   // Sync to local storage
   useEffect(() => {
     try {
-      localStorage.setItem('corebiq_contacts', JSON.stringify(contacts));
+      localStorage.setItem('cmdialer_contacts_v2', JSON.stringify(contacts));
     } catch {
       // ignore
     }
@@ -125,7 +125,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('corebiq_calls', JSON.stringify(calls));
+      localStorage.setItem('cmdialer_calls_v2', JSON.stringify(calls));
     } catch {
       // ignore
     }
@@ -133,7 +133,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('corebiq_voicemails', JSON.stringify(voicemails));
+      localStorage.setItem('cmdialer_voicemails_v2', JSON.stringify(voicemails));
     } catch {
       // ignore
     }
@@ -141,7 +141,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('corebiq_recordings', JSON.stringify(recordings));
+      localStorage.setItem('cmdialer_recordings_v2', JSON.stringify(recordings));
     } catch {
       // ignore
     }
@@ -149,7 +149,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('corebiq_tasks', JSON.stringify(tasks));
+      localStorage.setItem('cmdialer_tasks_v2', JSON.stringify(tasks));
     } catch {
       // ignore
     }
@@ -157,7 +157,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('corebiq_settings', JSON.stringify(settings));
+      localStorage.setItem('cmdialer_settings_v2', JSON.stringify(settings));
     } catch {
       // ignore
     }
@@ -341,7 +341,7 @@ export default function App() {
     const caller = contacts[0] || {
       name: 'Elena Rostova',
       phone: '+1 (415) 882-9014',
-      company: 'CoreBIQ Technologies',
+      company: 'CM Technologies',
       role: 'VP Engineering',
     };
 
@@ -388,11 +388,11 @@ export default function App() {
         {
           id: 't-in-2',
           speaker: 'other',
-          text: `Hi there! Elena here from CoreBIQ. Thanks for picking up!`,
+          text: `Hi there! Elena here from CM Technologies. Thanks for picking up!`,
           time: '00:02',
         },
       ],
-      aiSummary: 'Incoming call accepted. Verified caller from CoreBIQ engineering team.',
+      aiSummary: 'Incoming call accepted. Verified caller from CM Technologies engineering team.',
     });
 
     setIncomingCall(null);
@@ -619,7 +619,7 @@ export default function App() {
 
           <div className="flex items-center gap-1.5 text-[11px] text-blue-700 bg-blue-50/80 px-2.5 py-0.5 rounded-full border border-blue-200/60">
             <Sparkles className="w-3 h-3 text-blue-600" />
-            <span>Gemini Telephony v2.4 Active</span>
+            <span>CM Dialer AI Telephony Active</span>
           </div>
         </div>
 

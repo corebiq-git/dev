@@ -90,7 +90,7 @@ export const VoicemailScreen: React.FC<VoicemailScreenProps> = ({
         <div>
           <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
             <Voicemail className="w-5 h-5 text-blue-600" />
-            <span>CoreBIQ Visual Voicemail</span>
+            <span>CM Dialer AI Visual Voicemail</span>
           </h2>
           <p className="text-xs text-slate-500">
             Automated speech transcription & Gemini key takeaway synthesis

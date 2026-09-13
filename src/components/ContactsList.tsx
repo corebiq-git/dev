@@ -559,7 +559,7 @@ export const ContactsList: React.FC<ContactsListProps> = ({
                   <label className="block text-xs font-bold text-slate-700 mb-1">Company</label>
                   <input
                     type="text"
-                    placeholder="CoreBIQ Tech"
+                    placeholder="Tech Corp"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="w-full px-3 py-2 bg-white rounded-xl border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500"

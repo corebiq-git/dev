@@ -5,21 +5,21 @@ export const INITIAL_CONTACTS: Contact[] = [
     id: 'c-1',
     name: 'Elena Rostova',
     phone: '+1 (415) 882-9014',
-    email: 'elena.rostova@biqcloud.io',
-    company: 'CoreBIQ Technologies',
+    email: 'elena.rostova@cmdialer.ai',
+    company: 'CM Technologies',
     role: 'VP Engineering',
     avatarBg: 'bg-blue-600',
     isFavorite: true,
     speedDialKey: 2,
     isGoogleSynced: true,
-    notes: 'Primary contact for CoreBIQ distributed mesh architecture and sprint planning.'
+    notes: 'Primary contact for CM Dialer distributed mesh architecture and sprint planning.'
   },
   {
     id: 'c-2',
     name: 'Marcus Vance',
     phone: '+1 (415) 309-8871',
-    email: 'marcus.vance@corebiq.com',
-    company: 'CoreBIQ Systems',
+    email: 'marcus.vance@cmdialer.ai',
+    company: 'CM Systems',
     role: 'Head of Product',
     avatarBg: 'bg-indigo-600',
     isFavorite: true,
@@ -29,10 +29,10 @@ export const INITIAL_CONTACTS: Contact[] = [
   },
   {
     id: 'c-3',
-    name: 'CoreBIQ Support VIP',
+    name: 'CM Dialer VIP Support',
     phone: '+1 (800) 555-0199',
-    email: 'priority@corebiq.support',
-    company: 'CoreBIQ Global',
+    email: 'priority@cmdialer.ai',
+    company: 'CM Global Operations',
     role: '24/7 Priority Operations Desk',
     avatarBg: 'bg-emerald-600',
     isFavorite: true,
@@ -133,7 +133,7 @@ export const INITIAL_RECORDINGS: CallRecording[] = [
     durationSeconds: 512,
     silentRecorded: true,
     waveform: [40, 60, 80, 70, 50, 65, 85, 90, 75, 55, 65, 80, 95, 70, 60, 80, 85, 90, 60, 45, 55, 70, 80, 65, 35],
-    transcript: 'Elena: "CoreBIQ architecture benchmark shows 34ms reduction in latency across all Asia-Pacific nodes." You: "Confirmed, syncing Google Contacts and database replication now."',
+    transcript: 'Elena: "CM Dialer architecture benchmark shows 34ms reduction in latency across all Asia-Pacific nodes." You: "Confirmed, syncing Google Contacts and database replication now."',
     aiKeyPoints: [
       'APAC latency dropped by 34ms',
       'Google Contacts 2-way sync enabled',
@@ -149,7 +149,7 @@ export const INITIAL_SCHEDULED_TASKS: ScheduledTask[] = [
     contactName: 'Elena Rostova',
     phone: '+1 (415) 882-9014',
     scheduledTime: 'Today, 5:00 PM',
-    message: 'Hi Elena! Sending over the finalized CoreBIQ architecture benchmark report. Let me know if you need any adjustments before the board call.',
+    message: 'Hi Elena! Sending over the finalized CM Dialer architecture benchmark report. Let me know if you need any adjustments before the board call.',
     status: 'pending',
     createdAt: new Date().toISOString()
   },
@@ -200,7 +200,7 @@ export const INITIAL_CALL_RECORDS: CallRecord[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
     timeFormatted: '3 hours ago',
     durationSeconds: 512,
-    aiSummary: 'Reviewed CoreBIQ microservices failover tests. 99.99% SLA achieved with zero dropped packets.',
+    aiSummary: 'Reviewed CM Dialer microservices failover tests. 99.99% SLA achieved with zero dropped packets.',
     transcript: 'Elena: "Our latency metrics in Asia-Pacific dropped by 34ms." You: "Excellent, sending the benchmarking chart."'
   },
   {
@@ -216,7 +216,7 @@ export const INITIAL_CALL_RECORDS: CallRecord[] = [
   {
     id: 'call-4',
     contactId: 'c-3',
-    name: 'CoreBIQ Support VIP',
+    name: 'CM Dialer VIP Support',
     phone: '+1 (800) 555-0199',
     type: 'incoming',
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
@@ -243,7 +243,7 @@ export const INITIAL_CALL_RECORDS: CallRecord[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
     timeFormatted: '3 days ago',
     durationSeconds: 0,
-    aiSummary: 'Screened by CoreBIQ AI: Potential vendor consultation. No voicemail left.',
+    aiSummary: 'Screened by CM Dialer AI: Potential vendor consultation. No voicemail left.',
   }
 ];
 
@@ -256,7 +256,7 @@ export const INITIAL_VOICEMAILS: VoicemailItem[] = [
     timestamp: 'Today, 9:42 AM',
     durationSeconds: 48,
     isRead: false,
-    transcript: "Hi there, Alexander Sterling here from Apex Capital. Just reviewing the latest CoreBIQ performance metrics—impressive traction this quarter. When you get a chance today, give me a quick ring to align on the next board deck. Talk soon!",
+    transcript: "Hi there, Alexander Sterling here from Apex Capital. Just reviewing the latest CM Dialer performance metrics—impressive traction this quarter. When you get a chance today, give me a quick ring to align on the next board deck. Talk soon!",
     aiKeyPoints: [
       'Caller: Alexander Sterling (Apex Capital)',
       'Topic: Positive quarterly performance metrics review',

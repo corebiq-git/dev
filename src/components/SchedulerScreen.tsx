@@ -51,7 +51,7 @@ export const SchedulerScreen: React.FC<SchedulerScreenProps> = ({
   // Template suggestions for WhatsApp
   const whatsappTemplates = [
     "Hi! Missed your call on CM Dialer. I'm in a meeting, will call you back shortly.",
-    "Following up on our earlier call regarding the CoreBIQ project deliverables.",
+    "Following up on our earlier call regarding the project deliverables.",
     "Could you please share the updated invoice / document on WhatsApp?",
     "Confirming our scheduled call for tomorrow. Let me know if that time still works for you."
   ];
