@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f0f4f9">
+<meta name="description" content="CorBIQ ERP, CRM and Compliance Platform">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logo-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Poppins','sans-serif']},colors:{primary:'#0b57d0',primaryLight:'#d3e3fd',surface:'#f8fafd',surfaceContainer:'#edf2fa',onSurface:'#1f1f1f',onSurfaceVariant:'#444746',outline:'#747775',error:'#b3261e',success:'#146c2e',warning:'#f9ab00'},boxShadow:{'m3-elevation-1':'0px 1px 2px rgba(0,0,0,.3),0px 1px 3px 1px rgba(0,0,0,.15)','m3-elevation-2':'0px 1px 2px rgba(0,0,0,.3),0px 2px 6px 2px rgba(0,0,0,.15)','m3-elevation-3':'0px 1px 3px rgba(0,0,0,.3),0px 4px 8px 3px rgba(0,0,0,.15)'}}}};
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-module="data" class="h-[100dvh] w-full overflow-hidden flex selection:bg-primaryLight selection:text-primary">
+<div id="splash" class="fixed inset-0 z-[100] bg-[#f0f4f9] flex flex-col items-center justify-center transition-opacity duration-500">
+<img src="assets/logo-192.png" class="w-20 h-20 rounded-3xl shadow-m3-elevation-2 mb-5">
+<h1 class="text-4xl font-bold">CorBIQ</h1><p class="text-primary font-semibold mt-2 tracking-widest uppercase text-sm">ERP • CRM • COMPLY</p>
+</div>
+<aside id="sidebar" class="hidden md:flex flex-col w-64 bg-surfaceContainer h-full border-r border-slate-200"></aside>
+<main class="flex-1 min-w-0 flex flex-col h-full bg-surface relative overflow-hidden">
+<header class="flex items-center justify-between px-4 lg:px-8 py-4 bg-[#f0f4f9] sticky top-0 z-10 border-b border-slate-200 md:border-none">
+<div class="flex items-center gap-3"><div class="md:hidden w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-rounded">hub</span></div>
+<h2 id="header-title" class="text-xl font-semibold"></h2></div>
+<div class="flex items-center gap-3"><button class="p-2 rounded-full hover:bg-slate-200"><span class="material-symbols-rounded">notifications</span></button><div class="w-9 h-9 rounded-full bg-primaryLight text-primary flex items-center justify-center font-bold">CB</div></div>
+</header>
+<div class="flex-1 overflow-y-auto p-4 lg:p-8 pb-32 md:pb-8 no-scrollbar"><div class="max-w-7xl mx-auto">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div><div class="flex items-center gap-2 text-primary text-sm font-semibold"><span class="material-symbols-rounded">database</span> CorBIQ</div><h1 class="text-2xl lg:text-3xl font-semibold mt-1">Data Import, Export, Backup & Restore</h1><p class="text-sm text-onSurfaceVariant mt-1">Complete the required fields and save.</p></div>
+<div class="flex gap-2"><button data-back class="px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm">Back</button></div></div>
+<form data-module-form="data" class="space-y-5"><section class="form-card"><h2 class="form-section-title">Import</h2><div class="form-grid"><div class="form-field"><label class="block text-sm font-medium mb-1 required">Module</label><select name="module" class="m3-input m3-select" required><option value="">Select Module</option><option>Clients</option><option>Contacts</option><option>Ledgers</option><option>Employees</option><option>Products</option><option>Transactions</option><option>Projects</option><option>Compliance Tasks</option><option>Other</option></select></div><div class="form-field"><label class="block text-sm font-medium mb-1 required">File</label><input name="file" type="file" class="m3-input" required></div><div class="form-field"><label class="block text-sm font-medium mb-1 required">Import Mode</label><select name="importMode" class="m3-input m3-select" required><option value="">Select Import Mode</option><option>Add New</option><option>Update Existing</option><option>Add + Update</option></select></div><div class="form-field"><label class="block text-sm font-medium mb-1 required">Duplicate Handling</label><select name="duplicateHandling" class="m3-input m3-select" required><option value="">Select Duplicate Handling</option><option>Skip</option><option>Update</option><option>Create New</option></select></div><div class="form-field"><label class="block text-sm font-medium mb-1 ">Key Field</label><input name="keyField" type="text" class="m3-input" ></div><div class="form-field"><label class="block text-sm font-medium mb-1 required">Validate Before Import</label><select name="validateBeforeImport" class="m3-input m3-select" required><option value="">Select Validate Before Import</option><option>Yes</option><option>No</option></select></div></div></section><section class="form-card"><h2 class="form-section-title">Export</h2><div class="form-grid"><div class="form-field"><label class="block text-sm font-medium mb-1 required">Module</label><input name="exportModule" type="text" class="m3-input" required></div><div class="form-field"><label class="block text-sm font-medium mb-1 ">Date From</label><input name="dateFrom" type="date" class="m3-input" ></div><div class="form-field"><label class="block text-sm font-medium mb-1 ">Date To</label><input name="dateTo" type="date" class="m3-input" ></div><div class="form-field"><label class="block text-sm font-medium mb-1 required">Format</label><select name="format" class="m3-input m3-select" required><option value="">Select Format</option><option>Excel</option><option>CSV</option><option>PDF</option><option>JSON</option></select></div><div class="form-field"><label class="block text-sm font-medium mb-1 required">Include Attachments</label><select name="includeAttachments" class="m3-input m3-select" required><option value="">Select Include Attachments</option><option>Yes</option><option>No</option></select></div></div></section><section class="form-card"><h2 class="form-section-title">Backup / Restore</h2><div class="form-grid"><div class="form-field"><label class="block text-sm font-medium mb-1 required">Backup Type</label><select name="backupType" class="m3-input m3-select" required><option value="">Select Backup Type</option><option>Full</option><option>Company</option><option>Module</option><option>Database</option></select></div><div class="form-field"><label class="block text-sm font-medium mb-1 ">Backup ID</label><input name="restoreBackupId" type="text" class="m3-input" ></div><div class="form-field"><label class="block text-sm font-medium mb-1 ">Restore Confirmation</label><select name="restoreConfirmation" class="m3-input m3-select" ><option value="">Select Restore Confirmation</option><option>Not Requested</option><option>Confirmed</option></select></div></div></section><div class="flex justify-end gap-3 pb-8"><button type="reset" class="px-5 py-3 rounded-full border border-slate-200 bg-white font-medium">Reset</button><button type="submit" class="px-6 py-3 rounded-full bg-primary text-white font-medium shadow-sm">Save</button></div></form>
+</div></div>
+<nav id="mobile-nav" class="md:hidden fixed bottom-0 left-0 w-full bg-[#f0f4f9] border-t border-slate-200 px-2 pt-2 pb-safe-nav flex justify-around z-20"></nav>
+</main>
+<div id="mobile-drawer" class="fixed top-0 left-0 h-full w-[290px] bg-white z-[80] transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col shadow-m3-elevation-3"></div>
+<div id="toast" class="toast bg-onSurface text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium">Saved</div>
+<script type="module" src="app.js"></script>
+</body></html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f0f4f9">
+<meta name="description" content="CorBIQ ERP, CRM and Compliance Platform">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logo-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Poppins','sans-serif']},colors:{primary:'#0b57d0',primaryLight:'#d3e3fd',surface:'#f8fafd',surfaceContainer:'#edf2fa',onSurface:'#1f1f1f',onSurfaceVariant:'#444746',outline:'#747775',error:'#b3261e',success:'#146c2e',warning:'#f9ab00'},boxShadow:{'m3-elevation-1':'0px 1px 2px rgba(0,0,0,.3),0px 1px 3px 1px rgba(0,0,0,.15)','m3-elevation-2':'0px 1px 2px rgba(0,0,0,.3),0px 2px 6px 2px rgba(0,0,0,.15)','m3-elevation-3':'0px 1px 3px rgba(0,0,0,.3),0px 4px 8px 3px rgba(0,0,0,.15)'}}}};
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-module="dashboard" class="h-[100dvh] w-full overflow-hidden flex selection:bg-primaryLight selection:text-primary">
+<div id="splash" class="fixed inset-0 z-[100] bg-[#f0f4f9] flex flex-col items-center justify-center transition-opacity duration-500">
+<img src="assets/logo-192.png" class="w-20 h-20 rounded-3xl shadow-m3-elevation-2 mb-5">
+<h1 class="text-4xl font-bold">CorBIQ</h1><p class="text-primary font-semibold mt-2 tracking-widest uppercase text-sm">ERP • CRM • COMPLY</p>
+</div>
+<aside id="sidebar" class="hidden md:flex flex-col w-64 bg-surfaceContainer h-full border-r border-slate-200"></aside>
+<main class="flex-1 min-w-0 flex flex-col h-full bg-surface relative overflow-hidden">
+<header class="flex items-center justify-between px-4 lg:px-8 py-4 bg-[#f0f4f9] sticky top-0 z-10 border-b border-slate-200 md:border-none">
+<div class="flex items-center gap-3"><div class="md:hidden w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white"><span class="material-symbols-rounded">hub</span></div>
+<h2 id="header-title" class="text-xl font-semibold"></h2></div>
+<div class="flex items-center gap-3"><button class="p-2 rounded-full hover:bg-slate-200"><span class="material-symbols-rounded">notifications</span></button><div class="w-9 h-9 rounded-full bg-primaryLight text-primary flex items-center justify-center font-bold">CB</div></div>
+</header>
+<div class="flex-1 overflow-y-auto p-4 lg:p-8 pb-32 md:pb-8 no-scrollbar"><div class="max-w-7xl mx-auto">
+<div class="mb-6"><div class="flex items-center gap-2 text-primary text-sm font-semibold"><span class="material-symbols-rounded">hub</span> CorBIQ ERP & CRM</div><h1 class="text-2xl lg:text-3xl font-semibold mt-1">Business Dashboard</h1><p class="text-sm text-onSurfaceVariant mt-1">One connected workspace for company, CRM, accounts, compliance and operations.</p></div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+<div class="module-card"><span class="badge badge-red">Overdue</span><b class="text-3xl block mt-4">3</b><span class="text-xs text-onSurfaceVariant">Compliance Tasks</span></div>
+<div class="module-card"><span class="badge badge-blue">CRM</span><b class="text-3xl block mt-4">128</b><span class="text-xs text-onSurfaceVariant">Active Clients</span></div>
+<div class="module-card"><span class="badge badge-green">Finance</span><b class="text-3xl block mt-4">₹4.2L</b><span class="text-xs text-onSurfaceVariant">Revenue MTD</span></div>
+<div class="module-card"><span class="badge badge-amber">Projects</span><b class="text-3xl block mt-4">14</b><span class="text-xs text-onSurfaceVariant">Open Projects</span></div></div>
+<div class="grid lg:grid-cols-3 gap-5">
+<div class="lg:col-span-2 form-card"><h2 class="form-section-title">Quick Modules</h2><div class="grid grid-cols-2 md:grid-cols-4 gap-3">${"company,crm,accounts,compliance,projects,employee,documents,reports".split(",").map(x=>`<a href="${x}.html" class="module-card"><span class="material-symbols-rounded text-primary">${nav.find(n=>n[0]===x)?.[1]||"apps"}</span><p class="font-medium text-sm mt-3">${titles[x]}</p></a>`).join("")}</div></div>
+<div class="form-card"><h2 class="form-section-title">AI Assistant</h2><p class="text-sm text-onSurfaceVariant mb-4">Ask CorBIQ AI about compliance, accounting and business workflows.</p><a href="ai.html" class="block text-center bg-primary text-white rounded-full py-3 font-medium">Open CorBIQ AI</a></div></div>
+</div></div>
+<nav id="mobile-nav" class="md:hidden fixed bottom-0 left-0 w-full bg-[#f0f4f9] border-t border-slate-200 px-2 pt-2 pb-safe-nav flex justify-around z-20"></nav>
+</main>
+<div id="mobile-drawer" class="fixed top-0 left-0 h-full w-[290px] bg-white z-[80] transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col shadow-m3-elevation-3"></div>
+<div id="toast" class="toast bg-onSurface text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium">Saved</div>
+<script type="module" src="app.js"></script>
+</body></html>

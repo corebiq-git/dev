@@ -1,0 +1,20 @@
+{
+  "name": "CorBIQ ERP & CRM",
+  "short_name": "CorBIQ",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f8fafd",
+  "theme_color": "#0b57d0",
+  "icons": [
+    {
+      "src": "assets/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
