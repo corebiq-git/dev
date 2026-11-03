@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f0f4f9">
+  <title>COREBIQ | Module Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./module.css">
+</head>
+<body>
+  <section id="loginPanel" class="login-shell">
+    <form id="loginForm" class="login-card">
+      <div class="brand-mark">C</div>
+      <h1>COREBIQ</h1>
+      <p>Sign in to your admin workspace</p>
+      <label for="email">Admin email</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="primary" type="submit">Sign in</button>
+      <p id="loginMessage" class="message" role="status"></p>
+    </form>
+  </section>
+
+  <main id="app" class="app-shell" hidden>
+    <header class="topbar">
+      <div><div class="brand">COREBIQ</div><div class="subbrand">Business Workspace</div></div>
+      <div class="user-actions"><span id="adminEmail"></span><button id="logoutBtn" class="outline">Sign out</button></div>
+    </header>
+    <nav id="moduleNav" class="module-nav" aria-label="Main modules"></nav>
+    <section class="page">
+      <div class="page-heading">
+        <div><div id="breadcrumb" class="breadcrumb">Modules / Dashboard</div><h1 id="moduleTitle">Dashboard</h1><p id="moduleDescription">Manage your workspace.</p></div>
+      </div>
+      <div id="stats" class="stats-grid"></div>
+      <div class="toolbar">
+        <input id="searchInput" class="search" type="search" placeholder="Search records..." aria-label="Search records">
+        <button id="addBtn" class="primary">+ Add record</button>
+      </div>
+      <div class="table-card">
+        <div class="table-scroll"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+        <div id="emptyState" class="empty" hidden>No records yet. Add your first record.</div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="recordDialog">
+    <form id="recordForm" method="dialog">
+      <div class="dialog-head"><h2 id="dialogTitle">Add record</h2><button type="button" id="closeDialog" class="close" aria-label="Close">×</button></div>
+      <div id="formFields" class="form-fields"></div>
+      <div class="dialog-actions"><button type="button" id="cancelBtn" class="outline">Cancel</button><button type="submit" class="primary">Save record</button></div>
+      <p id="formMessage" class="message"></p>
+    </form>
+  </dialog>
+  <script type="module" src="./module.js"></script>
+</body>
+</html>
