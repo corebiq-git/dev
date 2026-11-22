@@ -1,10 +1,13 @@
 const SETTINGS_KEY = "corebiq-developer-settings";
+const PRIMARY_ADMIN = "shanicm@gmail.com";
 const PLAN_LIMITS = { Starter: 5, Growth: 25, Enterprise: null };
+const PLAN_BRANCH_LIMITS = { Starter: "-", Growth: "-", Enterprise: "-" };
 const CURRENCY_BY_COUNTRY = { India: "INR", UAE: "AED", "Other GCC": "SAR" };
 const DEFAULT_SETTINGS = {
   country: "India", currency: "INR", language: "English", typography: "auto",
   licenceNo: "", licenceName: "", purchaseDate: "", validity: "12", plan: "Growth",
-  industry: "Traders", access: {}
+  industry: "Traders", access: {},
+  admins: [{ email: PRIMARY_ADMIN, role: "Admin", permissions: {} }]
 };
 
 const $ = (id) => document.getElementById(id);
@@ -45,15 +48,68 @@ function renderAccess(settings) {
   $("developer-plan-limit").textContent = `${settings.plan} plan · ${limit ?? "Unlimited"} users per module`;
   rows.innerHTML = availableModules.map((module) => {
     const key = module.toLowerCase();
-    const current = { scope: "Admin", count: limit ?? 100, view: true, edit: true, ...(settings.access?.[key] || {}) };
+    const current = { scope: "Admin", count: limit ?? 100, view: true, edit: true, delete: true, add: true, ...(settings.access?.[key] || {}) };
+    const permissions = ["view", "edit", "delete", "add"];
     return `<tr data-access-module="${key}">
       <th scope="row"><i data-lucide="layers-3" aria-hidden="true"></i>${module}</th>
       <td><select data-access="scope" aria-label="${module} access scope"><option ${current.scope === "Admin" ? "selected" : ""}>Admin</option><option ${current.scope === "Branch" ? "selected" : ""}>Branch</option><option ${current.scope === "Public" ? "selected" : ""}>Public</option></select></td>
       <td><input data-access="count" type="number" min="0" ${limit ? `max="${limit}"` : ""} value="${Math.min(Number(current.count) || 0, limit ?? Number.MAX_SAFE_INTEGER)}" aria-label="${module} user count"></td>
-      <td><label class="developer-check"><input data-access="view" type="checkbox" ${current.view ? "checked" : ""}>View</label><label class="developer-check"><input data-access="edit" type="checkbox" ${current.edit ? "checked" : ""}>Edit</label></td>
+      ${permissions.map((permission) => `<td class="developer-permission-cell"><input data-access="${permission}" type="checkbox" ${current[permission] ? "checked" : ""} aria-label="${module} ${permission}"></td>`).join("")}
     </tr>`;
   }).join("");
   if (window.lucide) window.lucide.createIcons();
+}
+
+function normalizeAdmins(settings) {
+  const admins = Array.isArray(settings.admins) ? settings.admins : [];
+  const primary = admins.find((admin) => String(admin.email).toLowerCase() === PRIMARY_ADMIN) || { email: PRIMARY_ADMIN, role: "Admin", permissions: {} };
+  return [primary, ...admins.filter((admin) => String(admin.email).toLowerCase() !== PRIMARY_ADMIN && admin.email)];
+}
+
+function defaultPermissions() {
+  return Object.fromEntries(availableModules.map((module) => [module.toLowerCase(), { view: true, edit: true, delete: true, add: true }]));
+}
+
+function renderRoles(settings) {
+  const admins = normalizeAdmins(settings);
+  const list = $("developer-admin-list");
+  list.innerHTML = admins.map((admin, index) => `<div class="developer-admin-chip"><span><i data-lucide="shield-check" aria-hidden="true"></i><b>${admin.email}</b><small>${admin.role || "Admin"}${index === 0 ? " · Primary" : ""}</small></span><button type="button" data-remove-admin="${admin.email}" ${index === 0 ? "disabled title=\"Primary admin cannot be removed\"" : ""}>${index === 0 ? "Primary" : "Remove"}</button></div>`).join("");
+  $("developer-role-rows").innerHTML = admins.flatMap((admin) => {
+    const permissions = { ...defaultPermissions(), ...(admin.permissions || {}) };
+    return availableModules.map((module, moduleIndex) => {
+      const key = module.toLowerCase();
+      const current = permissions[key] || {};
+      return `<tr data-admin-email="${admin.email}" data-role-module="${key}">
+        ${moduleIndex === 0 ? `<th scope="rowgroup" rowspan="${availableModules.length}">${admin.email}</th>` : ""}
+        <th scope="row"><i data-lucide="layers-3" aria-hidden="true"></i>${module}</th>
+        <td class="developer-permission-cell"><input data-role-permission="view" type="checkbox" ${current.view ? "checked" : ""} aria-label="${admin.email} ${module} view"></td>
+        <td class="developer-permission-cell"><input data-role-permission="edit" type="checkbox" ${current.edit ? "checked" : ""} aria-label="${admin.email} ${module} edit"></td>
+        <td class="developer-permission-cell"><input data-role-permission="delete" type="checkbox" ${current.delete ? "checked" : ""} aria-label="${admin.email} ${module} delete"></td>
+        <td class="developer-permission-cell"><input data-role-permission="add" type="checkbox" ${current.add ? "checked" : ""} aria-label="${admin.email} ${module} add"></td>
+      </tr>`;
+    });
+  }).join("");
+  list.querySelectorAll("[data-remove-admin]").forEach((button) => button.addEventListener("click", () => {
+    captureRolePermissions(settings);
+    settings.admins = normalizeAdmins(settings).filter((admin) => admin.email !== button.dataset.removeAdmin);
+    renderRoles(settings);
+  }));
+  if (window.lucide) window.lucide.createIcons();
+}
+
+function captureRolePermissions(settings) {
+  const admins = normalizeAdmins(settings).map((admin) => ({ ...admin, permissions: {} }));
+  document.querySelectorAll("[data-admin-email][data-role-module]").forEach((row) => {
+    const admin = admins.find((item) => item.email === row.dataset.adminEmail);
+    if (!admin) return;
+    admin.permissions[row.dataset.roleModule] = Object.fromEntries(["view", "edit", "delete", "add"].map((permission) => [permission, row.querySelector(`[data-role-permission=\"${permission}\"]`).checked]));
+  });
+  settings.admins = admins;
+}
+
+function updatePlanLimits(plan) {
+  $("developer-user-limit").textContent = "-";
+  $("developer-branch-limit").textContent = PLAN_BRANCH_LIMITS[plan] || "-";
 }
 
 function fillForm(settings) {
@@ -65,6 +121,8 @@ function fillForm(settings) {
   if (radio) radio.checked = true;
   updateRenewal();
   renderAccess(settings);
+  updatePlanLimits(settings.plan);
+  renderRoles(settings);
 }
 
 function updateRenewal() {
@@ -81,8 +139,9 @@ function collectSettings(existing) {
   settings.access = {};
   document.querySelectorAll("[data-access-module]").forEach((row) => {
     const get = (name) => row.querySelector(`[data-access="${name}"]`);
-    settings.access[row.dataset.accessModule] = { scope: get("scope").value, count: Number(get("count").value) || 0, view: get("view").checked, edit: get("edit").checked };
+    settings.access[row.dataset.accessModule] = { scope: get("scope").value, count: Number(get("count").value) || 0, view: get("view").checked, edit: get("edit").checked, delete: get("delete").checked, add: get("add").checked };
   });
+  captureRolePermissions(settings);
   return settings;
 }
 
@@ -90,14 +149,14 @@ async function loadManifestModules() {
   try {
     const response = await fetch(new URL("modules.json", document.baseURI), { cache: "no-store" });
     const manifest = await response.json();
-    const modules = (manifest.modules || []).map((item) => item.name).filter((name) => name !== "developer");
-    if (modules.length) return modules.map((name) => name.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()));
+    const modules = (manifest.modules || []).filter((item) => item.name !== "developer");
+    if (modules.length) return modules.map((item) => item.title || item.name.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()));
   } catch { /* use the safe built-in list */ }
   return availableModules;
 }
 
 async function initDeveloperPage() {
-  const settings = loadSettings();
+  let settings = loadSettings();
   const modules = await loadManifestModules();
   if (modules.length) availableModules = modules;
   fillForm(settings);
@@ -105,13 +164,28 @@ async function initDeveloperPage() {
     const currency = CURRENCY_BY_COUNTRY[event.target.value];
     if (currency) $("developer-currency").value = currency;
   });
-  $("developer-plan").addEventListener("change", () => renderAccess(collectSettings(settings)));
+  $("developer-plan").addEventListener("change", () => {
+    settings = collectSettings(settings);
+    updatePlanLimits($("developer-plan").value);
+    renderAccess(settings);
+  });
   $("developer-purchase-date").addEventListener("change", updateRenewal);
   $("developer-validity").addEventListener("change", updateRenewal);
+  $("developer-add-admin").addEventListener("click", () => {
+    const input = $("developer-admin-email");
+    const email = input.value.trim().toLowerCase();
+    if (!email || !input.checkValidity()) { input.reportValidity(); return; }
+    settings = collectSettings(settings);
+    if (normalizeAdmins(settings).some((admin) => admin.email.toLowerCase() === email)) { input.setCustomValidity("This administrator already exists."); input.reportValidity(); input.setCustomValidity(""); return; }
+    settings.admins = [...normalizeAdmins(settings), { email, role: "Admin", permissions: defaultPermissions() }];
+    input.value = "";
+    renderRoles(settings);
+  });
   $("developer-settings-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const next = collectSettings(settings);
     saveSettings(next);
+    settings = next;
     fillForm(next);
     $("developer-status").textContent = `Saved ${new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date())}.`;
   });
