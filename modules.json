@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T18:00:07.954Z",
+  "generatedAt": "2026-11-22T18:05:40.048Z",
   "modules": [
     {
       "name": "crm",
@@ -188,7 +188,16 @@
       "icon": "receipt-text",
       "path": "tools",
       "href": "modules/tools/index.html",
-      "children": []
+      "children": [
+        {
+          "name": "calc",
+          "title": "Calc",
+          "icon": "calculator",
+          "path": "tools/calc",
+          "href": "modules/tools/calc/index.html",
+          "children": []
+        }
+      ]
     },
     {
       "name": "reports",

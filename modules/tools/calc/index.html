@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="../../../">
+  <title>Calc | COREBIQ</title>
+  <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="modules/tools/calc/calc.css">
+</head>
+<body data-page-title="Calc">
+  <div class="app-shell">
+    <div id="desktop-sidebar-mount"></div>
+    <main class="main-shell">
+      <div id="desktop-header-mount"></div>
+      <div id="mobile-header-mount"></div>
+      <main class="calc-page">
+        <section class="calc-hero">
+          <div>
+            <div class="calc-kicker">Tools / Utilities</div>
+            <div class="calc-title-row"><i data-lucide="calculator" aria-hidden="true"></i><h1>Calc</h1></div>
+            <p>Quick, reliable calculations for your daily workspace tasks.</p>
+          </div>
+          <button id="open-calculator" class="btn btn-primary" type="button"><i data-lucide="calculator" aria-hidden="true"></i><span>Open calculator</span></button>
+        </section>
+
+        <section class="ui-card calc-info-card" aria-label="Calculator information">
+          <div class="calc-info-icon"><i data-lucide="sigma" aria-hidden="true"></i></div>
+          <div><h2>CORE Professional Calculator</h2><p>Use the calculator popup for totals, percentages, and everyday business calculations. Your calculation stays local to this page.</p></div>
+          <button class="btn btn-tonal" type="button" id="open-calculator-secondary"><i data-lucide="maximize-2" aria-hidden="true"></i><span>Launch</span></button>
+        </section>
+      </main>
+    </main>
+  </div>
+  <div id="app-sidebar-mount"></div>
+  <div id="bottom-nav-mount"></div>
+
+  <dialog class="calc-dialog" id="calculator-dialog" aria-labelledby="calculator-title">
+    <div class="calc-dialog-shell">
+      <header class="calc-dialog-head">
+        <div><div class="calc-dialog-kicker">CORE Professional</div><h2 id="calculator-title">Calculator</h2></div>
+        <button class="calc-close" id="close-calculator" type="button" aria-label="Close calculator"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="calc-screen" aria-live="polite"><span id="calc-expression">0</span><strong id="calc-result">0</strong></div>
+      <div class="calc-keypad" role="group" aria-label="Calculator keypad">
+        <button type="button" class="calc-key calc-key-muted" data-calc="clear">AC</button>
+        <button type="button" class="calc-key calc-key-muted" data-calc="backspace" aria-label="Backspace"><i data-lucide="delete" aria-hidden="true"></i></button>
+        <button type="button" class="calc-key calc-key-muted" data-calc="percent">%</button>
+        <button type="button" class="calc-key calc-key-operator" data-calc="operator" data-value="/">÷</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="7">7</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="8">8</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="9">9</button>
+        <button type="button" class="calc-key calc-key-operator" data-calc="operator" data-value="*">×</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="4">4</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="5">5</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="6">6</button>
+        <button type="button" class="calc-key calc-key-operator" data-calc="operator" data-value="-">−</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="1">1</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="2">2</button>
+        <button type="button" class="calc-key" data-calc="digit" data-value="3">3</button>
+        <button type="button" class="calc-key calc-key-operator" data-calc="operator" data-value="+">+</button>
+        <button type="button" class="calc-key calc-key-zero" data-calc="digit" data-value="0">0</button>
+        <button type="button" class="calc-key" data-calc="decimal">.</button>
+        <button type="button" class="calc-key calc-key-equals" data-calc="equals">=</button>
+      </div>
+      <p class="calc-hint"><i data-lucide="keyboard" aria-hidden="true"></i> You can also use your keyboard. Press Escape to close.</p>
+    </div>
+  </dialog>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/index.js"></script>
+  <script type="module" src="modules/tools/calc/calc.js"></script>
+</body>
+</html>
