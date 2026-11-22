@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b57d0">
+  <base href="../../../">
+  <title>Payment Gateway | COREBIQ</title>
+  <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page-title="Payment Gateway">
+  <div class="app-shell">
+    <div id="desktop-sidebar-mount"></div>
+    <main class="main-shell">
+      <div id="desktop-header-mount"></div>
+      <div id="mobile-header-mount"></div>
+
+      <main class="gateway-page">
+        <section class="gateway-hero">
+          <div>
+            <div class="gateway-kicker">Collections / Payment Gateway</div>
+            <div class="gateway-title-row">
+              <span class="gateway-title-icon"><i data-lucide="wallet-cards" aria-hidden="true"></i></span>
+              <h1>Payment Gateway</h1>
+            </div>
+            <p>Connect a payment provider, create secure payment links, and track the hand-off to your customers.</p>
+          </div>
+          <span class="gateway-security-badge"><i data-lucide="shield-check" aria-hidden="true"></i> Secure connection required</span>
+        </section>
+
+        <section class="gateway-stat-grid" aria-label="Payment gateway summary">
+          <div class="ui-card gateway-stat"><span>Connected gateways</span><strong id="gateway-count">0</strong><small>Configured providers</small></div>
+          <div class="ui-card gateway-stat"><span>Payment links</span><strong id="gateway-link-count">0</strong><small>Created in this workspace</small></div>
+          <div class="ui-card gateway-stat"><span>Default currency</span><strong id="gateway-currency">INR</strong><small>From Developer settings</small></div>
+        </section>
+
+        <div class="gateway-grid">
+          <section class="ui-card gateway-card" aria-labelledby="provider-heading">
+            <div class="gateway-card-head">
+              <div><h2 id="provider-heading">Gateway providers</h2><p>Add Razorpay, PayU, or another supported provider.</p></div>
+              <button type="button" class="btn btn-primary btn-sm" id="gateway-show-provider"><i data-lucide="plus" aria-hidden="true"></i><span>Add gateway</span></button>
+            </div>
+            <div id="gateway-provider-list" class="gateway-provider-list"></div>
+            <div id="gateway-provider-empty" class="gateway-empty"><i data-lucide="landmark" aria-hidden="true"></i><strong>No gateway connected</strong><span>Add a provider to start creating payment links.</span></div>
+          </section>
+
+          <section class="ui-card gateway-card" aria-labelledby="link-heading">
+            <div class="gateway-card-head">
+              <div><h2 id="link-heading">Create payment link</h2><p>Generate a hosted checkout link through your secure server connection.</p></div>
+              <i data-lucide="link-2" aria-hidden="true"></i>
+            </div>
+            <form id="gateway-link-form" class="gateway-form">
+              <label class="gateway-field"><span>Gateway</span><select id="gateway-link-provider" required><option value="">Select a connected gateway</option></select></label>
+              <div class="gateway-form-two">
+                <label class="gateway-field"><span>Amount</span><input id="gateway-link-amount" type="number" min="1" step="0.01" placeholder="1,000.00" required></label>
+                <label class="gateway-field"><span>Currency</span><input id="gateway-link-currency" type="text" value="INR" maxlength="3" required></label>
+              </div>
+              <label class="gateway-field"><span>Customer name</span><input id="gateway-link-name" type="text" autocomplete="name" placeholder="Customer name" required></label>
+              <label class="gateway-field"><span>Customer email</span><input id="gateway-link-email" type="email" autocomplete="email" placeholder="customer@example.com" required></label>
+              <label class="gateway-field"><span>Description</span><input id="gateway-link-description" type="text" placeholder="Invoice or order description" required></label>
+              <div class="gateway-form-two">
+                <label class="gateway-field"><span>Reference / order ID</span><input id="gateway-link-reference" type="text" placeholder="INV-0001"></label>
+                <label class="gateway-field"><span>Link expiry</span><input id="gateway-link-expiry" type="datetime-local"></label>
+              </div>
+              <div class="gateway-safe-note"><i data-lucide="lock-keyhole" aria-hidden="true"></i><span>Payment links are created by the backend. API secrets never leave the secure server.</span></div>
+              <button type="submit" class="btn btn-primary"><i data-lucide="link" aria-hidden="true"></i><span>Create payment link</span></button>
+              <p id="gateway-link-status" class="gateway-form-status" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+        </div>
+
+        <section class="ui-card gateway-card" aria-labelledby="recent-heading">
+          <div class="gateway-card-head"><div><h2 id="recent-heading">Recent payment links</h2><p>Payment links created from this workspace.</p></div><i data-lucide="clock-3" aria-hidden="true"></i></div>
+          <div class="gateway-table-wrap"><table class="gateway-table"><thead><tr><th>Reference</th><th>Customer</th><th>Amount</th><th>Provider</th><th>Status</th><th>Link</th></tr></thead><tbody id="gateway-link-rows"></tbody></table></div>
+          <div id="gateway-link-empty" class="gateway-empty gateway-empty--small"><span>No payment links created yet.</span></div>
+        </section>
+
+        <dialog id="gateway-provider-dialog" class="gateway-dialog">
+          <form method="dialog" id="gateway-provider-form" class="gateway-dialog-form">
+            <div class="gateway-dialog-head"><div><h2>Add gateway provider</h2><p>Credentials are sent only to your secure backend and are not saved in browser storage.</p></div><button type="button" class="gateway-dialog-close" id="gateway-close-provider" aria-label="Close"><i data-lucide="x" aria-hidden="true"></i></button></div>
+            <label class="gateway-field"><span>Gateway provider name</span><select id="gateway-provider-name" required><option value="Razorpay">Razorpay</option><option value="PayU">PayU</option><option value="Cashfree">Cashfree</option><option value="Stripe">Stripe</option><option value="PhonePe">PhonePe</option><option value="Custom">Other provider</option></select></label>
+            <label class="gateway-field"><span>Page link</span><input id="gateway-page-link" type="url" placeholder="https://dashboard.razorpay.com" required></label>
+            <div class="gateway-form-two"><label class="gateway-field"><span>API key / client ID</span><input id="gateway-api-key" type="password" autocomplete="new-password" spellcheck="false" required></label><label class="gateway-field"><span>API secret</span><input id="gateway-api-secret" type="password" autocomplete="new-password" spellcheck="false" required></label></div>
+            <label class="gateway-field"><span>Webhook secret <small>(optional)</small></span><input id="gateway-webhook-secret" type="password" autocomplete="new-password" spellcheck="false"></label>
+            <div class="gateway-safe-note"><i data-lucide="key-round" aria-hidden="true"></i><span>Secrets are held in memory for this request only, then cleared. Configure the server endpoint before using live payments.</span></div>
+            <div class="gateway-dialog-actions"><button type="button" class="btn btn-tonal" id="gateway-cancel-provider">Cancel</button><button type="submit" class="btn btn-primary">Connect provider</button></div>
+            <p id="gateway-provider-status" class="gateway-form-status" role="status" aria-live="polite"></p>
+          </form>
+        </dialog>
+      </main>
+    </main>
+  </div>
+  <div id="app-sidebar-mount"></div><div id="bottom-nav-mount"></div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/index.js"></script>
+  <script type="module" src="modules/payment-gateway/dashboard/dashboard.js"></script>
+</body>
+</html>
