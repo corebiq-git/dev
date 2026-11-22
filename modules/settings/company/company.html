@@ -10,6 +10,7 @@
 
   <!-- Permanent Global Design System + Page CSS -->
   <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="modules/settings/company/company.css">
 
 </head>
 <body data-page-title="Settings">
@@ -173,6 +174,15 @@
                     <option value="en">English</option>
                     <option value="ar">العربية — Arabic</option>
                     <option value="fr">Français — French</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="compDateFormat">Core date format</label>
+                  <select id="compDateFormat" class="field form-input readonly-input" disabled>
+                    <option value="dd-MMM-yyyy">19-Nov-2026</option>
+                    <option value="dd/MM/yyyy">19/11/2026</option>
+                    <option value="MM/dd/yyyy">11/19/2026</option>
+                    <option value="yyyy-MM-dd">2026-11-19</option>
                   </select>
                 </div>
               </div>

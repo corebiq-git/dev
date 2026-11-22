@@ -7,6 +7,16 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const companyDocRef = doc(db, "settings", "company_profile");
 
+window.applyCorebiqSettings = function (settings = {}) {
+    if (settings.currencyCode) localStorage.setItem('corebiq-currency', settings.currencyCode);
+    if (settings.countryCode) localStorage.setItem('corebiq-country', settings.countryCode);
+    if (settings.preferredLanguage) localStorage.setItem('corebiq-language', settings.preferredLanguage);
+    if (settings.dateFormat) localStorage.setItem('corebiq-date-format', settings.dateFormat);
+    document.documentElement.dataset.corebiqCountry = settings.countryCode || '';
+    document.documentElement.dataset.corebiqLanguage = settings.preferredLanguage || '';
+    document.documentElement.dataset.corebiqDateFormat = settings.dateFormat || '';
+};
+
         const companyStates = {
             IN: ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Puducherry'],
             AE: ['Abu Dhabi', 'Ajman', 'Dubai', 'Fujairah', 'Ras Al Khaimah', 'Sharjah', 'Umm Al Quwain'],
@@ -114,10 +124,12 @@ const companyDocRef = doc(db, "settings", "company_profile");
                     }
                     currencySelect.value = currencyCode;
                     document.getElementById('compLanguage').value = data.preferredLanguage || 'en';
+                    document.getElementById('compDateFormat').value = data.dateFormat || localStorage.getItem('corebiq-date-format') || 'dd-MMM-yyyy';
                     window.applyCorebiqSettings?.({
                         currencyCode: document.getElementById('compCurrency').value,
                         countryCode,
-                        preferredLanguage: document.getElementById('compLanguage').value
+                        preferredLanguage: document.getElementById('compLanguage').value,
+                        dateFormat: document.getElementById('compDateFormat').value
                     });
                     if(typeof data.name === 'string' && data.name.trim()) {
                         const companyName = data.name.trim();
@@ -229,6 +241,7 @@ const companyDocRef = doc(db, "settings", "company_profile");
                 country: document.getElementById('compCountry').selectedOptions[0]?.textContent.trim() || '',
                 currencyCode: document.getElementById('compCurrency').value,
                 preferredLanguage: document.getElementById('compLanguage').value,
+                dateFormat: document.getElementById('compDateFormat').value,
                 address: getCompanyAddress(),
                 phone1: document.getElementById('compPhone1').value,
                 phone2: document.getElementById('compPhone2').value,

@@ -124,7 +124,7 @@ function pageMarkup(type) {
         </header>
         <form id="itemForm" class="inventory-form" novalidate>
           <div class="inventory-form-grid">
-            <label><span>Inventory ID *</span><input id="inventoryId" maxlength="80" required autocomplete="off"></label>
+            <label><span>Inventory ID</span><input id="inventoryId" maxlength="80" required autocomplete="off" readonly></label>
             <label><span>Name *</span><input id="itemName" maxlength="160" required></label>
             <label><span>Category</span><input id="itemCategory" maxlength="100"></label>
             <label><span>UQC *</span><input id="itemUqc" maxlength="40" placeholder="e.g. NOS, KGS, HRS" required></label>
@@ -289,6 +289,14 @@ export function initInventoryCatalog() {
     $("itemFormError").textContent = message;
   }
 
+  function nextInventoryId() {
+    const highest = [...items.values()].reduce((max, item) => {
+      const match = String(item.inventoryId || "").match(/^INV-(\d+)$/i);
+      return match ? Math.max(max, Number(match[1])) : max;
+    }, 0);
+    return `INV-${String(highest + 1).padStart(4, "0")}`;
+  }
+
   function updatePreview() {
     const rate = numberValue($("itemRate").value);
     const quantity = isGoods
@@ -307,8 +315,8 @@ export function initInventoryCatalog() {
     $("itemFormError").textContent = "";
     $("itemModalTitle").textContent = `${item ? "Edit" : "Add"} ${isGoods ? "Goods" : "Service"}`;
     $("saveInventoryItem").textContent = item ? "Save changes" : `Save ${isGoods ? "Goods" : "Service"}`;
-    $("inventoryId").readOnly = Boolean(item);
-    $("inventoryId").value = item?.inventoryId || "";
+    $("inventoryId").readOnly = true;
+    $("inventoryId").value = item?.inventoryId || nextInventoryId();
     $("itemName").value = item?.name || "";
     $("itemCategory").value = item?.category || "";
     $("itemUqc").value = item?.uqc || "";

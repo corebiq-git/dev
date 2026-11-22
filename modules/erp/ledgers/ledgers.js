@@ -171,7 +171,11 @@ function openModal(ledger = null) {
   $("ledgerModalTitle").textContent = editingId ? "Edit Ledger" : "Add Ledger";
 
   const type = ledger?.type || "Asset";
-  $("ledgerCode").value = ledger?.ledgerCode || String(1001 + ledgers.size);
+  const nextLedgerCode = [...ledgers.values()].reduce((highest, item) => {
+    const numeric = Number.parseInt(String(item.ledgerCode || "").replace(/\D/g, ""), 10);
+    return Number.isFinite(numeric) ? Math.max(highest, numeric) : highest;
+  }, 1000) + 1;
+  $("ledgerCode").value = ledger?.ledgerCode || String(nextLedgerCode);
   $("ledgerName").value = ledger?.name || "";
   $("ledgerType").value = type;
   populateGroups(type, ledger?.group || "");

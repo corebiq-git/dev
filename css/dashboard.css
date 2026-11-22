@@ -480,7 +480,7 @@
 /*
    ERP dashboard visual standard for every module dashboard
    ========================================================================== */
-:is(.hr-page, .tpl-page) .kpi-hero-submodule-page {
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 10px;
@@ -493,13 +493,13 @@
   box-shadow: var(--shadow-md);
 }
 
-:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head, .tpl-head) {
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page > :is(.crm-head, .hr-head, .inv-head, .tpl-head) {
   display: contents;
 }
 
-:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head, .tpl-head) > :is(.hr-head-identity, .tpl-head-identity) { order: 1; }
-:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > .kpi-hero-submodule-page-description { order: 2; }
-:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head-actions, .tpl-head-actions) {
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page > :is(.crm-head, .hr-head, .inv-head, .tpl-head) > :is(.modulepage-row1-identity, .hr-head-identity, .inv-head-identity, .tpl-head-identity) { order: 1; }
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page > .kpi-hero-submodule-page-description { order: 2; }
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page > :is(.crm-head, .hr-head, .inv-head, .tpl-head) > :is(.crm-head-actions, .hr-head-actions, .inv-head-actions, .tpl-head-actions) {
   order: 3;
   width: 100%;
   display: flex;
@@ -508,14 +508,28 @@
   gap: 8px;
 }
 
-:is(.hr-page, .tpl-page) :is(.hr-kpi-card, .tpl-kpi-card) {
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) :is(.crm-kpi-card, .hr-kpi-card, .inv-kpi-card, .tpl-kpi-card) {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
 }
 
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page-description {
+  max-width: 68ch;
+  line-height: 1.5;
+}
+
+:is(.crm-page, .hr-page, .inventory-page, .tpl-page) :is(.crm-kpi-grid, .hr-kpi-grid, .inv-kpi-grid, .tpl-kpi-grid) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
 @media (max-width: 700px) {
-  :is(.hr-page, .tpl-page) .kpi-hero-submodule-page { padding: 16px; }
-  :is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head-actions, .tpl-head-actions) {
+  :is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page { padding: 16px; }
+  :is(.crm-page, .hr-page, .inventory-page, .tpl-page) .kpi-hero-submodule-page > :is(.crm-head, .hr-head, .inv-head, .tpl-head) > :is(.crm-head-actions, .hr-head-actions, .inv-head-actions, .tpl-head-actions) {
     justify-content: flex-start;
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T18:05:40.048Z",
+  "generatedAt": "2026-11-22T21:47:23.359Z",
   "modules": [
     {
       "name": "crm",
@@ -121,6 +121,14 @@
           "icon": "folder",
           "path": "hr/dashboard",
           "href": "modules/hr/dashboard/index.html",
+          "children": []
+        },
+        {
+          "name": "employees",
+          "title": "Employees",
+          "icon": "folder",
+          "path": "hr/employees",
+          "href": "modules/hr/employees/index.html",
           "children": []
         }
       ]

@@ -210,8 +210,12 @@
       document.dispatchEvent(new CustomEvent('corebiq:module-navigation-ready', { detail: manifest }));
     }
 
+    const moduleManagerApiBase = window.location.protocol === 'file:'
+      ? 'http://127.0.0.1:4177'
+      : '';
+
     async function api(path, options = {}) {
-      const response = await fetch(`/__module-manager/${path}`, {
+      const response = await fetch(`${moduleManagerApiBase}/__module-manager/${path}`, {
         ...options,
         headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
       });
@@ -493,6 +497,15 @@
     try { syncAll(); } catch (error) { console.error(`[COREBIQ Module Manager] ${error.message}`); process.exitCode = 1; return; }
     const server = http.createServer((req, res) => {
       const url = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
+      const origin = String(req.headers.origin || '');
+      const localOrigin = origin === 'null' || /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(origin);
+      if (localOrigin) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      }
+      if (req.method === 'OPTIONS' && url.pathname.startsWith('/__module-manager/')) return send(res, 204, '');
       if (url.pathname.startsWith('/__module-manager/')) return handleApi(req, res, url);
       serveStatic(req, res, url);
     });

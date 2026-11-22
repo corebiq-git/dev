@@ -48,12 +48,13 @@ function renderAccess(settings) {
   $("developer-plan-limit").textContent = `${settings.plan} plan · ${limit ?? "Unlimited"} users per module`;
   rows.innerHTML = availableModules.map((module) => {
     const key = module.toLowerCase();
-    const current = { scope: "Admin", count: limit ?? 100, view: true, edit: true, delete: true, add: true, ...(settings.access?.[key] || {}) };
+    const current = { scope: "Admin", count: limit ?? 100, prefill: false, view: true, edit: true, delete: true, add: true, ...(settings.access?.[key] || {}) };
     const permissions = ["view", "edit", "delete", "add"];
     return `<tr data-access-module="${key}">
       <th scope="row"><i data-lucide="layers-3" aria-hidden="true"></i>${module}</th>
       <td><select data-access="scope" aria-label="${module} access scope"><option ${current.scope === "Admin" ? "selected" : ""}>Admin</option><option ${current.scope === "Branch" ? "selected" : ""}>Branch</option><option ${current.scope === "Public" ? "selected" : ""}>Public</option></select></td>
       <td><input data-access="count" type="number" min="0" ${limit ? `max="${limit}"` : ""} value="${Math.min(Number(current.count) || 0, limit ?? Number.MAX_SAFE_INTEGER)}" aria-label="${module} user count"></td>
+      <td><select data-access="prefill" aria-label="${module} prefill"><option value="no" ${current.prefill ? "" : "selected"}>No</option><option value="yes" ${current.prefill ? "selected" : ""}>Yes</option></select></td>
       ${permissions.map((permission) => `<td class="developer-permission-cell"><input data-access="${permission}" type="checkbox" ${current[permission] ? "checked" : ""} aria-label="${module} ${permission}"></td>`).join("")}
     </tr>`;
   }).join("");
@@ -139,7 +140,7 @@ function collectSettings(existing) {
   settings.access = {};
   document.querySelectorAll("[data-access-module]").forEach((row) => {
     const get = (name) => row.querySelector(`[data-access="${name}"]`);
-    settings.access[row.dataset.accessModule] = { scope: get("scope").value, count: Number(get("count").value) || 0, view: get("view").checked, edit: get("edit").checked, delete: get("delete").checked, add: get("add").checked };
+    settings.access[row.dataset.accessModule] = { scope: get("scope").value, count: Number(get("count").value) || 0, prefill: get("prefill").value === "yes", view: get("view").checked, edit: get("edit").checked, delete: get("delete").checked, add: get("add").checked };
   });
   captureRolePermissions(settings);
   return settings;

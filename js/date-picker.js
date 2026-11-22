@@ -16,8 +16,8 @@ function toIsoDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
-function formatDate(date, options = { day: "2-digit", month: "short", year: "numeric" }) {
-  return new Intl.DateTimeFormat("en-IN", options).format(date);
+function formatDate(date, options = null) {
+  return window.COREBIQ?.formatDate ? window.COREBIQ.formatDate(date, options) : new Intl.DateTimeFormat("en-IN", options).format(date);
 }
 
 function dateOnly(date) {
