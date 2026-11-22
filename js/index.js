@@ -22,6 +22,30 @@ const componentMap = {
   "app-loader-mount": "components/loader.html"
 };
 
+/* Shared mini feedback popup for save, success, warning, and error states. */
+window.COREBIQ = window.COREBIQ || {};
+window.COREBIQ.feedback = function feedback(message, type = "success", actionLabel = "Done", duration = 3600) {
+  if (!document.body) return;
+  let popup = document.getElementById("core-feedback-popup");
+  if (!popup) {
+    popup = document.createElement("aside");
+    popup.id = "core-feedback-popup";
+    popup.className = "core-feedback-popup";
+    popup.setAttribute("role", "status");
+    popup.setAttribute("aria-live", "polite");
+    document.body.appendChild(popup);
+  }
+  const kind = ["success", "warning", "error", "save"].includes(type) ? type : "success";
+  const icons = { success: "✓", warning: "!", error: "×", save: "✓" };
+  const escape = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
+  popup.className = `core-feedback-popup is-visible is-${kind}`;
+  popup.innerHTML = `<span class="core-feedback-icon" aria-hidden="true">${icons[kind]}</span><span class="core-feedback-message">${escape(message)}</span><button type="button" class="core-feedback-action">${escape(actionLabel)}</button>`;
+  const close = () => popup.classList.remove("is-visible");
+  popup.querySelector(".core-feedback-action").addEventListener("click", close, { once: true });
+  clearTimeout(popup._timer);
+  popup._timer = window.setTimeout(close, duration);
+};
+
 async function loadComponent(mountId, url) {
   const mount = document.getElementById(mountId);
   if (!mount) return;

@@ -212,6 +212,7 @@ async function initDeveloperPage() {
     settings = next;
     fillForm(next);
     $("developer-status").textContent = `Saved ${new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date())}.`;
+    window.COREBIQ?.feedback("Developer settings saved.", "save");
   });
   saveSettings(settings);
   if (window.lucide) window.lucide.createIcons();

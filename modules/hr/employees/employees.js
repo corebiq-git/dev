@@ -28,7 +28,7 @@ const isPrefillEnabled = () => {
 };
 
 function showError(message = "") { $("hr-employees-error").textContent = message; $("hr-employees-error").classList.toggle("hidden", !message); }
-function toast(message, success = true) { const node = $("employeeToast"); node.textContent = message; node.style.background = success ? "#166534" : "#b42318"; node.classList.remove("hidden"); setTimeout(() => node.classList.add("hidden"), 3000); }
+function toast(message, success = true) { if (window.COREBIQ?.feedback) { window.COREBIQ.feedback(message, success ? "success" : "error"); return; } const node = $("employeeToast"); node.textContent = message; node.style.background = success ? "#166534" : "#b42318"; node.classList.remove("hidden"); setTimeout(() => node.classList.add("hidden"), 3000); }
 function formatDate(value) { if (!value) return "—"; const date = new Date(`${value}T00:00:00`); return Number.isNaN(date.getTime()) ? "—" : new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short", year: "numeric" }).format(date); }
 function nextEmployeeId() {
   const max = [...employees.values()].reduce((highest, employee) => { const match = String(employee.employeeId || "").match(/^EMP-(\d+)$/i); return match ? Math.max(highest, Number(match[1])) : highest; }, 0);
