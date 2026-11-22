@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b57d0">
+  <base href="../../../">
+  <title>Developer · SuperAdmin | COREBIQ</title>
+  <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page-title="Developer">
+  <div class="app-shell">
+    <div id="desktop-sidebar-mount"></div>
+    <main class="main-shell">
+      <div id="desktop-header-mount"></div>
+      <div id="mobile-header-mount"></div>
+
+      <main class="developer-page">
+        <section class="developer-hero">
+          <div>
+            <div class="developer-kicker">Developer / SuperAdmin</div>
+            <div class="developer-title-row">
+              <span class="developer-title-icon"><i data-lucide="shield-check" aria-hidden="true"></i></span>
+              <h1>Core application controls</h1>
+            </div>
+            <p>Set the workspace defaults and control access to every module from one place.</p>
+          </div>
+          <div class="developer-admin-badge">
+            <i data-lucide="mail" aria-hidden="true"></i>
+            <span>shanicm@gmail.com</span>
+          </div>
+        </section>
+
+        <form id="developer-settings-form" class="developer-layout">
+          <section class="ui-card developer-card" aria-labelledby="locale-heading">
+            <div class="developer-card-head">
+              <div>
+                <h2 id="locale-heading">Core locale</h2>
+                <p>These choices are reflected across currency, dates, and app presentation.</p>
+              </div>
+              <i data-lucide="globe-2" aria-hidden="true"></i>
+            </div>
+            <div class="developer-form-grid">
+              <label class="developer-field">
+                <span>Country</span>
+                <select id="developer-country" name="country">
+                  <option value="India">India</option>
+                  <option value="UAE">UAE</option>
+                  <option value="Other GCC">Other GCC</option>
+                </select>
+              </label>
+              <label class="developer-field">
+                <span>Core currency</span>
+                <select id="developer-currency" name="currency">
+                  <option value="INR">INR · Indian Rupee</option>
+                  <option value="AED">AED · UAE Dirham</option>
+                  <option value="SAR">SAR · Saudi Riyal</option>
+                  <option value="QAR">QAR · Qatari Riyal</option>
+                  <option value="KWD">KWD · Kuwaiti Dinar</option>
+                  <option value="BHD">BHD · Bahraini Dinar</option>
+                  <option value="OMR">OMR · Omani Rial</option>
+                </select>
+              </label>
+              <label class="developer-field">
+                <span>App language</span>
+                <select id="developer-language" name="language">
+                  <option>English</option>
+                  <option>French</option>
+                  <option>Arabic</option>
+                </select>
+              </label>
+              <label class="developer-field">
+                <span>Typography style</span>
+                <select id="developer-typography" name="typography">
+                  <option value="auto">Auto correction</option>
+                  <option value="upper">FULL CAPS</option>
+                  <option value="title">Each Word First Letter Caps</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="ui-card developer-card" aria-labelledby="licence-heading">
+            <div class="developer-card-head">
+              <div>
+                <h2 id="licence-heading">App licence</h2>
+                <p>Keep the licence identity and renewal information visible to administrators.</p>
+              </div>
+              <i data-lucide="badge-check" aria-hidden="true"></i>
+            </div>
+            <div class="developer-form-grid developer-form-grid--three">
+              <label class="developer-field"><span>Licence no</span><input id="developer-licence-no" name="licenceNo" type="text" placeholder="CORE-2026-0001"></label>
+              <label class="developer-field"><span>Licence name</span><input id="developer-licence-name" name="licenceName" type="text" placeholder="Company or workspace name"></label>
+              <label class="developer-field"><span>Purchase date</span><input id="developer-purchase-date" name="purchaseDate" type="date"></label>
+              <label class="developer-field"><span>Validity</span><select id="developer-validity" name="validity"><option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12" selected>12 months</option><option value="24">24 months</option></select></label>
+              <label class="developer-field"><span>Plan</span><select id="developer-plan" name="plan"><option value="Starter">Starter · 5 users</option><option value="Growth" selected>Growth · 25 users</option><option value="Enterprise">Enterprise · unlimited</option></select></label>
+              <div class="developer-field developer-readonly-field"><span>Renewal date</span><strong id="developer-renewal-date">—</strong><small>Calculated automatically</small></div>
+            </div>
+          </section>
+
+          <section class="ui-card developer-card" aria-labelledby="industry-heading">
+            <div class="developer-card-head">
+              <div>
+                <h2 id="industry-heading">Industry profile</h2>
+                <p>Choose the operating profile used for the workspace.</p>
+              </div>
+              <i data-lucide="briefcase-business" aria-hidden="true"></i>
+            </div>
+            <div class="developer-industry-grid" role="radiogroup" aria-label="Industry">
+              <label class="developer-choice"><input type="radio" name="industry" value="Traders"><span><b>Traders</b><small>Stock and goods</small></span></label>
+              <label class="developer-choice"><input type="radio" name="industry" value="Professionals"><span><b>Professionals</b><small>Services and billing</small></span></label>
+              <label class="developer-choice"><input type="radio" name="industry" value="Health"><span><b>Health</b><small>Clinics and care</small></span></label>
+              <label class="developer-choice"><input type="radio" name="industry" value="Construction"><span><b>Construction</b><small>Projects and sites</small></span></label>
+            </div>
+          </section>
+
+          <section class="ui-card developer-card developer-access-card" aria-labelledby="access-heading">
+            <div class="developer-card-head">
+              <div>
+                <h2 id="access-heading">Module access</h2>
+                <p>Set who can open each module and whether they can view or edit its data.</p>
+              </div>
+              <i data-lucide="route" aria-hidden="true"></i>
+            </div>
+            <div class="developer-access-summary"><span id="developer-plan-limit">Growth plan · 25 users per module</span><span>Scope: Admin · Branch · Public</span></div>
+            <div class="developer-access-table-wrap">
+              <table class="developer-access-table">
+                <thead><tr><th>Module</th><th>Access scope</th><th>Count</th><th>Permissions</th></tr></thead>
+                <tbody id="developer-access-rows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="developer-save-bar">
+            <span id="developer-status" role="status" aria-live="polite">Changes are stored on this workspace.</span>
+            <button type="submit" class="btn btn-primary"><i data-lucide="save" aria-hidden="true"></i><span>Save developer settings</span></button>
+          </div>
+        </form>
+      </main>
+    </main>
+  </div>
+  <div id="app-sidebar-mount"></div>
+  <div id="bottom-nav-mount"></div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/index.js"></script>
+  <script type="module" src="modules/developer/dashboard/dashboard.js"></script>
+</body>
+</html>

@@ -2,6 +2,23 @@
   "generatedAt": "2026-11-22T09:16:37.970Z",
   "modules": [
     {
+      "name": "developer",
+      "title": "Developer",
+      "icon": "code-2",
+      "path": "developer",
+      "href": "modules/developer/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dev",
+          "icon": "shield-check",
+          "path": "developer/dashboard",
+          "href": "modules/developer/dashboard/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
       "name": "crm",
       "title": "CRM",
       "icon": "users",

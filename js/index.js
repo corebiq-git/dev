@@ -38,6 +38,13 @@ async function loadComponent(mountId, url) {
 async function initDashboard() {
   initAppearanceTheme();
 
+  try {
+    const { applyDeveloperSettings } = await import(new URL("js/developer-settings.js", document.baseURI));
+    applyDeveloperSettings();
+  } catch (error) {
+    console.warn("Developer settings could not be applied:", error);
+  }
+
   const loaderMount = document.getElementById("app-loader-mount") || document.createElement("div");
   loaderMount.id = "app-loader-mount";
   const miniMount = document.getElementById("mini-container-mount") || document.createElement("div");
