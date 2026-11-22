@@ -179,11 +179,25 @@ async function loadManifestModules() {
   return availableModules;
 }
 
+function initSectionMenu() {
+  const toggle = $("developerSectionMenuToggle");
+  const menu = $("developerSectionMenu");
+  if (!toggle || !menu) return;
+  const close = () => { menu.hidden = true; toggle.setAttribute("aria-expanded", "false"); };
+  toggle.addEventListener("click", () => {
+    menu.hidden = !menu.hidden;
+    toggle.setAttribute("aria-expanded", String(!menu.hidden));
+  });
+  menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", close));
+  document.addEventListener("click", (event) => { if (!event.target.closest(".developer-dashboard-hero .erp-dropdown-wrap")) close(); });
+}
+
 async function initDeveloperPage() {
   let settings = loadSettings();
   const modules = await loadManifestModules();
   if (modules.length) availableModules = modules;
   fillForm(settings);
+  initSectionMenu();
   $("developer-country").addEventListener("change", (event) => {
     const currency = CURRENCY_BY_COUNTRY[event.target.value];
     if (currency) $("developer-currency").value = currency;

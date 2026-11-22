@@ -260,6 +260,12 @@
   box-sizing: border-box;
 }
 
+.developer-dashboard-hero { scroll-margin-top: 18px; }
+.developer-dashboard-hero .developer-admin-badge { margin-left: auto; }
+.developer-hero-save { display: inline-flex; align-items: center; gap: 7px; }
+.developer-hero-save svg { width: 16px; height: 16px; }
+.developer-page > form > section { scroll-margin-top: 18px; }
+
 .developer-hero {
   display: flex;
   align-items: flex-start;

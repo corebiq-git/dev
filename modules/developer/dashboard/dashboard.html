@@ -7,6 +7,7 @@
   <base href="../../../">
   <title>Developer · SuperAdmin | COREBIQ</title>
   <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="modules/erp/dashboard/dashboard.css">
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body data-page-title="Developer">
@@ -17,23 +18,39 @@
       <div id="mobile-header-mount"></div>
 
       <main class="developer-page">
-        <section class="developer-hero">
-          <div>
-            <div class="developer-kicker">Developer / SuperAdmin</div>
-            <div class="developer-title-row">
-              <span class="developer-title-icon"><i data-lucide="shield-check" aria-hidden="true"></i></span>
-              <h1>Core application controls</h1>
+        <section class="kpi-hero-submodule-page developer-dashboard-hero" aria-label="Developer overview">
+          <header class="erp-head">
+            <div class="erp-head-identity">
+              <h1 class="erp-page-title"><i data-lucide="shield-check" aria-hidden="true"></i><span>Developer Dashboard</span></h1>
+              <nav class="erp-breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Modules</a><span aria-hidden="true">&gt;</span>
+                <a href="modules/developer/index.html">Developer</a><span aria-hidden="true">&gt;</span>
+                <span aria-current="page">Dashboard</span>
+              </nav>
             </div>
-            <p>Set the workspace defaults and control access to every module from one place.</p>
-          </div>
-          <div class="developer-admin-badge">
-            <i data-lucide="mail" aria-hidden="true"></i>
-            <span>shanicm@gmail.com</span>
+            <div class="developer-admin-badge"><i data-lucide="mail" aria-hidden="true"></i><span>shanicm@gmail.com · Founder</span></div>
+          </header>
+          <p class="kpi-hero-submodule-page-description">Manage CoreBIQ settings, plans, workspace limits, module access, and user roles from one place.</p>
+          <div class="erp-head-actions">
+            <div class="erp-dropdown-wrap">
+              <button id="developerSectionMenuToggle" type="button" class="btn btn-tonal" aria-haspopup="menu" aria-expanded="false" aria-controls="developerSectionMenu">
+                <i data-lucide="layout-grid" aria-hidden="true"></i><span>Sections</span>
+              </button>
+              <nav id="developerSectionMenu" class="erp-dropdown-menu" role="menu" aria-label="Developer sections" hidden>
+                <a href="#core-locale" role="menuitem"><i data-lucide="globe-2" aria-hidden="true"></i><span>Core settings</span></a>
+                <a href="#plan-details" role="menuitem"><i data-lucide="badge-check" aria-hidden="true"></i><span>Plan details</span></a>
+                <a href="#industry-profile" role="menuitem"><i data-lucide="briefcase-business" aria-hidden="true"></i><span>Workspace profile</span></a>
+                <a href="#module-access" role="menuitem"><i data-lucide="route" aria-hidden="true"></i><span>Module access</span></a>
+                <a href="#workspace-limits" role="menuitem"><i data-lucide="gauge" aria-hidden="true"></i><span>Workspace limits</span></a>
+                <a href="#user-roles" role="menuitem"><i data-lucide="users-round" aria-hidden="true"></i><span>User roles</span></a>
+              </nav>
+            </div>
+            <button type="submit" class="btn btn-primary developer-hero-save"><i data-lucide="save" aria-hidden="true"></i><span>Save</span></button>
           </div>
         </section>
 
         <form id="developer-settings-form" class="developer-layout">
-          <section class="ui-card developer-card" aria-labelledby="locale-heading">
+          <section id="core-locale" class="ui-card developer-card" aria-labelledby="locale-heading">
             <div class="developer-card-head">
               <div>
                 <h2 id="locale-heading">Core locale</h2>
@@ -81,7 +98,7 @@
             </div>
           </section>
 
-          <section class="ui-card developer-card" aria-labelledby="licence-heading">
+          <section id="plan-details" class="ui-card developer-card" aria-labelledby="licence-heading">
             <div class="developer-card-head">
               <div>
                 <h2 id="licence-heading">App licence</h2>
@@ -99,7 +116,7 @@
             </div>
           </section>
 
-          <section class="ui-card developer-card" aria-labelledby="industry-heading">
+          <section id="industry-profile" class="ui-card developer-card" aria-labelledby="industry-heading">
             <div class="developer-card-head">
               <div>
                 <h2 id="industry-heading">Industry profile</h2>
@@ -115,7 +132,7 @@
             </div>
           </section>
 
-          <section class="ui-card developer-card developer-access-card" aria-labelledby="access-heading">
+          <section id="module-access" class="ui-card developer-card developer-access-card" aria-labelledby="access-heading">
             <div class="developer-card-head">
               <div>
                 <h2 id="access-heading">Module access</h2>
@@ -132,7 +149,7 @@
             </div>
           </section>
 
-          <section class="ui-card developer-card" aria-labelledby="limits-heading">
+          <section id="workspace-limits" class="ui-card developer-card" aria-labelledby="limits-heading">
             <div class="developer-card-head">
               <div>
                 <h2 id="limits-heading">Workspace limits</h2>
@@ -149,7 +166,7 @@
             </div>
           </section>
 
-          <section class="ui-card developer-card" aria-labelledby="roles-heading">
+          <section id="user-roles" class="ui-card developer-card" aria-labelledby="roles-heading">
             <div class="developer-card-head">
               <div>
                 <h2 id="roles-heading">Users &amp; roles</h2>
