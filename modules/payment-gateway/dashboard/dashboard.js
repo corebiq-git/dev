@@ -74,14 +74,43 @@ function clearSensitiveFields() {
   ["gateway-api-key", "gateway-api-secret", "gateway-webhook-secret"].forEach((id) => { $(id).value = ""; });
 }
 
+function normalizeProviderPageLink(provider, value) {
+  const input = String(value || "").trim();
+  if (provider !== "Razorpay") return input;
+  const prefix = "https://razorpay.me/@";
+  if (!input) return prefix;
+  if (input.startsWith(prefix)) return input;
+  if (input.startsWith("razorpay.me/@")) return `https://${input}`;
+  if (input.startsWith("https://razorpay.me/")) return `${prefix}${input.slice("https://razorpay.me/".length).replace(/^@+/, "")}`;
+  return `${prefix}${input.replace(/^@+/, "")}`;
+}
+
 function bindProviderDialog() {
   const dialog = $("gateway-provider-dialog");
-  $("gateway-show-provider").addEventListener("click", () => { $("gateway-provider-status").textContent = ""; dialog.showModal(); });
+  $("gateway-show-provider").addEventListener("click", () => {
+    $("gateway-provider-status").textContent = "";
+    const provider = $("gateway-provider-name").value;
+    if (provider === "Razorpay") $("gateway-page-link").value = normalizeProviderPageLink("Razorpay", "");
+    dialog.showModal();
+  });
   ["gateway-close-provider", "gateway-cancel-provider"].forEach((id) => $(id).addEventListener("click", () => dialog.close()));
+  $("gateway-provider-name").addEventListener("change", (event) => {
+    const pageLink = $("gateway-page-link");
+    if (event.target.value === "Razorpay") {
+      const current = pageLink.value.trim();
+      pageLink.value = current && current.startsWith("https://razorpay.me/")
+        ? normalizeProviderPageLink("Razorpay", current)
+        : normalizeProviderPageLink("Razorpay", "");
+    }
+    else if (pageLink.value === "https://razorpay.me/@") pageLink.value = "";
+  });
+  $("gateway-page-link").addEventListener("blur", () => {
+    $("gateway-page-link").value = normalizeProviderPageLink($("gateway-provider-name").value, $("gateway-page-link").value);
+  });
   $("gateway-provider-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const provider = $("gateway-provider-name").value;
-    const pageLink = $("gateway-page-link").value.trim();
+    const pageLink = normalizeProviderPageLink(provider, $("gateway-page-link").value);
     const apiKey = $("gateway-api-key").value;
     const apiSecret = $("gateway-api-secret").value;
     const webhookSecret = $("gateway-webhook-secret").value;
