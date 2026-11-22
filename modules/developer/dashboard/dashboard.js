@@ -43,7 +43,7 @@ function renderAccess(settings) {
   const rows = $("developer-access-rows");
   const limit = PLAN_LIMITS[settings.plan];
   $("developer-plan-limit").textContent = `${settings.plan} plan · ${limit ?? "Unlimited"} users per module`;
-  rows.innerHTML = getModules().map((module) => {
+  rows.innerHTML = availableModules.map((module) => {
     const key = module.toLowerCase();
     const current = { scope: "Admin", count: limit ?? 100, view: true, edit: true, ...(settings.access?.[key] || {}) };
     return `<tr data-access-module="${key}">

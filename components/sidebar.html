@@ -82,6 +82,7 @@
   .desktop-sidebar {
     width: var(--sidebar, 256px);
     height: 100dvh;
+    min-height: 0;
     position: sticky;
     top: 0;
     flex-shrink: 0;
@@ -96,6 +97,7 @@
     line-height: 1.5;
     color: var(--ink-primary, #1f1f1f);
     box-sizing: border-box;
+    overflow: hidden;
   }
 
   /* Brand Header */
