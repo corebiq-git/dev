@@ -228,11 +228,27 @@
   /* Square Navigation Links */
   .drawer-links {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
     overflow-y: auto;
     margin-bottom: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-mid, #cbd5e1) transparent;
+  }
+
+  .drawer-links::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .drawer-links::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .drawer-links::-webkit-scrollbar-thumb {
+    background: var(--border-mid, #cbd5e1);
+    border-radius: 999px;
   }
 
   .drawer-links a {
