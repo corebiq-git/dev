@@ -30,48 +30,59 @@
       const style = document.createElement('style');
       style.id = 'corebiq-module-nav-styles';
       style.textContent = `
-        .cbq-module-nav-item{display:flex;flex-direction:column;gap:2px;width:100%}
-        .cbq-module-nav-main{display:flex;align-items:center;gap:3px;min-width:0}
-        .cbq-module-nav-main>.side-link,.cbq-module-nav-main>.drawer-main-link{flex:1;min-width:0}
-        .cbq-module-nav-toggle{width:30px;height:34px;flex:0 0 30px;border:0;border-radius:6px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}
-        .cbq-module-nav-toggle:hover{background:var(--bg-tonal,#f0f4f9)}
-        .cbq-module-nav-toggle svg{width:15px;height:15px;transition:transform .18s ease}
-        .cbq-module-nav-item.is-open>.cbq-module-nav-main .cbq-module-nav-toggle svg{transform:rotate(90deg)}
-        .cbq-module-nav-children{display:none;flex-direction:column;gap:2px;margin:1px 0 5px 19px;padding-left:10px;border-left:1px solid var(--border-light,#e2e8f0)}
-        .cbq-module-nav-item.is-open>.cbq-module-nav-children{display:flex}
-        .cbq-module-nav-children .side-link,.cbq-module-nav-children .drawer-main-link{min-height:36px;height:auto;padding-top:7px;padding-bottom:7px;font-size:.84rem}
-        .cbq-module-nav-children .cbq-module-nav-children{margin-left:12px}
-        .drawer-links .cbq-module-nav-toggle{height:40px}
-        .drawer-links .cbq-module-nav-children{margin-left:18px}
-        .cbq-module-nav-main a[aria-current="page"],.cbq-module-nav-children a[aria-current="page"]{color:var(--primary-700,#0842a0);background:var(--primary-50,#f0f6ff)}
-
-        /* Submenus share the ERP Add-menu popup treatment on desktop and mobile. */
-        .cbq-module-nav-children{display:flex;flex-direction:column;gap:2px;min-width:188px;max-height:0;margin:0;padding:0;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-6px) scale(.98);transform-origin:top left;border:1px solid transparent;border-radius:var(--radius-md,10px);background:var(--bg-surface,#fff);box-shadow:var(--shadow-menu,0 10px 28px -4px rgba(4,30,73,.14));color:var(--ink-primary,#1f1f1f);transition:max-height .18s ease,opacity .16s ease,transform .16s ease,visibility 0s linear .18s,padding .18s ease,margin .18s ease}
-        .cbq-module-nav-item.is-open>.cbq-module-nav-children{max-height:520px;margin:4px 0 6px;padding:6px;opacity:1;visibility:visible;pointer-events:auto;transform:none;border-color:var(--border-light,#e2e8f0);transition:max-height .22s ease,opacity .16s ease,transform .16s ease,visibility 0s linear 0s,padding .18s ease,margin .18s ease}
-        .cbq-module-nav-children .side-link,.cbq-module-nav-children .drawer-main-link{display:flex;align-items:center;gap:10px;height:auto;min-height:0;padding:8px 10px;border-radius:var(--radius-sm,6px);color:var(--ink-primary,#1f1f1f);font-size:.8125rem;font-weight:500}
-        .cbq-module-nav-children .side-link:hover,.cbq-module-nav-children .drawer-main-link:hover{background:var(--bg-tonal,#f0f4f9);color:var(--primary-600,#0b57d0);text-decoration:none}
-        .cbq-module-nav-children .side-link svg,.cbq-module-nav-children .side-link i,.cbq-module-nav-children .drawer-main-link svg,.cbq-module-nav-children .drawer-main-link i{width:16px;height:16px;color:var(--ink-muted,#64748b);flex-shrink:0}
-        .cbq-module-nav-children .side-link.active,
-        .cbq-module-nav-children .side-link[aria-current="page"],
-        .cbq-module-nav-children .drawer-main-link.active,
-        .cbq-module-nav-children .drawer-main-link[aria-current="page"]{background:var(--primary-100,#d3e3fd);color:var(--primary-900,#041e49);font-weight:600}
-        .cbq-module-nav-children .side-link.active,
-        .cbq-module-nav-children .side-link[aria-current="page"]{font-weight:600}
-        .cbq-module-nav-children .side-link.active svg,
-        .cbq-module-nav-children .side-link[aria-current="page"] svg,
-        .cbq-module-nav-children .drawer-main-link.active svg,
-        .cbq-module-nav-children .drawer-main-link[aria-current="page"] svg{color:var(--primary-600,#0b57d0)}
-        .cbq-module-nav-children .cbq-module-nav-children{margin:0}
-
-        /* Desktop menus open below the sidebar item, inside the sidebar width. */
-        .desktop-sidebar .side-nav{position:relative;overflow-y:auto;overflow-x:hidden}
-        .desktop-sidebar .cbq-module-nav-item{position:relative}
-        .desktop-sidebar .cbq-module-nav-item>.cbq-module-nav-children{position:static;width:auto;min-width:0;margin:4px 0 6px}
-        .desktop-sidebar .cbq-module-nav-item>.cbq-module-nav-children .cbq-module-nav-children{position:static;margin:4px 0 0 12px}
-        .desktop-sidebar .cbq-module-nav-toggle{color:var(--ink-muted,#64748b)}
-        .desktop-sidebar .cbq-module-nav-toggle:hover{background:var(--bg-tonal,#f0f4f9);color:var(--ink-primary,#1f1f1f)}
-        .drawer-links .cbq-module-nav-item.is-open>.cbq-module-nav-children{margin:4px 0 6px 18px}
-        #app-sidebar-mount .drawer-links .cbq-module-nav-children .drawer-main-link{font-size:.8125rem}
+        .cbq-module-nav-item { display: grid; gap: 3px; min-width: 0; width: 100%; }
+        .cbq-module-nav-main { display: flex; align-items: center; gap: 3px; min-width: 0; }
+        .cbq-module-nav-main > :is(.side-link, .drawer-main-link) { flex: 1; min-width: 0; }
+        .cbq-module-nav-toggle {
+          display: grid;
+          place-items: center;
+          flex: 0 0 36px;
+          height: 36px;
+          border: 0;
+          border-radius: 8px;
+          background: transparent;
+          color: inherit;
+          cursor: pointer;
+        }
+        .cbq-module-nav-toggle:hover,
+        .cbq-module-nav-toggle[aria-expanded="true"] { background: var(--bg-tonal, #f0f4f9); }
+        .cbq-module-nav-toggle svg { width: 16px; height: 16px; transition: transform .16s ease; }
+        .cbq-module-nav-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+        .cbq-module-nav-children {
+          display: none;
+          gap: 3px;
+          margin: 0 0 5px 9px;
+          padding: 4px 4px 4px 7px;
+          border-inline-start: 2px solid var(--border-light, #dee3eb);
+          border-radius: 0 12px 12px 0;
+          background: var(--bg-tonal, #f0f4f9);
+        }
+        .cbq-module-nav-item.is-open > .cbq-module-nav-children { display: grid; }
+        .cbq-module-nav-children .cbq-module-nav-children { margin-inline-start: 4px; }
+        .cbq-module-nav-children :is(.side-link, .drawer-main-link) {
+          min-height: 42px;
+          height: auto;
+          gap: 8px;
+          padding: 7px 8px;
+          border-radius: 8px;
+          font-size: .875rem;
+          overflow-wrap: anywhere;
+        }
+        .cbq-module-nav-children :is(svg, i) { width: 17px; height: 17px; flex-shrink: 0; }
+        .cbq-module-nav-children a[aria-current="page"] {
+          background: var(--primary-100, #d3e3fd);
+          color: var(--primary-900, #041e49);
+          font-weight: 600;
+        }
+        .cbq-module-nav-item :is(a, button):focus-visible {
+          outline: 2px solid var(--primary, #0b57d0);
+          outline-offset: -2px;
+        }
+        .drawer-links .cbq-module-nav-toggle { flex-basis: 44px; height: 44px; }
+        .drawer-links .cbq-module-nav-children .drawer-main-link { min-height: 44px; }
+        @media (prefers-reduced-motion: reduce) {
+          .cbq-module-nav-toggle svg { transition: none; }
+        }
       `;
       document.head.appendChild(style);
     }
@@ -102,8 +113,9 @@
         const toggle = document.createElement('button');
         toggle.type = 'button';
         toggle.className = 'cbq-module-nav-toggle';
-        toggle.setAttribute('aria-label', `Expand ${node.title}`);
+        toggle.setAttribute('aria-label', `${node.title || titleCase(node.name)} submenu`);
         toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', `${mobile ? 'drawer' : 'sidebar'}-submenu-${encodeURIComponent(node.path)}`);
         const chevron = document.createElement('i');
         chevron.setAttribute('data-lucide', 'chevron-right');
         toggle.appendChild(chevron);
@@ -118,6 +130,7 @@
       if (node.children && node.children.length) {
         const children = document.createElement('div');
         children.className = 'cbq-module-nav-children';
+        children.id = main.lastElementChild.getAttribute('aria-controls');
         node.children.forEach(child => children.appendChild(makeNode(child, mobile, depth + 1)));
         wrap.appendChild(children);
       }
@@ -132,7 +145,9 @@
         const active = current === hrefPath || current.startsWith(hrefPath.replace(/index\.html$/, ''));
         link.classList.toggle('active', active);
         if (active) {
-          link.setAttribute('aria-current', 'page');
+          if (current === hrefPath || current === hrefPath.replace(/index\.html$/, '')) {
+            link.setAttribute('aria-current', 'page');
+          }
           let parent = link.closest('.cbq-module-nav-item');
           while (parent) {
             parent.classList.add('is-open');
