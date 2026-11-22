@@ -1,40 +1,6 @@
 {
-  "generatedAt": "2026-11-22T09:16:37.970Z",
+  "generatedAt": "2026-11-22T14:58:17.606Z",
   "modules": [
-    {
-      "name": "developer",
-      "title": "Developer",
-      "icon": "code-2",
-      "path": "developer",
-      "href": "modules/developer/index.html",
-      "children": [
-        {
-          "name": "dashboard",
-          "title": "Dev",
-          "icon": "shield-check",
-          "path": "developer/dashboard",
-          "href": "modules/developer/dashboard/index.html",
-          "children": []
-        }
-      ]
-    },
-    {
-      "name": "payment-gateway",
-      "title": "Payment Gateway",
-      "icon": "wallet-cards",
-      "path": "payment-gateway",
-      "href": "modules/payment-gateway/index.html",
-      "children": [
-        {
-          "name": "dashboard",
-          "title": "Dashboard",
-          "icon": "layout-dashboard",
-          "path": "payment-gateway/dashboard",
-          "href": "modules/payment-gateway/dashboard/index.html",
-          "children": []
-        }
-      ]
-    },
     {
       "name": "crm",
       "title": "CRM",
@@ -269,6 +235,48 @@
           "icon": "folder",
           "path": "settings/users",
           "href": "modules/settings/users/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "developer",
+      "title": "Developer",
+      "icon": "code-2",
+      "path": "developer",
+      "href": "modules/developer/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dev",
+          "icon": "shield-check",
+          "path": "developer/dashboard",
+          "href": "modules/developer/dashboard/index.html",
+          "children": []
+        },
+        {
+          "name": "module-manager",
+          "title": "Module Manager",
+          "icon": "folder-cog",
+          "path": "developer/module-manager",
+          "href": "modules/developer/module-manager/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "payment-gateway",
+      "title": "Payment Gateway",
+      "icon": "wallet-cards",
+      "path": "payment-gateway",
+      "href": "modules/payment-gateway/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "layout-dashboard",
+          "path": "payment-gateway/dashboard",
+          "href": "modules/payment-gateway/dashboard/index.html",
           "children": []
         }
       ]

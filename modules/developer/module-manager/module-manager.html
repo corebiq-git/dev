@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="../../../">
+  <title>Module Manager | COREBIQ</title>
+  <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page-title="Module Manager">
+  <div class="app-shell">
+    <div id="desktop-sidebar-mount"></div>
+    <main class="main-shell">
+      <div id="desktop-header-mount"></div>
+      <div id="mobile-header-mount"></div>
+      <main class="module-manager-page">
+        <section class="module-manager-hero">
+          <div>
+            <div class="module-manager-kicker">Developer / SuperAdmin</div>
+            <div class="module-manager-title-row"><i data-lucide="folder-cog" aria-hidden="true"></i><h1>Module Manager</h1></div>
+            <p>Manage module folders, generated indexes, and application navigation from the Developer workspace.</p>
+          </div>
+          <a class="btn btn-tonal" href="modules/developer/dashboard/index.html"><i data-lucide="arrow-left" aria-hidden="true"></i><span>Back to Dev</span></a>
+        </section>
+
+        <section class="ui-card module-manager-card">
+          <div class="module-manager-card-head"><div><h2>Create module or submodule</h2><p>Choose a parent folder to add a nested Developer-managed module.</p></div><i data-lucide="folder-plus" aria-hidden="true"></i></div>
+          <form id="module-create-form" class="module-manager-form">
+            <label class="developer-field"><span>Folder name</span><input id="module-name" name="name" placeholder="e.g. Customers" required maxlength="60"></label>
+            <label class="developer-field"><span>Parent folder</span><select id="module-parent"><option value="">Main module (root)</option></select></label>
+            <label class="developer-field"><span>Lucide icon name</span><input id="module-icon" name="icon" placeholder="folder" value="folder" maxlength="40"></label>
+            <button class="btn btn-primary" type="submit"><i data-lucide="plus" aria-hidden="true"></i><span>Create folder</span></button>
+          </form>
+          <div id="manager-status" class="module-manager-status" role="status" aria-live="polite">Connecting to local module manager…</div>
+        </section>
+
+        <section class="ui-card module-manager-card">
+          <div class="module-manager-toolbar"><div><h2>Current folder structure</h2><p id="module-count">Scanning folders…</p></div><button id="sync-modules" class="btn btn-tonal" type="button"><i data-lucide="refresh-cw" aria-hidden="true"></i><span>Scan &amp; sync</span></button></div>
+          <ul id="module-tree" class="module-manager-tree" aria-label="Module folders"></ul>
+        </section>
+
+        <section class="ui-card module-manager-card">
+          <div class="module-manager-card-head"><div><h2>How synchronisation works</h2><p>The manager scans <code>/modules/</code>, creates missing generated indexes, and refreshes <code>modules.json</code>. Existing hand-written files are preserved.</p></div><i data-lucide="info" aria-hidden="true"></i></div>
+          <p class="module-manager-note"><strong>Local administration:</strong> Run <code>node js/module-manager.js</code> from the COREBIQ project folder. The manager listens only on <code>127.0.0.1:4177</code> and should not be exposed publicly.</p>
+        </section>
+      </main>
+    </main>
+  </div>
+  <div id="app-sidebar-mount"></div>
+  <div id="bottom-nav-mount"></div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
