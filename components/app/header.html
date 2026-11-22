@@ -1,0 +1,176 @@
+<header class="mobile-app-header no-print" aria-label="Mobile workspace actions">
+  <a href="index.html" class="mobile-app-brand" aria-label="Home">
+    <img src="assets/logo.png" alt="COREBIQ" class="mobile-brand-logo">
+  </a>
+  <span class="mobile-header-spacer"></span>
+  <button
+    class="mobile-header-action"
+    type="button"
+    aria-label="Master search"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-popover-target="mini-search"
+  >
+    <i data-lucide="search" aria-hidden="true"></i>
+  </button>
+  <button
+    class="mobile-header-action module-refresh-button"
+    type="button"
+    aria-label="Refresh module"
+    title="Refresh module"
+    data-module-refresh
+  >
+    <i data-lucide="refresh-cw" aria-hidden="true"></i>
+  </button>
+  <button
+    class="mobile-header-action notification-button"
+    type="button"
+    aria-label="Recent activity notifications"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-popover-target="mini-notifications"
+  >
+    <i data-lucide="bell" aria-hidden="true"></i>
+    <b aria-hidden="true"></b>
+  </button>
+  <button
+    class="mobile-header-action"
+    type="button"
+    aria-label="Open signed-in profile"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-popover-target="mini-profile"
+  >
+    <i data-lucide="user-round" aria-hidden="true"></i>
+  </button>
+</header>
+
+<style>
+  /* Sticky must be applied to the mount wrapper so it sticks across the full scroll height */
+  #mobile-header-mount {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    width: 100%;
+  }
+
+  .mobile-app-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    min-height: calc(64px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid var(--border-light, #e2e8f0);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(14px);
+    font-family: var(--font-sans, "Inter", sans-serif);
+    color: var(--ink-primary, #1f1f1f);
+    box-sizing: border-box;
+  }
+
+  :root[data-theme="dark"] .mobile-app-header,
+  body[data-theme="dark"] .mobile-app-header {
+    background: rgba(30, 31, 32, 0.92);
+  }
+
+  .mobile-app-brand {
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--radius-sm, 6px);
+    text-decoration: none;
+  }
+
+  .mobile-brand-logo {
+    width: 40px;
+    height: 40px;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
+    border-radius: var(--radius-sm, 6px);
+  }
+
+  .mobile-header-spacer {
+    flex: 1;
+  }
+
+  .mobile-header-action {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: var(--radius-btn, 6px);
+    background: transparent;
+    color: var(--ink-secondary, #444746);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .mobile-header-action:hover {
+    background: var(--bg-tonal, #f0f4f9);
+    color: var(--ink-primary, #1f1f1f);
+  }
+
+  .mobile-header-action:active {
+    background: var(--bg-tonal-hov, #e4eaf2);
+  }
+
+  .mobile-header-action[aria-expanded="true"] {
+    background: var(--primary-50, #f0f6ff);
+    border-color: var(--primary-200, #a8c7fa);
+    color: var(--primary-600, #0b57d0);
+  }
+
+  .mobile-header-action:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring, 0 0 0 3px rgba(11, 87, 208, 0.2));
+  }
+
+  .mobile-header-action i,
+  .mobile-header-action svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.85;
+  }
+
+  .module-refresh-button.is-refreshing i,
+  .module-refresh-button.is-refreshing svg {
+    animation: mobileRefreshSpin 0.7s linear infinite;
+  }
+
+  @keyframes mobileRefreshSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .notification-button b {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--bg-surface, #ffffff);
+    border-radius: 50%;
+    background: var(--primary-600, #0b57d0);
+  }
+
+  @media (min-width: 901px) {
+    #mobile-header-mount,
+    .mobile-app-header {
+      display: none;
+    }
+  }
+
+  @media print {
+    #mobile-header-mount,
+    .mobile-app-header {
+      display: none !important;
+    }
+  }
+</style>

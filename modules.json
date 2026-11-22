@@ -1,0 +1,251 @@
+{
+  "generatedAt": "2026-11-22T09:16:37.970Z",
+  "modules": [
+    {
+      "name": "crm",
+      "title": "CRM",
+      "icon": "users",
+      "path": "crm",
+      "href": "modules/crm/index.html",
+      "children": [
+        {
+          "name": "clients",
+          "title": "Clients",
+          "icon": "folder",
+          "path": "crm/clients",
+          "href": "modules/crm/clients/index.html",
+          "children": []
+        },
+        {
+          "name": "compliance",
+          "title": "Compliance",
+          "icon": "folder",
+          "path": "crm/compliance",
+          "href": "modules/crm/compliance/index.html",
+          "children": []
+        },
+        {
+          "name": "credentials",
+          "title": "Credentials",
+          "icon": "folder",
+          "path": "crm/credentials",
+          "href": "modules/crm/credentials/index.html",
+          "children": []
+        },
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "folder",
+          "path": "crm/dashboard",
+          "href": "modules/crm/dashboard/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "erp",
+      "title": "ERP",
+      "icon": "layers-3",
+      "path": "erp",
+      "href": "modules/erp/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "folder",
+          "path": "erp/dashboard",
+          "href": "modules/erp/dashboard/index.html",
+          "children": []
+        },
+        {
+          "name": "ledgers",
+          "title": "Ledgers",
+          "icon": "folder",
+          "path": "erp/ledgers",
+          "href": "modules/erp/ledgers/index.html",
+          "children": []
+        },
+        {
+          "name": "vouchers",
+          "title": "Vouchers",
+          "icon": "folder",
+          "path": "erp/vouchers",
+          "href": "modules/erp/vouchers/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "inventory",
+      "title": "Inventory",
+      "icon": "boxes",
+      "path": "inventory",
+      "href": "modules/inventory/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "folder",
+          "path": "inventory/dashboard",
+          "href": "modules/inventory/dashboard/index.html",
+          "children": []
+        },
+        {
+          "name": "goods",
+          "title": "Goods",
+          "icon": "folder",
+          "path": "inventory/goods",
+          "href": "modules/inventory/goods/index.html",
+          "children": []
+        },
+        {
+          "name": "services",
+          "title": "Services",
+          "icon": "folder",
+          "path": "inventory/services",
+          "href": "modules/inventory/services/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "hr",
+      "title": "HR",
+      "icon": "contact-round",
+      "path": "hr",
+      "href": "modules/hr/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "folder",
+          "path": "hr/dashboard",
+          "href": "modules/hr/dashboard/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "templates",
+      "title": "Templates",
+      "icon": "files",
+      "path": "templates",
+      "href": "modules/templates/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "folder",
+          "path": "templates/dashboard",
+          "href": "modules/templates/dashboard/index.html",
+          "children": []
+        },
+        {
+          "name": "invoice-template",
+          "title": "Invoice Template",
+          "icon": "folder",
+          "path": "templates/invoice-template",
+          "href": "modules/templates/invoice-template/index.html",
+          "children": []
+        },
+        {
+          "name": "letterhead",
+          "title": "Letterhead",
+          "icon": "folder",
+          "path": "templates/letterhead",
+          "href": "modules/templates/letterhead/index.html",
+          "children": []
+        },
+        {
+          "name": "payment-voucher",
+          "title": "Payment Voucher",
+          "icon": "folder",
+          "path": "templates/payment-voucher",
+          "href": "modules/templates/payment-voucher/index.html",
+          "children": []
+        },
+        {
+          "name": "receipt-voucher",
+          "title": "Receipt Voucher",
+          "icon": "folder",
+          "path": "templates/receipt-voucher",
+          "href": "modules/templates/receipt-voucher/index.html",
+          "children": []
+        },
+        {
+          "name": "seal",
+          "title": "Seal",
+          "icon": "folder",
+          "path": "templates/seal",
+          "href": "modules/templates/seal/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "tools",
+      "title": "Tools",
+      "icon": "receipt-text",
+      "path": "tools",
+      "href": "modules/tools/index.html",
+      "children": []
+    },
+    {
+      "name": "reports",
+      "title": "Reports",
+      "icon": "chart-no-axes-combined",
+      "path": "reports",
+      "href": "modules/reports/index.html",
+      "children": []
+    },
+    {
+      "name": "settings",
+      "title": "Settings",
+      "icon": "settings",
+      "path": "settings",
+      "href": "modules/settings/index.html",
+      "children": [
+        {
+          "name": "backup",
+          "title": "Backup",
+          "icon": "folder",
+          "path": "settings/backup",
+          "href": "modules/settings/backup/index.html",
+          "children": []
+        },
+        {
+          "name": "branches",
+          "title": "Branches",
+          "icon": "folder",
+          "path": "settings/branches",
+          "href": "modules/settings/branches/index.html",
+          "children": []
+        },
+        {
+          "name": "company",
+          "title": "Company",
+          "icon": "folder",
+          "path": "settings/company",
+          "href": "modules/settings/company/index.html",
+          "children": []
+        },
+        {
+          "name": "users",
+          "title": "Users",
+          "icon": "folder",
+          "path": "settings/users",
+          "href": "modules/settings/users/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "transactions",
+      "title": "Transactions",
+      "icon": "folder",
+      "path": "transactions",
+      "href": "modules/transactions/index.html",
+      "children": []
+    }
+  ]
+}
