@@ -1,7 +1,9 @@
 {
-  "name": "CM | Workspace",
-  "short_name": "CM Admin",
-  "description": "CM Workspace.",
+  "name": "COREBIQ",
+  "short_name": "COREBIQ",
+  "description": "COREBIQ Health workspace and business operations platform.",
+  "version": "1.0",
+  "categories": ["health", "business", "productivity"],
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

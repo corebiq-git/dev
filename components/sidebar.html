@@ -58,6 +58,7 @@
     <div class="sidebar-help">
       <span>Need help?</span>
       <a href="mailto:support@corebiq.com">Contact support</a>
+      <span class="sidebar-legal-links"><a href="privacy-policy.html">Privacy</a><a href="license.html">Licence</a></span>
     </div>
     <div class="sidebar-appearance">
       <span class="appearance-label">
@@ -303,6 +304,14 @@
     color: var(--primary-700, #0842a0);
     text-decoration: underline;
   }
+
+  .sidebar-legal-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+  }
+
+  .sidebar-legal-links a { margin-left: 0; }
 
   /* Appearance Footer Switch */
   .sidebar-appearance {
