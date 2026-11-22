@@ -299,6 +299,9 @@
 .developer-limit-item span { color: var(--ink-muted); font-size: .75rem; }
 .developer-limit-item strong { color: var(--ink-primary); font-family: var(--font-display); font-size: 1.25rem; }
 .developer-limit-item small { color: var(--ink-muted); font-size: .6875rem; }
+.developer-default-limit-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.developer-limit-item input { width: 100%; min-height: 36px; padding: 0 9px; border: 1px solid var(--border-mid); border-radius: var(--radius-btn); background: var(--bg-surface); color: var(--ink-primary); font: inherit; font-weight: 600; box-sizing: border-box; }
+.developer-limit-item input:focus { outline: none; border-color: var(--primary-500); box-shadow: var(--focus-ring); }
 .developer-industry-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .developer-choice { position: relative; display: flex; align-items: flex-start; gap: 9px; padding: 13px; border: 1px solid var(--border-light); border-radius: var(--radius-btn); background: var(--bg-surface); cursor: pointer; }
 .developer-choice:has(input:checked) { border-color: var(--primary-300); background: var(--primary-50); }
@@ -334,6 +337,7 @@
 .developer-admin-chip button:disabled { cursor: not-allowed; opacity: .65; }
 .developer-roles-table { min-width: 720px; }
 .developer-roles-table tbody th[scope="rowgroup"] { vertical-align: top; color: var(--primary-700); font-size: .75rem; }
+.developer-founder-access { color: var(--primary-700); font-size: .75rem; font-weight: 600; }
 .developer-save-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 2px 4px; color: var(--ink-muted); font-size: .75rem; }
 .developer-save-bar .btn { display: inline-flex; align-items: center; gap: 8px; }
 .developer-save-bar .btn svg { width: 16px; height: 16px; }
@@ -342,7 +346,7 @@
   .developer-page { padding: 16px 14px 96px; }
   .developer-hero { flex-direction: column; padding: 18px; }
   .developer-admin-badge { white-space: normal; }
-  .developer-form-grid, .developer-form-grid--three, .developer-industry-grid, .developer-limit-grid { grid-template-columns: 1fr; }
+  .developer-form-grid, .developer-form-grid--three, .developer-industry-grid, .developer-limit-grid, .developer-default-limit-grid { grid-template-columns: 1fr; }
   .developer-card { padding: 16px; }
   .developer-access-summary, .developer-save-bar { align-items: flex-start; flex-direction: column; }
   .developer-admin-form { align-items: stretch; flex-direction: column; }

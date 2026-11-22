@@ -136,14 +136,16 @@
             <div class="developer-card-head">
               <div>
                 <h2 id="limits-heading">Workspace limits</h2>
-                <p>Company ownership is fixed to one workspace. Branch and user limits follow the selected plan.</p>
+                <p>Default workspace capacity is ready for one company, branch, admin, staff member, and public user.</p>
               </div>
               <i data-lucide="gauge" aria-hidden="true"></i>
             </div>
-            <div class="developer-limit-grid">
-              <div class="developer-limit-item"><span>Max company</span><strong>1</strong><small>Fixed</small></div>
-              <div class="developer-limit-item"><span>Branches</span><strong id="developer-branch-limit">-</strong><small>Plan limit</small></div>
-              <div class="developer-limit-item"><span>Users</span><strong id="developer-user-limit">25</strong><small>Plan limit</small></div>
+            <div class="developer-limit-grid developer-default-limit-grid">
+              <label class="developer-limit-item"><span>Company</span><input id="developer-default-company" type="number" min="0" value="1" aria-label="Default company limit"><small>Default</small></label>
+              <label class="developer-limit-item"><span>Branch</span><input id="developer-default-branch" type="number" min="0" value="1" aria-label="Default branch limit"><small>Default</small></label>
+              <label class="developer-limit-item"><span>Admin</span><input id="developer-default-admin" type="number" min="0" value="1" aria-label="Default admin limit"><small>Default</small></label>
+              <label class="developer-limit-item"><span>Staff</span><input id="developer-default-staff" type="number" min="0" value="1" aria-label="Default staff limit"><small>Default</small></label>
+              <label class="developer-limit-item"><span>Public</span><input id="developer-default-public" type="number" min="0" value="1" aria-label="Default public limit"><small>Default</small></label>
             </div>
           </section>
 
