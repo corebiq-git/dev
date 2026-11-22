@@ -224,6 +224,10 @@ function initDrawer() {
 }
 
 function initNavigation() {
+  // The folder-driven navigation owns active states once it has rendered.
+  // Applying the legacy data-nav-key logic after that would incorrectly mark
+  // Home active for newer nested modules such as Developer and Payment Gateway.
+  if (document.querySelector(".side-nav [data-module-path], .drawer-links [data-module-path]")) return;
   const segments = location.pathname.split("/").filter(Boolean).map(part => part.toLowerCase());
   const moduleNames = ["crm", "erp", "inventory", "hr", "templates", "tools", "reports", "settings", "transactions"];
   let activeKey = "home";

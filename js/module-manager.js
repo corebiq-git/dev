@@ -137,6 +137,15 @@
       return wrap;
     }
 
+    function uniqueModuleTree(nodes, seen = new Set()) {
+      return (Array.isArray(nodes) ? nodes : []).reduce((result, node) => {
+        if (!node || !node.path || seen.has(node.path)) return result;
+        seen.add(node.path);
+        result.push({ ...node, children: uniqueModuleTree(node.children, seen) });
+        return result;
+      }, []);
+    }
+
     function markActive(container) {
       if (!container) return;
       const current = decodeURI(location.pathname).replace(/\\/g, '/');
@@ -172,7 +181,7 @@
       const manifest = await response.json();
       const desktop = document.querySelector('.side-nav');
       const mobile = document.querySelector('.drawer-links');
-      const nodes = Array.isArray(manifest.modules) ? manifest.modules : [];
+      const nodes = uniqueModuleTree(manifest.modules);
 
       [desktop, mobile].forEach((nav, index) => {
         if (!nav) return;

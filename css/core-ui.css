@@ -486,19 +486,7 @@ body {
     stroke-width: 1.9;
   }
 
-  /* Dashboard Welcome & Chart Cards */
-  #welcome-mount h1,
-  #welcome-mount h2,
-  #welcome-company-name {
-    font-size: 1.65rem;
-    line-height: 1.25;
-  }
-
-  #welcome-mount p,
-  #welcome-date-text {
-    font-size: 0.94rem;
-  }
-
+  /* Dashboard chart cards */
   #chart-mount h2,
   #chart-mount h3 {
     font-size: 1.25rem;
