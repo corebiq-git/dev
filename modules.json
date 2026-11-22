@@ -19,6 +19,23 @@
       ]
     },
     {
+      "name": "payment-gateway",
+      "title": "Payment Gateway",
+      "icon": "wallet-cards",
+      "path": "payment-gateway",
+      "href": "modules/payment-gateway/index.html",
+      "children": [
+        {
+          "name": "dashboard",
+          "title": "Dashboard",
+          "icon": "layout-dashboard",
+          "path": "payment-gateway/dashboard",
+          "href": "modules/payment-gateway/dashboard/index.html",
+          "children": []
+        }
+      ]
+    },
+    {
       "name": "crm",
       "title": "CRM",
       "icon": "users",
