@@ -121,7 +121,7 @@ function startListeners() {
   }, error => setError("stock activity", error));
 }
 
-document.getElementById("refreshInventoryDashboard").addEventListener("click", startListeners);
+document.getElementById("refreshInventoryDashboard")?.addEventListener("click", startListeners);
 window.addEventListener("corebiq:signout-request", async () => {
   try {
     await signOut(auth);

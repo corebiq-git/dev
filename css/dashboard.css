@@ -476,3 +476,46 @@
   .module-manager-tree-item code { grid-column: 2; grid-row: 2; }
   .module-manager-tree-actions { grid-column: 3; grid-row: 1 / 3; flex-direction: column; }
 }
+
+/*
+   ERP dashboard visual standard for every module dashboard
+   ========================================================================== */
+:is(.hr-page, .tpl-page) .kpi-hero-submodule-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 20px 24px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, var(--bg-surface) 0%, var(--primary-50) 100%) padding-box,
+    linear-gradient(135deg, var(--primary-200) 0%, var(--border-light) 50%, var(--primary-500) 100%) border-box;
+  box-shadow: var(--shadow-md);
+}
+
+:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head, .tpl-head) {
+  display: contents;
+}
+
+:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head, .tpl-head) > :is(.hr-head-identity, .tpl-head-identity) { order: 1; }
+:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > .kpi-hero-submodule-page-description { order: 2; }
+:is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head-actions, .tpl-head-actions) {
+  order: 3;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+:is(.hr-page, .tpl-page) :is(.hr-kpi-card, .tpl-kpi-card) {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 700px) {
+  :is(.hr-page, .tpl-page) .kpi-hero-submodule-page { padding: 16px; }
+  :is(.hr-page, .tpl-page) .kpi-hero-submodule-page > :is(.hr-head-actions, .tpl-head-actions) {
+    justify-content: flex-start;
+  }
+}

@@ -35,6 +35,14 @@ async function loadComponent(mountId, url) {
   }
 }
 
+function normalizeDashboardHeroActions() {
+  document.querySelectorAll(".kpi-hero-submodule-page").forEach(hero => {
+    const description = hero.querySelector(":scope > .kpi-hero-submodule-page-description");
+    const actions = hero.querySelector(":scope > header > :is(.erp-head-actions, .crm-head-actions, .hr-head-actions, .inv-head-actions, .tpl-head-actions)");
+    if (description && actions) hero.append(actions);
+  });
+}
+
 async function initDashboard() {
   initAppearanceTheme();
 
@@ -71,6 +79,7 @@ async function initDashboard() {
   initModulePageRow2();
   initModulePageRow3();
   initModulePageRow4();
+  normalizeDashboardHeroActions();
   window.COREBIQ_COMPONENTS_LOADED = true;
   document.dispatchEvent(new Event("corebiq:components-loaded"));
   initCrmSubnav();

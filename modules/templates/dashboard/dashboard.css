@@ -182,14 +182,6 @@
   color: var(--primary-600);
 }
 
-#refreshTemplates.is-refreshing svg {
-  animation: tpl-spin 0.7s linear infinite;
-}
-
-@keyframes tpl-spin {
-  to { transform: rotate(360deg); }
-}
-
 .tpl-error-banner {
   padding: 12px 16px;
   border-radius: var(--radius-sm);

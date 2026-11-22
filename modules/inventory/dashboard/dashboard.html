@@ -9,6 +9,7 @@
   <title>Inventory Dashboard | COREBIQ</title>
 
   <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="css/dashboard.css">
   <style>
     [hidden] { display: none !important; }
 
@@ -133,9 +134,6 @@
     .inv-dropdown-menu a:hover svg { color: var(--primary-600); }
     .inv-dropdown-menu a[aria-current="page"] { background: var(--primary-100); color: var(--primary-900); font-weight: 600; }
     .inv-dropdown-menu a[aria-current="page"] svg { color: var(--primary-600); }
-
-    #refreshInventoryDashboard.is-refreshing svg { animation: inv-spin 0.7s linear infinite; }
-    @keyframes inv-spin { to { transform: rotate(360deg); } }
 
     /* Error Banner */
     .inventory-error-banner {
@@ -346,6 +344,24 @@
       .inv-table tbody td { padding: 9px 10px; font-size: 0.75rem; }
       .inventory-id { font-size: 0.6875rem; }
     }
+    /* ERP dashboard visual standard: hero actions sit below the description. */
+    section.kpi-hero-submodule-page {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+    section.kpi-hero-submodule-page > .inv-head { display: contents; }
+    section.kpi-hero-submodule-page .inv-head-identity { order: 1; }
+    section.kpi-hero-submodule-page > .kpi-hero-submodule-page-description { order: 2; }
+    section.kpi-hero-submodule-page .inv-head-actions {
+      order: 3;
+      width: 100%;
+      justify-content: flex-end;
+    }
+    section.kpi-hero-submodule-page .inv-kpi-card {
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
   </style>
 </head>
 <body data-page-title="Inventory">
@@ -427,15 +443,6 @@
                 </nav>
               </div>
 
-              <button
-                id="refreshInventoryDashboard"
-                type="button"
-                class="btn btn-tonal btn-icon"
-                aria-label="Refresh inventory data"
-                title="Refresh inventory data"
-              >
-                <i data-lucide="refresh-cw" aria-hidden="true"></i>
-              </button>
             </div>
           </header>
 
@@ -608,11 +615,6 @@
       });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeAll();
-      });
-      const refreshBtn = document.getElementById("refreshInventoryDashboard");
-      refreshBtn?.addEventListener("click", () => {
-        refreshBtn.classList.add("is-refreshing");
-        setTimeout(() => refreshBtn.classList.remove("is-refreshing"), 700);
       });
     })();
   </script>

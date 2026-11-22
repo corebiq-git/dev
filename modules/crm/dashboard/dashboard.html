@@ -9,6 +9,7 @@
   <title>CRM Dashboard | COREBIQ</title>
 
   <link rel="stylesheet" href="css/core-ui.css">
+  <link rel="stylesheet" href="css/dashboard.css">
   <style>
     [hidden] { display: none !important; }
 
@@ -110,12 +111,6 @@
       gap: 8px;
       flex-shrink: 0;
     }
-
-    #refreshCrm.is-refreshing svg {
-      animation: crm-spin 0.7s linear infinite;
-    }
-
-    @keyframes crm-spin { to { transform: rotate(360deg); } }
 
     .crm-module-menu-wrap,
     .crm-add-wrap {
@@ -461,6 +456,24 @@
       .crm-search-wrap { max-width: 100%; }
       .crm-selected-panel { padding: 14px 16px; }
     }
+    /* ERP dashboard visual standard: hero actions sit below the description. */
+    section.kpi-hero-submodule-page {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+    section.kpi-hero-submodule-page > .crm-head { display: contents; }
+    section.kpi-hero-submodule-page .modulepage-row1-identity { order: 1; }
+    section.kpi-hero-submodule-page > .kpi-hero-submodule-page-description { order: 2; }
+    section.kpi-hero-submodule-page .crm-head-actions {
+      order: 3;
+      width: 100%;
+      justify-content: flex-end;
+    }
+    section.kpi-hero-submodule-page .crm-kpi-card {
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
   </style>
 </head>
 <body data-page-title="CRM">
@@ -552,15 +565,6 @@
                 </nav>
               </div>
 
-              <button
-                type="button"
-                id="refreshCrm"
-                class="btn btn-tonal btn-icon"
-                aria-label="Refresh CRM data"
-                title="Refresh CRM data"
-              >
-                <i data-lucide="refresh-cw" aria-hidden="true"></i>
-              </button>
             </div>
           </header>
 

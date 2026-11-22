@@ -201,14 +201,6 @@ function initPage() {
     if (event.key !== "Escape") return;
     closeAddMenu();
   });
-  document.getElementById("refreshCrm").addEventListener("click", event => {
-    const button = event.currentTarget;
-    button.classList.remove("is-refreshing");
-    void button.offsetWidth;
-    button.classList.add("is-refreshing");
-    startListeners();
-    setTimeout(() => button.classList.remove("is-refreshing"), 750);
-  });
   const search = document.getElementById("client-record-search");
   search.addEventListener("input", () => {
     selectedClientDocId = "";

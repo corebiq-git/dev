@@ -183,14 +183,6 @@
   color: var(--primary-600);
 }
 
-#refreshInventoryDashboard.is-refreshing svg {
-  animation: inv-spin 0.7s linear infinite;
-}
-
-@keyframes inv-spin {
-  to { transform: rotate(360deg); }
-}
-
 /* Error Banner */
 .inventory-error-banner {
   padding: 12px 16px;

@@ -219,13 +219,6 @@ function init() {
   window.addEventListener("corebiq:signout-request", () => signOut(auth));
 
   $("templateSearch")?.addEventListener("input", render);
-  $("refreshTemplates")?.addEventListener("click", (e) => {
-    const btn = e.currentTarget;
-    btn.classList.add("is-refreshing");
-    startListener();
-    setTimeout(() => btn.classList.remove("is-refreshing"), 700);
-  });
-
   onAuthStateChanged(auth, async (user) => {
     if (!user || normalize(user.email) !== ADMIN) {
       templatesUnsub?.();

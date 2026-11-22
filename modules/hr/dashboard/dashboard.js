@@ -244,13 +244,6 @@ function init() {
   setupDropdowns();
   window.addEventListener("corebiq:signout-request", () => signOut(auth));
 
-  $("refreshHr")?.addEventListener("click", (e) => {
-    const btn = e.currentTarget;
-    btn.classList.add("is-refreshing");
-    startListeners();
-    setTimeout(() => btn.classList.remove("is-refreshing"), 700);
-  });
-
   onAuthStateChanged(auth, async (user) => {
     if (!user || normalize(user.email) !== ADMIN) {
       unsubs.forEach((fn) => fn?.());
