@@ -1,0 +1,66 @@
+<section class="kpi-hero-submodule-page" aria-label="Sample page overview">
+  <div
+    id="modulepage-row1-mount"
+    data-page-icon="clipboard-check"
+    data-root-name="Components"
+    data-menu-template-id="sampleCrmMenuTemplate"
+    data-menu-label="CRM modules"
+    data-add-label="Add"
+    data-add-aria-label="Add compliance example"
+  ></div>
+  <p class="kpi-hero-submodule-page-description">
+    Component sample — explore the reusable Compliance layout and its responsive components. This page uses example data and does not save records.
+  </p>
+</section>
+
+<style>
+  .kpi-hero-submodule-page {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 20px 24px;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-lg, 14px);
+    background:
+      linear-gradient(180deg, var(--bg-surface, #ffffff) 0%, var(--primary-50, #f0f6ff) 100%) padding-box,
+      linear-gradient(135deg, var(--primary-200, #a8c7fa) 0%, var(--border-light, #e2e8f0) 50%, var(--primary-500, #1a73e8) 100%) border-box;
+    box-shadow: var(--shadow-md, 0 6px 20px -4px rgba(11, 87, 208, 0.08));
+  }
+
+  /* Prevents layout jump before js/index.js mounts Row 1 */
+  .kpi-hero-submodule-page #modulepage-row1-mount:empty {
+    min-height: 44px;
+  }
+
+  .kpi-hero-submodule-page-description {
+    max-width: 68ch;
+    margin: 0;
+    color: var(--ink-secondary, #444746);
+    font-family: var(--font-sans, "Inter", sans-serif);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 768px) {
+    .kpi-hero-submodule-page {
+      gap: 8px;
+      padding: 16px;
+    }
+
+    .kpi-hero-submodule-page-description {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+  }
+
+  /* Preserves the card boundary in Windows High Contrast Mode */
+  @media (forced-colors: active) {
+    .kpi-hero-submodule-page {
+      border-color: CanvasText;
+    }
+  }
+</style>
