@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <base href="../../../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>COREBIQ BUSINESS FLOW APP | User Access Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../../css/corebiq.css">
+    <link rel="stylesheet" href="css/core-ui.css">
     <style>
         .users-page {
             min-width: 0;
@@ -148,7 +149,12 @@
         }
     </style>
 </head>
-<body>
+<body data-page-title="Settings">
+<div class="app-shell">
+  <div id="desktop-sidebar-mount"></div>
+  <main class="main-shell">
+    <div id="desktop-header-mount"></div>
+    <div id="mobile-header-mount"></div>
 <div class="module-container">
     <div class="users-page">
         <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 24px;">User Access Management</h2>
@@ -203,7 +209,14 @@
         </div>
     </div>
 
-    <script type="module" src="./users.js"></script>
+    <script type="module" src="modules/settings/users/users.js"></script>
 </div>
+  </main>
+</div>
+<div id="app-sidebar-mount"></div>
+<div id="bottom-nav-mount"></div>
+<div id="mini-container-mount"></div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>

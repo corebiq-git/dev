@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <base href="../../../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>COREBIQ BUSINESS FLOW APP | Branch Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0"/>
-<link rel="stylesheet" href="../../../css/corebiq.css">
+<link rel="stylesheet" href="css/core-ui.css">
     <link rel="stylesheet" href="./branches.css" data-module-style>
 </head>
-<body>
+<body data-page-title="Settings">
+<div class="app-shell">
+  <div id="desktop-sidebar-mount"></div>
+  <main class="main-shell">
+    <div id="desktop-header-mount"></div>
+    <div id="mobile-header-mount"></div>
 
 <div class="module-container" id="branches-module">
     
@@ -110,8 +116,15 @@
         </div>
     </div>
 
-    <script type="module" src="./branches.js"></script>
+    <script type="module" src="modules/settings/branches/branches.js"></script>
 </div>
+  </main>
+</div>
+<div id="app-sidebar-mount"></div>
+<div id="bottom-nav-mount"></div>
+<div id="mini-container-mount"></div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/index.js"></script>
 
 </body>
 </html>
