@@ -1,5 +1,17 @@
 export const ROLES=['super_admin','developer','admin','branch_manager','physiotherapist','receptionist','accountant','support_staff'];
-const modules={super_admin:['dashboard','branches','staff','patients','services','appointments','settings','audit'],developer:['dashboard','settings','audit'],admin:['dashboard','branches','staff','patients','services','appointments','settings'],branch_manager:['dashboard','staff','patients','services','appointments'],physiotherapist:['dashboard','patients','appointments'],receptionist:['dashboard','patients','appointments'],accountant:['dashboard'],support_staff:['dashboard']};
+const modules={
+  super_admin:['dashboard','branches','staff','patients','services','appointments','settings','audit'],
+  developer:['dashboard','settings','audit'],
+  admin:['dashboard','branches','staff','patients','services','appointments','settings'],
+  branch_manager:['dashboard','staff','patients','services','appointments'],
+  physiotherapist:['dashboard','appointments'],
+  receptionist:['dashboard','patients','appointments'],
+  accountant:['dashboard'],
+  support_staff:['dashboard']
+};
 export function canView(role,module){return (modules[role]||[]).includes(module)}
 export function scopedBranch(user,branchId){return ['super_admin','admin'].includes(user?.role)||(Array.isArray(user?.branchIds)&&user.branchIds.includes(branchId))}
-export function canCreate(role,type){return ({branches:['super_admin','admin'],staff:['super_admin','admin'],patients:['super_admin','admin','branch_manager','receptionist'],services:['super_admin','admin'],appointments:['super_admin','admin','branch_manager','receptionist']}[type]||[]).includes(role)}
+export function canCreate(role,type){return ({
+  branches:['super_admin','admin'],staff:['super_admin','admin'],patients:['super_admin','admin','branch_manager','receptionist'],
+  services:['super_admin','admin'],appointments:['super_admin','admin','branch_manager','receptionist']
+}[type]||[]).includes(role)}

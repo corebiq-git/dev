@@ -1,16 +1,63 @@
-rules_version = '2';service cloud.firestore {match /databases/{database}/documents {
-function signedIn(){return request.auth!=null}
-function profile(){return get(/databases/$(database)/documents/users/$(request.auth.uid))}
-function active(){return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && profile().data.status=='active'}
-function role(){return profile().data.role}
-function admin(){return active() && role() in ['super_admin','admin']}
-function branchAllowed(b){return admin() || (active() && b in profile().data.branchIds)}
-function ops(){return active() && role() in ['super_admin','admin','branch_manager','receptionist']}
-match /users/{uid}{allow read:if active() && (request.auth.uid==uid || role() in ['super_admin','admin']);allow write:if false;}
-match /branches/{id}{allow read:if active() && (admin() || branchAllowed(resource.data.businessId) || branchAllowed(id));allow write:if false;}
-match /services/{id}{allow read:if active();allow write:if false;}
-match /patients/{id}{allow read:if active() && role() in ['super_admin','admin','branch_manager','physiotherapist','receptionist'] && branchAllowed(resource.data.branchId);allow write:if false;}
-match /appointments/{id}{allow read:if active() && role() in ['super_admin','admin','branch_manager','physiotherapist','receptionist'] && branchAllowed(resource.data.branchId);allow write:if false;}
-match /staff/{id}{allow read:if active() && (admin() || branchAllowed(resource.data.branchId));allow write:if false;}
-match /{document=**}{allow read,write:if false;}
-}}
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn(){return request.auth != null}
+    function userPath(){return /databases/$(database)/documents/users/$(request.auth.uid)}
+    function active(){return signedIn() && exists(userPath()) && get(userPath()).data.status == 'active'
+      && request.auth.token.role == get(userPath()).data.role}
+    function role(){return get(userPath()).data.role}
+    function admin(){return active() && role() in ['super_admin','admin']}
+    function branchAllowed(branchId){
+      return admin() || (active() && branchId in get(userPath()).data.get('branchIds',[]));
+    }
+    function staffAssigned(staffId){
+      return active() && staffId in get(userPath()).data.get('staffIds',[]);
+    }
+    function patientFieldsAreMinimal(){
+      return resource.data.keys().hasOnly([
+        'documentId','businessId','businessReferenceId','branchId','fullName',
+        'mobile','dob','consent','status','createdAt','updatedAt','createdBy','updatedBy'
+      ]);
+    }
+    // Never expose medical history, diagnosis, or clinical notes via the basic patient list.
+    match /users/{uid}{
+      allow read: if active() && (request.auth.uid == uid || admin());
+      allow write: if false;
+    }
+    match /branches/{id}{
+      allow read: if active() && (admin() || branchAllowed(id));
+      allow write: if false;
+    }
+    match /services/{id}{
+      allow read: if active();
+      allow write: if false;
+    }
+    match /patients/{id}{
+      allow read: if active() && patientFieldsAreMinimal() && (
+        admin() || (
+          role() in ['branch_manager','receptionist'] &&
+          branchAllowed(resource.data.branchId)
+        )
+      );
+      allow write: if false;
+    }
+    match /appointments/{id}{
+      allow read: if active() && (
+        (role() in ['super_admin','admin','branch_manager','receptionist']
+          && branchAllowed(resource.data.branchId)) ||
+        (role() == 'physiotherapist' && branchAllowed(resource.data.branchId)
+          && staffAssigned(resource.data.staffId))
+      );
+      allow write: if false;
+    }
+    match /staff/{id}{
+      allow read: if active() && (admin() || branchAllowed(resource.data.branchId));
+      allow write: if false;
+    }
+    // Confidential clinical, financial, technical and occupancy data is backend-only
+    // until purpose-bound rules and endpoints have been implemented and tested.
+    match /{document=**}{
+      allow read,write: if false;
+    }
+  }
+}
