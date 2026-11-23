@@ -1,12 +1,40 @@
-# Controlled Firebase deployment
+# Firebase staging & controlled deployment
 
-1. Create a dedicated Firebase project and enable Firestore, Authentication (Email/Password), Storage, App Check and Functions on the required billing plan.
-2. Copy `.env.example` to `.env`; populate only PUBLIC Firebase web config values and an App Check reCAPTCHA v3 site key. Never add payment or WhatsApp tokens to the frontend.
-3. Update `.firebaserc` with your Firebase project ID.
-4. `npm install && npm run build`; `cd functions && npm install && npm test && cd ..`.
-5. Install Firebase CLI, authenticate, then `firebase deploy --only firestore:rules,firestore:indexes,storage,functions,hosting`.
-6. Create initial Firebase Auth super admin account manually, and set custom claim `{role:'super_admin'}` plus Firestore `users/{uid}` document `{role:'super_admin',status:'active',branchIds:[]}` via a trusted Admin SDK or controlled bootstrap script (not the browser).
-7. Configure App Check enforcement on Firebase services only after validating token issuance. Enforce testing/staging first.
-8. Run Firebase Emulator Suite security tests and integration tests before any production/patient-data rollout.
+This is a **development foundation**, not a production-ready healthcare platform.
 
-**Never launch this foundation with real health data or enable public booking yet.** No payment or messaging secrets have been supplied or installed.
+## Requirements
+
+- Firebase project with Firestore, Firebase Auth Email/Password, Storage, Cloud Functions (Node.js 22), Hosting and App Check.
+- Firebase CLI and trusted Google Cloud Application Default Credentials for the one-time bootstrap.
+- Node 22; Firebase project billing plan supporting Functions; App Check reCAPTCHA v3 site key.
+
+## Staging steps
+
+1. Copy `.env.example` to `.env`, fill in **public** Firebase web config; do not add secrets.
+2. Update `.firebaserc` with the dedicated Firebase project ID.
+3. Run `npm ci` (when package lock is generated) or `npm install`, `npm test`, `npm run build`.
+4. Run `cd functions && npm install && npm test && cd ..`.
+5. Use `firebase emulators:exec` and role-specific Firestore/Storage security tests. This gate is **not passed** yet.
+6. Deploy to **staging** only: `firebase deploy --only firestore:rules,firestore:indexes,storage,functions,hosting`.
+7. Create an Email/Password account in Firebase Authentication, verify its email and capture its UID. Provision it from a trusted terminal, **never from the frontend**:
+
+```bash
+cd functions
+export COREBIQ_FIREBASE_PROJECT_ID="your-staging-project"
+export COREBIQ_BOOTSTRAP_UID="verified-auth-user-uid"
+export COREBIQ_BOOTSTRAP_EMAIL="admin@your-verified-domain.example"
+export COREBIQ_BOOTSTRAP_CONFIRM="bootstrap:your-staging-project:verified-auth-user-uid"
+# Authenticate using Google ADC outside source control.
+npm run bootstrap:super-admin
+```
+
+8. Reload the login session to refresh the signed Firebase role claim.
+9. Test role restrictions, cross-branch query denials, concurrent bookings, schedule rules and audit logs with nonclinical test records.
+10. Review and enforce App Check for Hosting/Firestore and Functions; validate token issuance first. Never bypass App Check for production.
+
+## Blockers
+
+- No production deployment or live Firebase integration test has been performed.
+- Booking overlapping intervals are locked, but branch hours, clinician hours, leave, holidays, buffers, cancellation and rescheduling still require validation.
+- Clinical records, patient files, payment webhooks, refunds, PDF generation, WhatsApp templates and reporting need implementation.
+- Never use real patient data until security, privacy, workflow, recovery and integration acceptance tests pass.

@@ -7,7 +7,8 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "bootstrap:super-admin": "node scripts/bootstrap-super-admin.mjs"
   },
   "dependencies": {
     "firebase-admin": "^13.4.0",
