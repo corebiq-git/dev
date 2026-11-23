@@ -845,3 +845,40 @@ body[data-theme="dark"] {
     flex: 0 1 auto;
   }
 }
+
+@media screen {
+  .main-shell .kpi-hero-submodule-page > :is(
+    .erp-head-actions, .crm-head-actions, .hr-head-actions, .inv-head-actions,
+    .tpl-head-actions, .hr-employees-actions
+  ) {
+    order: 3;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .main-shell :is(.erp-kpi-grid, .crm-kpi-grid, .hr-kpi-grid,
+    .hr-employees-kpi-grid, .inv-kpi-grid, .tpl-kpi-grid) > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .main-shell :is(.crm-kpi-card, .hr-kpi-card, .inv-kpi-card, .tpl-kpi-card) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .main-shell :is(.erp-kpi-top, .crm-kpi-top, .hr-kpi-top,
+    .hr-employees-kpi-top, .inv-kpi-top, .tpl-kpi-top) > :first-child {
+    min-width: 0;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .main-shell :is(.erp-kpi-grid, .crm-kpi-grid, .hr-kpi-grid,
+    .hr-employees-kpi-grid, .inv-kpi-grid, .tpl-kpi-grid) > * {
+    padding: 12px;
+  }
+}
