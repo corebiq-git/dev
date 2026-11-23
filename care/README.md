@@ -1,15 +1,32 @@
-# COREBIQ Care
+# COREBIQ Care — Phase 1 Foundation (development build)
 
-Phase 1 development foundation for the single-organization, multi-branch healthcare application.
+**Status:** Source builds locally; not approved for real-patient production use. This is not the full 7-phase application. No fake billing, WhatsApp delivery, clinical reports or payments.
 
-**Status:** In development; not ready for production patient data.
+## Included
+- Material-inspired responsive sign-in and authorized navigation (blue/green, light/dark)
+- Firebase email/password auth; server-provisioned user roles; deny-by-default Firestore and Storage rules
+- Authorized live listing and server-side creation for branches, staff, patients and services
+- Transactional business ID service (20 module prefixes)
+- Early staff appointment booking endpoint (same-start lock only, incomplete overlap validation)
+- Cloud Function audit writes; PWA manifest/service worker shell; emulator-independent unit tests
+- Deployment instructions, Firestore data model, explicit pending checklist
 
-The full Phase 1 source archive was generated separately. This GitHub folder is currently an incomplete upload and must not be deployed until all source modules, Firebase security rules, and Cloud Functions are added and verified.
+## Commands
+```
+cp .env.example .env
+npm install
+npm test
+npm run build
+cd functions && npm install && npm test
+```
 
-## Local development
+See `docs/DEPLOYMENT.md` and `docs/SCHEMA.md`.
 
-Install dependencies with `npm install`, configure Firebase environment values, then run `npm run dev` once the remaining source files are present.
-
-## Security
-
-Never place Firebase service-account credentials, Razorpay secrets, or WhatsApp tokens in frontend files.
+## SECURITY BLOCKERS for real deployment
+1. Booking must validate all overlapping intervals, branch/staff hours, holidays, leave, buffers and capacity. The current simple exact-start lock is insufficient.
+2. Clinical records need treatment-assignment and purpose-based access (current patient list visibility is only branch-level). Restricted data should be separated from reception fields.
+3. Public guest booking requires verified anti-abuse and identity checks, with a public callable and explicit consent.
+4. Staff cross-branch allocation and query-side branch filtering need completion; current staff form handles one branch.
+5. Firebase security rules must be emulator-tested with each role, and policies reviewed against local health-data regulations.
+6. Implement payments, invoices, PDFs, WhatsApp consent/templates/webhooks, reporting and admin provisioning UI in later phases.
+7. Use staging deployment and actual API integration testing before production release.
