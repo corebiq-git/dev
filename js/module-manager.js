@@ -19,6 +19,16 @@
       settings: 'settings', dashboard: 'layout-dashboard'
     };
 
+    const SUBMODULE_ICONS = {
+      dashboard: 'layout-dashboard', employees: 'contact-round', clients: 'users-round',
+      compliance: 'clipboard-check', credentials: 'shield-check', ledgers: 'book-open',
+      vouchers: 'receipt-text', goods: 'package', services: 'briefcase-business',
+      'invoice-template': 'file-text', letterhead: 'file-pen-line',
+      'payment-voucher': 'banknote', 'receipt-voucher': 'receipt', seal: 'stamp',
+      calc: 'calculator', backup: 'database-backup', branches: 'git-branch',
+      company: 'building-2', users: 'user-round-cog', 'module-manager': 'panels-top-left'
+    };
+
     function titleCase(value) {
       const acronyms = { crm: 'CRM', erp: 'ERP', hr: 'HR', gst: 'GST', api: 'API' };
       return String(value || '').split(/[-_\s]+/).filter(Boolean)
@@ -49,30 +59,54 @@
         .cbq-module-nav-toggle svg { width: 16px; height: 16px; transition: transform .16s ease; }
         .cbq-module-nav-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
         .cbq-module-nav-children {
-          display: none;
-          gap: 3px;
-          margin: 0 0 5px 9px;
-          padding: 4px 4px 4px 7px;
-          border-inline-start: 2px solid var(--border-light, #dee3eb);
-          border-radius: 0 12px 12px 0;
-          background: var(--bg-tonal, #f0f4f9);
+          position: fixed;
+          inset: auto;
+          margin: 0;
+          box-sizing: border-box;
+          width: min(280px, calc(100vw - 24px));
+          max-height: calc(100dvh - 24px);
+          overflow: auto;
+          overscroll-behavior: contain;
+          padding: 6px;
+          border: 1px solid #e3e8f0;
+          border-radius: 16px;
+          background: #fff;
+          color: #172338;
+          box-shadow: 0 12px 32px rgb(4 30 73 / 20%);
         }
-        .cbq-module-nav-item.is-open > .cbq-module-nav-children { display: grid; }
-        .cbq-module-nav-children .cbq-module-nav-children { margin-inline-start: 4px; }
+        .cbq-module-nav-children:not(:popover-open) { display: none; }
+        .cbq-module-nav-children > .cbq-module-nav-title {
+          margin: 0;
+          padding: 8px 10px 6px;
+          color: #58677d;
+          font-size: .75rem;
+          font-weight: 600;
+        }
         .cbq-module-nav-children :is(.side-link, .drawer-main-link) {
-          min-height: 42px;
+          min-height: 44px;
           height: auto;
-          gap: 8px;
-          padding: 7px 8px;
+          gap: 10px;
+          padding: 8px 10px;
           border-radius: 8px;
+          background: transparent;
+          color: #172338;
           font-size: .875rem;
           overflow-wrap: anywhere;
         }
-        .cbq-module-nav-children :is(svg, i) { width: 17px; height: 17px; flex-shrink: 0; }
+        .cbq-module-nav-children :is(svg, i) {
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
+          color: #526783;
+        }
+        .cbq-module-nav-children :is(.side-link, .drawer-main-link):hover,
         .cbq-module-nav-children a[aria-current="page"] {
-          background: var(--primary-100, #d3e3fd);
-          color: var(--primary-900, #041e49);
-          font-weight: 600;
+          background: #edf4ff;
+          color: #0842a0;
+        }
+        .cbq-module-nav-children .cbq-module-nav-toggle:hover,
+        .cbq-module-nav-children .cbq-module-nav-toggle[aria-expanded="true"] {
+          background: #edf4ff;
         }
         .cbq-module-nav-item :is(a, button):focus-visible {
           outline: 2px solid var(--primary, #0b57d0);
@@ -87,13 +121,14 @@
       document.head.appendChild(style);
     }
 
-    function makeLink(node, mobile) {
+    function makeLink(node, mobile, depth) {
       const link = document.createElement('a');
       link.href = new URL(node.href, document.baseURI).href;
       link.className = mobile ? 'drawer-main-link' : 'side-link';
       link.dataset.modulePath = node.path;
       const icon = document.createElement('i');
-      icon.setAttribute('data-lucide', node.icon || 'folder');
+      const defaultIcon = depth ? SUBMODULE_ICONS[node.name] || 'file-text' : 'folder';
+      icon.setAttribute('data-lucide', node.icon && node.icon !== 'folder' ? node.icon : defaultIcon);
       icon.setAttribute('aria-hidden', 'true');
       const label = document.createElement('span');
       label.textContent = node.title || titleCase(node.name);
@@ -107,33 +142,56 @@
       wrap.dataset.modulePath = node.path;
       const main = document.createElement('div');
       main.className = 'cbq-module-nav-main';
-      main.appendChild(makeLink(node, mobile));
+      main.appendChild(makeLink(node, mobile, depth));
 
-      if (node.children && node.children.length) {
-        const toggle = document.createElement('button');
-        toggle.type = 'button';
-        toggle.className = 'cbq-module-nav-toggle';
-        toggle.setAttribute('aria-label', `${node.title || titleCase(node.name)} submenu`);
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-controls', `${mobile ? 'drawer' : 'sidebar'}-submenu-${encodeURIComponent(node.path)}`);
-        const chevron = document.createElement('i');
-        chevron.setAttribute('data-lucide', 'chevron-right');
-        toggle.appendChild(chevron);
-        toggle.addEventListener('click', () => {
-          const open = wrap.classList.toggle('is-open');
-          toggle.setAttribute('aria-expanded', String(open));
-        });
-        main.appendChild(toggle);
-      }
       wrap.appendChild(main);
+      if (!node.children?.length) return wrap;
 
-      if (node.children && node.children.length) {
-        const children = document.createElement('div');
-        children.className = 'cbq-module-nav-children';
-        children.id = main.lastElementChild.getAttribute('aria-controls');
-        node.children.forEach(child => children.appendChild(makeNode(child, mobile, depth + 1)));
-        wrap.appendChild(children);
-      }
+      const titleText = node.title || titleCase(node.name);
+      const submenu = document.createElement('div');
+      submenu.className = 'cbq-module-nav-children';
+      submenu.id = `${mobile ? 'drawer' : 'sidebar'}-submenu-${encodeURIComponent(node.path)}`;
+      submenu.setAttribute('popover', 'auto');
+      submenu.setAttribute('role', 'group');
+      submenu.setAttribute('aria-label', `${titleText} submenu`);
+
+      const title = document.createElement('p');
+      title.className = 'cbq-module-nav-title';
+      title.textContent = titleText;
+      submenu.appendChild(title);
+      node.children.forEach(child => submenu.appendChild(makeNode(child, mobile, depth + 1)));
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'cbq-module-nav-toggle';
+      toggle.setAttribute('aria-label', `${titleText} submenu`);
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', submenu.id);
+      toggle.setAttribute('popovertarget', submenu.id);
+      const chevron = document.createElement('i');
+      chevron.setAttribute('data-lucide', 'chevron-right');
+      chevron.setAttribute('aria-hidden', 'true');
+      toggle.appendChild(chevron);
+      main.appendChild(toggle);
+      wrap.appendChild(submenu);
+
+      submenu.addEventListener('beforetoggle', event => {
+        const opening = event.newState === 'open';
+        toggle.setAttribute('aria-expanded', String(opening));
+        if (!opening) return;
+        const row = main.getBoundingClientRect();
+        const trigger = toggle.getBoundingClientRect();
+        const viewportWidth = document.documentElement.clientWidth;
+        const width = Math.min(280, viewportWidth - 24);
+        const below = window.innerHeight - row.bottom - 20;
+        const above = row.top - 20;
+        const placeBelow = below >= 220 || below >= above;
+
+        submenu.style.left = `${Math.max(12, Math.min(trigger.right - width, viewportWidth - width - 12))}px`;
+        submenu.style.top = placeBelow ? `${row.bottom + 8}px` : 'auto';
+        submenu.style.bottom = placeBelow ? 'auto' : `${window.innerHeight - row.top + 8}px`;
+        submenu.style.maxHeight = `${Math.max(0, placeBelow ? below : above)}px`;
+      });
       return wrap;
     }
 
@@ -156,13 +214,6 @@
         if (active) {
           if (current === hrefPath || current === hrefPath.replace(/index\.html$/, '')) {
             link.setAttribute('aria-current', 'page');
-          }
-          let parent = link.closest('.cbq-module-nav-item');
-          while (parent) {
-            parent.classList.add('is-open');
-            const button = parent.querySelector(':scope > .cbq-module-nav-main .cbq-module-nav-toggle');
-            if (button) button.setAttribute('aria-expanded', 'true');
-            parent = parent.parentElement?.closest('.cbq-module-nav-item');
           }
         }
       });

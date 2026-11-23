@@ -243,11 +243,20 @@ function initDrawer() {
   const backdrop = document.getElementById("app-drawer-backdrop");
   if (!drawer || !backdrop) return;
   const open = () => { drawer.classList.add("open"); backdrop.classList.add("show"); drawer.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; };
-  const close = () => { drawer.classList.remove("open"); backdrop.classList.remove("show"); drawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; };
+  const close = () => {
+    if (typeof HTMLElement.prototype.hidePopover === "function") {
+      drawer.querySelectorAll(".cbq-module-nav-children:popover-open").forEach(panel => panel.hidePopover());
+    }
+    drawer.classList.remove("open"); backdrop.classList.remove("show"); drawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; };
   document.querySelectorAll("[data-open-app-sidebar],[data-bottom-menu]").forEach(el => el.addEventListener("click", open));
   document.getElementById("close-app-sidebar")?.addEventListener("click", close);
   backdrop.addEventListener("click", close);
-  document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape" || !drawer.classList.contains("open")) return;
+    if (typeof HTMLElement.prototype.hidePopover === "function" &&
+        drawer.querySelector(".cbq-module-nav-children:popover-open")) return;
+    close();
+  });
   let sx = 0, sy = 0, edge = false;
   document.addEventListener("touchstart", e => { if (e.touches.length !== 1) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; edge = sx < 24 && !drawer.classList.contains("open"); }, { passive: true });
   document.addEventListener("touchend", e => { if (!edge || !e.changedTouches.length) return; const dx = e.changedTouches[0].clientX - sx; const dy = Math.abs(e.changedTouches[0].clientY - sy); if (dx > 65 && dy < 90) open(); edge = false; }, { passive: true });
