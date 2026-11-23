@@ -7,7 +7,7 @@
 - Firebase email/password auth; server-provisioned user roles; deny-by-default Firestore and Storage rules
 - Authorized live listing and server-side creation for branches, staff, patients and services
 - Transactional business ID service (20 module prefixes)
-- Early staff appointment booking endpoint (same-start lock only, incomplete overlap validation)
+- Early staff appointment booking endpoint with atomic staff-and-patient interval occupancy locks (hours, leave, holidays and cancellation still pending)
 - Cloud Function audit writes; PWA manifest/service worker shell; emulator-independent unit tests
 - Deployment instructions, Firestore data model, explicit pending checklist
 
@@ -23,7 +23,7 @@ cd functions && npm install && npm test
 See `docs/DEPLOYMENT.md` and `docs/SCHEMA.md`.
 
 ## SECURITY BLOCKERS for real deployment
-1. Booking must validate all overlapping intervals, branch/staff hours, holidays, leave, buffers and capacity. The current simple exact-start lock is insufficient.
+1. Booking now prevents overlapping slots using five-minute locks, but must still validate branch/staff hours, holidays, leave, buffers and capacity. Cancellation must release locks safely.
 2. Clinical records need treatment-assignment and purpose-based access (current patient list visibility is only branch-level). Restricted data should be separated from reception fields.
 3. Public guest booking requires verified anti-abuse and identity checks, with a public callable and explicit consent.
 4. Staff cross-branch allocation and query-side branch filtering need completion; current staff form handles one branch.
