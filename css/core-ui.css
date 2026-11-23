@@ -803,3 +803,45 @@ body[data-theme="dark"] {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Keep workspace header actions below the description at every screen width. */
+@media screen {
+  .main-shell .client-page > .crm-head {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .main-shell .kpi-hero-submodule-page > #modulepage-row1-mount,
+  .main-shell .kpi-hero-submodule-page > #modulepage-row1-mount > .crm-head {
+    display: contents;
+  }
+
+  .main-shell .kpi-hero-submodule-page > #modulepage-row1-mount .modulepage-row1-identity {
+    order: 1;
+  }
+
+  .main-shell .kpi-hero-submodule-page:has(> #modulepage-row1-mount) > .kpi-hero-submodule-page-description {
+    order: 2;
+  }
+
+  .main-shell .kpi-hero-submodule-page > #modulepage-row1-mount .crm-head-actions {
+    order: 3;
+  }
+
+  .main-shell .kpi-hero-submodule-page > .hr-employees-actions,
+  .main-shell .kpi-hero-submodule-page > #modulepage-row1-mount .crm-head-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-self: flex-end;
+    width: auto;
+    max-width: 100%;
+    gap: 8px;
+  }
+
+  .main-shell .kpi-hero-submodule-page > .hr-employees-actions > .btn {
+    flex: 0 1 auto;
+  }
+}

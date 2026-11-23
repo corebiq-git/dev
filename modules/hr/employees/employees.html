@@ -28,20 +28,21 @@
                 <span aria-current="page">Employees</span>
               </nav>
             </div>
-            <div class="hr-employees-actions">
-              <div class="hr-employees-dropdown-wrap">
-                <button id="hrEmployeesMenuToggle" type="button" class="btn btn-tonal" aria-haspopup="menu" aria-expanded="false" aria-controls="hrEmployeesMenu">
-                  <i data-lucide="layout-grid" aria-hidden="true"></i><span>Menu</span>
-                </button>
-                <nav id="hrEmployeesMenu" class="hr-employees-menu" role="menu" aria-label="HR modules" hidden>
-                  <a href="modules/hr/dashboard/dashboard.html" role="menuitem"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></a>
-                  <a href="modules/hr/employees/employees.html" role="menuitem" aria-current="page"><i data-lucide="id-card" aria-hidden="true"></i><span>Employees</span></a>
-                </nav>
-              </div>
-              <button id="addEmployeeBtn" type="button" class="btn btn-primary"><i data-lucide="plus" aria-hidden="true"></i><span>Add employee</span></button>
-            </div>
+
           </header>
           <p class="kpi-hero-submodule-page-description">Maintain your employee directory, departments, roles, salary details, and active workforce status.</p>
+          <div class="hr-employees-actions">
+            <div class="hr-employees-dropdown-wrap">
+              <button id="hrEmployeesMenuToggle" type="button" class="btn btn-tonal" aria-haspopup="menu" aria-expanded="false" aria-controls="hrEmployeesMenu">
+                <i data-lucide="layout-grid" aria-hidden="true"></i><span>Menu</span>
+              </button>
+              <nav id="hrEmployeesMenu" class="hr-employees-menu" role="menu" aria-label="HR modules" hidden>
+                <a href="modules/hr/dashboard/dashboard.html" role="menuitem"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></a>
+                <a href="modules/hr/employees/employees.html" role="menuitem" aria-current="page"><i data-lucide="id-card" aria-hidden="true"></i><span>Employees</span></a>
+              </nav>
+            </div>
+            <button id="addEmployeeBtn" type="button" class="btn btn-primary"><i data-lucide="plus" aria-hidden="true"></i><span>Add employee</span></button>
+          </div>
         </section>
 
         <div id="hr-employees-error" class="hr-employees-error hidden" role="alert"></div>
