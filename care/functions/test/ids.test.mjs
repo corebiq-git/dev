@@ -1,0 +1,1 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {formatId,PREFIXES} from '../src/ids.js';test('expected patient ID',()=>assert.equal(formatId(PREFIXES.patients,2026,1),'PAT26-0001'));test('no serial overflow',()=>assert.throws(()=>formatId('PAT',2026,10000)));

@@ -1,0 +1,17 @@
+{
+  "name": "COREBIQ Care",
+  "short_name": "COREBIQ Care",
+  "description": "Intelligent Healthcare. Connected Care.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F9FC",
+  "theme_color": "#3478D4",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
