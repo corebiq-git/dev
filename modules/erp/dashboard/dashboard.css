@@ -91,8 +91,8 @@
   z-index: 60;
   min-width: 188px;
   padding: 6px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-light);
+  background: var(--bg-tonal);
+  border: 1px solid var(--border-mid);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-menu);
   display: flex;
@@ -114,6 +114,7 @@
 
 .erp-dropdown-menu a svg { width: 16px; height: 16px; color: var(--ink-muted); flex-shrink: 0; }
 .erp-dropdown-menu a:hover { background: var(--bg-tonal); color: var(--primary-600); text-decoration: none; }
+.erp-dropdown-menu a:hover { background: var(--bg-tonal-hov); }
 .erp-dropdown-menu a:hover svg { color: var(--primary-600); }
 .erp-dropdown-menu a[aria-current="page"] { background: var(--primary-100); color: var(--primary-900); font-weight: 600; }
 .erp-dropdown-menu a[aria-current="page"] svg { color: var(--primary-600); }
