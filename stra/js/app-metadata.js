@@ -1,7 +1,7 @@
 export const APP_METADATA = Object.freeze({
-    name: 'COREBIQ BUSINESS FLOW APP',
-    shortName: 'COREBIQ',
-    description: 'COREBIQ business flow app for managing clinic operations.',
+    name: 'Care',
+    shortName: 'Care',
+    description: 'Care manages clinic operations.',
     moduleRoutes: Object.freeze({
         'view-dashboard': 'modules/dashboard/dashboard.html',
         'view-patients': 'modules/crm/patients/patients.html',

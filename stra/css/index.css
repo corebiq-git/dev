@@ -1,9 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
 
+@import url("./care-theme.css");
+
 :root{
-  --primary:#0B1F4B;
-  --primary-hover:#071630;
-  --primary-soft:#E8EEF7;
+  --primary:var(--care-blue);
+  --primary-hover:var(--care-blue-hover);
+  --primary-soft:var(--care-blue-soft);
   --surface:#FFFFFF;
   --surface-soft:#F7F9FC;
   --surface-container:#F0F4F9;
@@ -52,15 +54,15 @@ body{overflow-x:hidden}
 .module-page{max-width:1200px;margin:0 auto}
 .page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}
 .page-title{display:flex;gap:12px;align-items:center}
-.page-title-icon{width:44px;height:44px;border-radius:14px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center}
+.page-title-icon{width:44px;height:44px;border-radius:var(--care-button-radius);background:var(--care-icon-surface);color:var(--care-icon);display:grid;place-items:center}
 .page-title h1{font-size:26px;line-height:1.1;margin:0;font-weight:600}
 .page-title p{margin:5px 0 0;color:var(--muted);font-size:14px}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{height:42px;padding:0 17px;border-radius:22px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-weight:600}
+.btn{height:42px;padding:0 17px;border-radius:var(--care-button-radius);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-weight:600}
 .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
 .btn-tonal{background:var(--primary-soft);color:var(--primary)}
 .btn-outline{background:#fff;color:#40454D;border:1px solid var(--outline)}
-:is(.company-module-tabs,.crm-module-tabs) .btn[aria-current="page"]{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(105deg,#0B1F4B 0%,#274777 55%,#7890B4 100%) border-box;border:1px solid transparent;color:#0B1F4B;box-shadow:0 2px 8px rgba(11,31,75,.12)}
+:is(.company-module-tabs,.crm-module-tabs) .btn[aria-current="page"]{background:var(--primary-soft);border:1px solid var(--primary);color:var(--primary)}
 :is(.company-module-tabs,.crm-module-tabs) .btn:not([aria-current="page"]):hover{background:#F3F6FA;color:#0B1F4B;border-color:#C8D2E1}
 :is(.crm-module-header,.company-module-header) .page-title h1{color:#68717D;font-weight:500}
 .btn-danger{background:#FDE8E7;color:var(--danger)}
@@ -106,21 +108,21 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
 .erp-module-header{align-items:center;position:relative}
 .erp-module-tabs{justify-content:flex-end;max-width:72%;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .erp-module-tabs::-webkit-scrollbar{display:none}
-.erp-module-tabs .btn{white-space:nowrap;height:40px;padding:0 15px;border-radius:12px;font-size:13px}
+.erp-module-tabs .btn{white-space:nowrap;height:40px;padding:0 15px;border-radius:var(--care-button-radius);font-size:13px}
 .erp-module-tabs .btn-primary{box-shadow:0 2px 8px rgba(75,143,209,.12)}
 .erp-crud-header{margin-bottom:18px}
 .erp-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .erp-info-card{padding:20px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
 .erp-info-card h3{margin:0 0 4px;font-size:16px}.erp-info-card p{margin:0;color:var(--muted);font-size:13px}
-.erp-info-card .btn{height:36px;border-radius:10px;padding:0 13px}
+.erp-info-card .btn{height:36px;border-radius:var(--care-button-radius);padding:0 13px}
 @media(max-width:900px){.erp-module-header{align-items:flex-start;flex-direction:column}.erp-module-tabs{max-width:100%;width:100%;justify-content:flex-start;flex-wrap:nowrap}.erp-info-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.erp-module-tabs .btn{height:38px;padding:0 12px}.erp-info-card{grid-template-columns:auto 1fr}.erp-info-card .btn{grid-column:2;justify-self:start}}
 
 /* Shared module design system */
 :root{
-  --primary:#0B1F4B!important;
-  --primary-hover:#071630!important;
-  --primary-soft:#E8EEF7!important;
+  --primary:var(--care-blue)!important;
+  --primary-hover:var(--care-blue-hover)!important;
+  --primary-soft:var(--care-blue-soft)!important;
   --primary-light:var(--primary-soft)!important;
   --surface:#FFFFFF!important;
   --surface-soft:#F7F9FC!important;
@@ -177,7 +179,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
 }
 
 .module-container button{
-  border-radius:10px!important;
+  border-radius:var(--care-button-radius)!important;
   font-family:Outfit,"Google Sans",sans-serif!important;
   font-size:14px!important;
 }
@@ -185,7 +187,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
 .module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button)){
   min-height:40px;
   border:1px solid var(--outline)!important;
-  border-radius:10px!important;
+  border-radius:var(--care-button-radius)!important;
   background:var(--surface)!important;
   color:var(--primary)!important;
   font-weight:600;
@@ -230,7 +232,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
 
 .module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button.btn-danger{
   border:1px solid var(--danger)!important;
-  border-radius:10px!important;
+  border-radius:var(--care-button-radius)!important;
   background:var(--surface)!important;
   color:var(--danger)!important;
   box-shadow:none!important;

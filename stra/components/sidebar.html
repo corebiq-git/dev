@@ -12,7 +12,7 @@
 
 
     /* =========================================================
-       SIDEBAR HEADER / STRA CARE LOGO
+       CARE SIDEBAR HEADER
        ========================================================= */
 
     .sidebar-header {
@@ -278,14 +278,7 @@
         flex-shrink: 0;
     }
 
-    .sidebar-nav-group[data-category="CRM"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child { color: #34A853; }
-    .sidebar-nav-group[data-category="Accounts"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child { color: #4285F4; }
-    .sidebar-nav-group[data-category="HR"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child { color: #8E5AE8; }
-    .sidebar-nav-group[data-category="Templates"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child { color: #80868B; }
-    .sidebar-nav-group[data-category="Tools"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child,
-    .sidebar-nav-group[data-category="Settings"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child,
-    .sidebar-nav-group[data-category="App Info"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child,
-    .sidebar-nav-group[data-category="Export & Backup"] > .sidebar-nav-trigger > .material-symbols-rounded:first-child { color: #80868B; }
+    .sidebar-nav-group > .sidebar-nav-trigger > .material-symbols-rounded:first-child { color: var(--care-icon); }
 
     .sidebar-nav-chevron,
     .sidebar-nav-submenu-chevron {
@@ -637,17 +630,13 @@
 <div class="sidebar-inner-wrapper">
 
     <!-- =====================================================
-         STRA CARE SIDEBAR HEADER
+         CARE SIDEBAR HEADER
          ===================================================== -->
 
     <div class="sidebar-header">
 
         <div class="sidebar-brand">
-            <img
-                src="assets/name.png"
-                alt="Corebiq"
-                class="sidebar-logo"
-            >
+            <span class="care-wordmark">Care</span>
         </div>
 
         <div class="sidebar-brand-actions">

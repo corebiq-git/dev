@@ -1,12 +1,12 @@
 {
-  "name": "COREBIQ BUSINESS FLOW APP",
-  "short_name": "COREBIQ",
-  "description": "COREBIQ business flow app for managing clinic operations.",
+  "name": "Care",
+  "short_name": "Care",
+  "description": "Care manages clinic operations.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#FAFAFB",
-  "theme_color": "#0F7A52",
+  "theme_color": "#175cd3",
   "icons": [
     {
       "src": "assets/app-icon.png",

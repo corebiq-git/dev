@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#F7F9FC">
     <meta name="description" content="Sign in to your COREBIQ clinic workspace.">
-    <title>COREBIQ BUSINESS FLOW APP | Secure Login</title>
-    <meta name="application-name" content="COREBIQ BUSINESS FLOW APP">
-    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <title>Care | Secure Login</title>
+    <meta name="application-name" content="Care">
+    <link rel="icon" type="image/png" href="assets/app-icon.png">
     <link rel="apple-touch-icon" href="assets/app-icon.png">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="css/corebiq.css">
@@ -18,9 +18,9 @@
             --login-ink: #1F1F1F;
             --login-muted: #5F6672;
             --login-border: #DDE3EA;
-            --login-blue: #0B1F4B;
-            --login-blue-dark: #071630;
-            --login-blue-soft: #E8EEF7;
+            --login-blue: var(--care-blue);
+            --login-blue-dark: var(--care-blue-hover);
+            --login-blue-soft: var(--care-blue-soft);
         }
 
         * { box-sizing: border-box; }
@@ -263,7 +263,7 @@
             align-items: center;
             justify-content: center;
             gap: 9px;
-            border-radius: 26px;
+            border-radius: var(--care-button-radius);
             background: var(--login-blue);
             color: #fff;
             font-size: 14px;
@@ -411,9 +411,8 @@
     </div>
 
     <header class="login-topbar">
-        <a class="login-brand" href="login.html" aria-label="STRA CARE">
-            <img class="login-logo-image" src="assets/logo-sidebar-bottom.png" alt="">
-            <img class="login-name-image" src="assets/name.png" alt="STRA CARE">
+        <a class="login-brand" href="login.html" aria-label="Care">
+            <span class="care-wordmark">Care</span>
         </a>
     </header>
 

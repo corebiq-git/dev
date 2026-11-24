@@ -86,8 +86,8 @@ window.installApp = async function() {
     if (!window.deferredInstallPrompt) {
         const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
         window.alert(isIOS
-            ? 'To install COREBIQ BUSINESS FLOW APP, tap the Share button in Safari and choose "Add to Home Screen".'
-            : 'To install COREBIQ BUSINESS FLOW APP, use your browser menu and choose "Install app" or "Add to Home screen".');
+            ? 'To install Care, tap the Share button in Safari and choose "Add to Home Screen".'
+            : 'To install Care, use your browser menu and choose "Install app" or "Add to Home screen".');
         return;
     }
 
