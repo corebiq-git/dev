@@ -1,10 +1,15 @@
+import { normalizePatientName, patientBranchFilters } from '../../../js/patient-search.mjs';
 import { auth, db } from '../../../js/firebase-config.js';
 import { advanceDocumentIdCounter, reserveNextDocumentIds } from '../../../js/document-ids.js';
 import { chunkValues, legacyDateValues, normalizeDateKey } from '../../../js/date-utils.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { collection, query, where, getDocs, updateDoc, doc, deleteDoc, getDoc, runTransaction, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { collection, query, where, limit, getDocs, updateDoc, doc, deleteDoc, getDoc, runTransaction, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-window.appointmentsDataCache={}; window.allPatientsCache={}; window.allPatientsCacheByBranch={}; window.allPatientsDocumentIdsByBranch={}; window.allPatientsCacheLoaded=false; window.patientsForAptLoadPromise=null; window.allBranchesString='';
+window.appointmentsDataCache={}; window.allBranchesString='';
+let clientSearchTimer;
+let clientSearchVersion=0;
+let clientDueVersion=0;
+const clientSearchCache=new Map();
 let allAppointments=[]; let sortMode='dateDesc'; let confirmHandler=null;
 const appointmentsRequestCache=new Map();
 let appointmentsLoadVersion=0;
@@ -147,26 +152,66 @@ onAuthStateChanged(auth,user=>{
   });
 });
 
-window.loadPatientsForApt=async()=>{
-  const dl=document.getElementById('patients-datalist'); if(!dl)return;
-  if(window.allPatientsCacheLoaded)return;
-  if(window.patientsForAptLoadPromise)return window.patientsForAptLoadPromise;
-  const request=(async()=>{
+function clearClientSearch(){
+  clearTimeout(clientSearchTimer);
+  clientSearchVersion++;
+  clientDueVersion++;
+  document.getElementById('aptClientResults')?.replaceChildren();
+}
+window.searchAppointmentClients=input=>{
+  clearClientSearch();
+  delete input.dataset.patientId;
+  const term=input.value.trim();
+  if(term.length<2)return;
+  if(/^\d+$/.test(term)&&term.length!==10)return;
+  const version=clientSearchVersion;
+  clientSearchTimer=setTimeout(async()=>{
+    const results=document.getElementById('aptClientResults');
+    if(!results)return;
+    results.textContent='Searching…';
     try{
-      let q=query(collection(db,'patients'));
-      if(window.currentUser&&window.currentUser.role!=='admin')q=query(collection(db,'patients'),where('branch','==',window.currentUser.branch));
-      const s=await getDocs(q);let h='';window.allPatientsCache={};window.allPatientsCacheByBranch={};window.allPatientsDocumentIdsByBranch={};
-      s.forEach(d=>{const p=d.data();if(p.name&&p.mobile){window.allPatientsCache[p.mobile]=p;window.allPatientsCacheByBranch[`${p.branch||''}:${p.mobile}`]=p;window.allPatientsDocumentIdsByBranch[`${p.branch||''}:${p.mobile}`]=d.id;h+=`<option value="${esc(p.mobile)}" label="${esc(p.name)} (${esc(p.mobile)})"></option><option value="${esc(p.name)} (${esc(p.mobile)})"></option>`}});
-      window.allPatientsCacheLoaded=true;
-      window.patientMatchLookupFailed=false;
-      dl.innerHTML=h;
-      window.renderPublicBookingRequests?.();
-      return s;
-    }catch(e){window.allPatientsCacheLoaded=false;window.patientMatchLookupFailed=true;console.error(e);throw e}
-  })();
-  window.patientsForAptLoadPromise=request;
-  try{return await request}
-  finally{if(window.patientsForAptLoadPromise===request)window.patientsForAptLoadPromise=null}
+      const user=window.currentUser;
+      const scope=patientBranchFilters(user,where);
+      const cacheKey=JSON.stringify([user.email,user.role,user.branch,term]);
+      const cached=clientSearchCache.get(cacheKey);
+      const patients=collection(db,'patients');
+      const prefixQuery=(field,value,count)=>getDocs(query(patients,...scope,
+        where(field,'>=',value),where(field,'<=',value+'\uf8ff'),limit(count)));
+      const normalized=normalizePatientName(term);
+      const hasCachedResults=cached&&cached.expires>Date.now();
+      const snapshots=hasCachedResults?[]:/^\d{10}$/.test(term)
+        ? [await getDocs(query(patients,...scope,where('mobile','==',term),limit(10)))]
+        : [await prefixQuery('nameSearch',normalized,10)];
+      const matches=hasCachedResults?cached.matches:new Map(snapshots.flatMap(snapshot=>snapshot.docs.map(item=>[item.id,item])));
+      if(!hasCachedResults&&!/^\d+$/.test(term)&&matches.size<10){
+        const variants=new Set([term,normalized.replace(/(^|\s)\S/g,x=>x.toUpperCase()),normalized,normalized.toUpperCase()]);
+        for(const variant of variants){
+          if(version!==clientSearchVersion||matches.size>=10)break;
+          const legacy=await prefixQuery('name',variant,10);
+          legacy.docs.forEach(item=>{if(matches.size<10)matches.set(item.id,item)});
+        }
+      }
+      if(version!==clientSearchVersion||!input.isConnected||window.currentUser!==user)return;
+      if(!hasCachedResults){
+        if(clientSearchCache.size>=40)clientSearchCache.delete(clientSearchCache.keys().next().value);
+        clientSearchCache.set(cacheKey,{matches,expires:Date.now()+30_000});
+      }
+      results.replaceChildren();
+      if(!matches.size){results.textContent='No clients found.';return}
+      for(const item of matches.values()){
+        const client=item.data();
+        const option=document.createElement('button');
+        option.type='button';
+        option.className='btn btn-outline';
+        option.textContent=[client.name,client.mobile?'•••• '+String(client.mobile).slice(-4):'',client.branch].filter(Boolean).join(' · ');
+        option.addEventListener('click',()=>applyAppointmentClient(item));
+        results.append(option);
+      }
+    }catch(error){
+      console.error('Client search failed:',error);
+      if(version===clientSearchVersion)results.textContent='Client search unavailable. You can enter the details manually.';
+    }
+  },300);
 };
 window.loadBranchesForApt=async()=>{
   const a=document.getElementById('aptBranch'),f=document.getElementById('filterBranch');
@@ -177,13 +222,28 @@ window.loadTherapistsForApt=async()=>{
   const dl=document.getElementById('therapists-datalist');if(!dl)return;
   try{let q=query(collection(db,'therapists'));if(window.currentUser&&window.currentUser.role!=='admin')q=query(collection(db,'therapists'),where('branch','==',window.currentUser.branch));const s=await getDocs(q);let l=[];s.forEach(d=>{if(d.data().name)l.push(d.data().name)});dl.innerHTML=l.sort().map(x=>`<option value="${esc(x)}"></option>`).join('')}catch(e){console.error(e)}
 };
-window.handlePatientSelect=async()=>{
-  let raw=document.getElementById('aptPatientSearch').value.trim(),mobile=raw;if(!window.allPatientsCache[mobile]){const m=raw.match(/(\d{10})/);if(m)mobile=m[1]}const p=window.allPatientsCache[mobile];if(!p)return;
+async function applyAppointmentClient(item){
+  clearClientSearch();
+  const version=clientDueVersion;
+  const p=item.data();
+  document.getElementById('aptPatientSearch').dataset.patientId=item.id;
   document.getElementById('aptPatientSearch').value=p.name||'';
   const ids=['aptName','aptMobile','aptAge','aptGender','aptLocation','aptPatientNotes'],keys=['name','mobile','age','gender','location','notes'];ids.forEach((id,i)=>document.getElementById(id).value=p[keys[i]]||'');
   document.getElementById('aptCategory').value=p.category||'Normal';if(p.branch&&!document.getElementById('aptBranch').disabled)document.getElementById('aptBranch').value=p.branch;
-  let due=0,current=document.getElementById('aptDocId').value;try{let q=query(collection(db,'appointments'),where('mobile','==',p.mobile));if(window.currentUser&&window.currentUser.role!=='admin')q=query(collection(db,'appointments'),where('mobile','==',p.mobile),where('branch','==',window.currentUser.branch));(await getDocs(q)).forEach(d=>{if(d.id!==current)due+=parseFloat(d.data().balance)||0});document.getElementById('aptPrevDues').value=due.toFixed(2);window.calcBalance()}catch(e){console.error(e)}
-};
+  const previousDues=document.getElementById('aptPrevDues');
+  previousDues.value='0.00';
+  window.calcBalance();
+  try{
+    if(!p.mobile||!p.branch)return;
+    const current=document.getElementById('aptDocId').value;
+    const snapshot=await getDocs(query(collection(db,'appointments'),where('mobile','==',p.mobile),where('branch','==',p.branch)));
+    if(version!==clientDueVersion||!previousDues.isConnected)return;
+    let due=0;
+    snapshot.forEach(record=>{if(record.id!==current)due+=parseFloat(record.data().balance)||0});
+    previousDues.value=due.toFixed(2);
+    window.calcBalance();
+  }catch(error){console.error('Unable to load client dues:',error)}
+}
 window.calcBalance=()=>{
   const f=parseFloat(document.getElementById('aptFee').value)||0;
   const a=parseFloat(document.getElementById('aptAdvance').value)||0;
@@ -208,6 +268,8 @@ window.openLocationMap=()=>{const l=document.getElementById('aptLocation').value
 window.getCurrentLocation=btn=>{if(!navigator.geolocation)return alert('Geolocation is not supported.');const old=btn.innerHTML;btn.innerHTML='<span class="material-symbols-rounded">sync</span>';navigator.geolocation.getCurrentPosition(p=>{document.getElementById('aptLocation').value=`https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;btn.innerHTML=old},()=>{alert('Unable to get location.');btn.innerHTML=old})};
 
 window.resetAptForm=()=>{
+  clearClientSearch();
+  delete document.getElementById('aptPatientSearch').dataset.patientId;
   document.getElementById('add-appointment-form').reset();document.getElementById('aptDocId').value='';document.getElementById('aptPatientSearch').value='';
   document.getElementById('aptCategory').value='Normal';document.getElementById('aptStatus').value='Pending';document.getElementById('aptPaymentMode').value='Cash';
   document.getElementById('aptPrevDues').value='0.00';document.getElementById('aptBalance').value='0.00';document.getElementById('aptBalanceState').textContent='No Due';document.getElementById('aptBalanceState').className='no-due';document.getElementById('saveAptBtn').textContent='Save Appointment';document.getElementById('formTitle').textContent='New Appointment';
@@ -215,8 +277,8 @@ window.resetAptForm=()=>{
   if(window.currentUser&&window.currentUser.role!=='admin')document.getElementById('aptBranch').value=window.currentUser.branch;
   window.calcBalance();
 };
-window.openAppointmentForm=()=>{closeTools();window.resetAptForm();window.loadPatientsForApt().catch(e=>console.error('Unable to load appointment patient choices:',e));document.getElementById('aptModal').classList.add('show');setTimeout(()=>document.getElementById('aptMobile').focus(),80)};
-window.closeAppointmentForm=()=>document.getElementById('aptModal').classList.remove('show');
+window.openAppointmentForm=()=>{closeTools();window.resetAptForm();document.getElementById('aptModal').classList.add('show');setTimeout(()=>document.getElementById('aptMobile').focus(),80)};
+window.closeAppointmentForm=()=>{clearClientSearch();document.getElementById('aptModal').classList.remove('show')};
 
 window.publicBookingRequestsCache={};
 window.canReviewPublicBookingRequest=request=>
@@ -229,23 +291,9 @@ window.loadPublicBookingRequests=async()=>{
   list.innerHTML='<div class="public-booking-empty">Loading public booking requests…</div>';
   try{
     if(!window.currentUser)throw new Error('Your account profile is not available.');
-    let q=collection(db,'booking_requests');
-    if(window.currentUser.role!=='admin'){
-      if(!window.currentUser.branch||window.currentUser.branch==='Unknown'){
-        throw new Error('Your account has no assigned branch.');
-      }
-      q=query(collection(db,'booking_requests'),where('branch','==',window.currentUser.branch));
-    }
-    const snapshot=await getDocs(q);
-    window.publicBookingRequestsCache={};
-    snapshot.forEach(item=>{
-      const request=item.data();
-      if(request.status==='pending')window.publicBookingRequestsCache[item.id]=request;
-    });
-    if(Object.keys(window.publicBookingRequestsCache).length&&!window.allPatientsCacheLoaded){
-      try{await window.loadPatientsForApt();window.patientMatchLookupFailed=false}
-      catch(error){window.patientMatchLookupFailed=true;console.error('Unable to match public bookings to patients:',error)}
-    }
+    const scope=patientBranchFilters(window.currentUser,where);
+    const snapshot=await getDocs(query(collection(db,'booking_requests'),...scope,where('status','==','pending')));
+    window.publicBookingRequestsCache=Object.fromEntries(snapshot.docs.map(item=>[item.id,item.data()]));
     window.renderPublicBookingRequests();
   }catch(error){
     console.error('Public booking request load failed:',error);
@@ -264,18 +312,12 @@ window.renderPublicBookingRequests=()=>{
     return;
   }
   document.getElementById('publicBookingList').innerHTML=requests.map(([id,request])=>{
-    const patient=window.allPatientsCacheByBranch?.[`${request.branch||''}:${request.mobile||''}`];
-    const matchLabel=window.patientMatchLookupFailed
-      ?'Patient match unavailable — verified during conversion'
-      :!window.allPatientsCacheLoaded
-        ?'Patient match not checked yet'
-        :patient?'Existing patient — verify details':'New patient — verify before creating';
-    const matchClass=patient?'existing':window.allPatientsCacheLoaded?'new':'';
-    const time=formatTime12Hour(request.time);
+    const matchLabel='Client match checked during conversion';
+      const time=formatTime12Hour(request.time);
     return `<article class="public-booking-request">
       <div class="public-booking-request-top">
         <div><div class="public-booking-request-name">${esc(request.name||'')}</div><div class="public-booking-request-meta">${esc(request.mobile||'')}<br>${esc(request.branch||'')} · ${window.formatIndianDate(request.date)} ${esc(time)}${request.notes?`<br>Message: ${esc(request.notes)}`:''}</div></div>
-        <span class="patient-match ${matchClass}">${matchLabel}</span>
+        <span class="patient-match">${matchLabel}</span>
       </div>
       <div class="public-booking-actions">
         <button class="btn primary" type="button" onclick="window.convertPublicBooking('${esc(id)}')"><span class="material-symbols-rounded" style="font-size:17px">event_available</span> Convert to Appointment</button>
@@ -351,6 +393,7 @@ window.convertPublicBooking=async requestId=>{
     patientId:newPatientId,
     mobile:request.mobile,
     name:request.name,
+    nameSearch:normalizePatientName(request.name),
     category:'Normal',
     branch:request.branch,
     location:'',
@@ -373,7 +416,6 @@ window.convertPublicBooking=async requestId=>{
       });
     });
     invalidateAppointmentsRequestCache();
-    if(patientData)window.allPatientsCacheByBranch[`${request.branch}:${request.mobile}`]=patientData;
     delete window.publicBookingRequestsCache[requestId];
     await Promise.all([window.loadAppointments(),window.loadPublicBookingRequests()]);
     alert(`Booking converted to appointment.${existingPatient?' Existing patient record matched by mobile and branch.':' New patient record created.'}`);
@@ -643,7 +685,8 @@ window.openSelectedNew=()=>{
   showConfirm('Create New Appointment','Create a new appointment using the first selected appointment as the patient/template?','Continue',()=>{window.editAppointmentData(d,null,true)});
 };
 window.editAppointmentData=async(d,id=null,isNew=false)=>{
-  window.loadPatientsForApt().catch(e=>console.error('Unable to load appointment patient choices:',e));
+  clearClientSearch();
+  delete document.getElementById('aptPatientSearch').dataset.patientId;
   const fields={aptDocId:id||'',aptMobile:d.mobile||'',aptName:d.name||'',aptAge:d.age||'',aptGender:d.gender||'',aptCategory:d.category||'Normal',aptLocation:d.location||'',aptPatientNotes:d.patientNotes||'',aptBranch:d.branch||'',aptDate:isNew?todayISO():(d.date||''),aptTime:isNew?'':(d.time||''),aptPreviousDate:d.previousDate||'',aptPreviousTime:d.previousTime||'',aptDuration:d.duration||'',aptSessionsPerDay:d.sessionsPerDay||'',aptTherapist:d.therapist||'',aptStatus:isNew?'Pending':(d.status||'Pending'),aptFee:d.fee??'',aptAdvance:isNew?'':(d.advance??''),aptNotes:d.notes||'',aptPaymentMode:d.paymentMode||'Cash',aptPaymentReference:isNew?'':(d.paymentReference||''),aptPaymentRemarks:isNew?'':(d.paymentRemarks||'')};
   Object.entries(fields).forEach(([k,v])=>document.getElementById(k).value=v);
   document.getElementById('aptPatientSearch').value=d.name||'';document.getElementById('saveAptBtn').textContent=isNew?'Save Appointment':'Update Appointment';document.getElementById('formTitle').textContent=isNew?'New Appointment from Selected':'Edit Appointment';
@@ -659,8 +702,7 @@ window.saveAppointment=async()=>{
   const payload={mobile:get('aptMobile'),name:get('aptName'),age:get('aptAge'),gender:get('aptGender'),category:get('aptCategory'),location:get('aptLocation'),patientNotes:get('aptPatientNotes'),branch:get('aptBranch'),date,time:appointmentTime,previousDate:get('aptPreviousDate'),previousTime:get('aptPreviousTime'),duration:get('aptDuration'),sessionsPerDay:get('aptSessionsPerDay'),therapist:get('aptTherapist'),status,fee,advance,balance:fee+prev-advance,prevDues:prev,notes,paymentMode:get('aptPaymentMode'),paymentReference:get('aptPaymentReference'),paymentRemarks:get('aptPaymentRemarks'),updatedAt:new Date()};
   btn.disabled=true;btn.textContent='Saving...';
   try{
-    const pdata={mobile:payload.mobile,name:payload.name,age:payload.age,gender:payload.gender,category:payload.category,location:payload.location,notes:payload.patientNotes,branch:payload.branch};
-    const patientCacheKey=`${payload.branch}:${payload.mobile}`;
+    const pdata={mobile:payload.mobile,name:payload.name,nameSearch:normalizePatientName(payload.name),age:payload.age,gender:payload.gender,category:payload.category,location:payload.location,notes:payload.patientNotes,branch:payload.branch};
     let appointmentId=id;
     if(id){
       const existingQuery=query(
@@ -680,17 +722,16 @@ window.saveAppointment=async()=>{
       payload.createdAt=new Date();
       appointmentId=await createAppointmentIfMissing(payload);
     }
-    if(window.patientsForAptLoadPromise){
-      try{await window.patientsForAptLoadPromise}
-      catch(cacheError){console.warn('Patient cache unavailable; using a focused patient lookup for this save.',cacheError)}
+    const selectedPatientId=document.getElementById('aptPatientSearch').dataset.patientId;
+    let patientId;
+    if(selectedPatientId){
+      const selected=await getDoc(doc(db,'patients',selectedPatientId));
+      const client=selected.data();
+      if(client?.mobile===payload.mobile&&client?.branch===payload.branch)patientId=selected.id;
     }
-    let patientId=window.allPatientsCacheLoaded
-      ?window.allPatientsDocumentIdsByBranch?.[patientCacheKey]
-      :null;
-    if(!window.allPatientsCacheLoaded){
-      const patientQuery=query(collection(db,'patients'),where('mobile','==',payload.mobile),where('branch','==',payload.branch));
-      const patientSnapshot=await getDocs(patientQuery);
-      patientId=patientSnapshot.docs[0]?.id||null;
+    if(!patientId){
+      const patientQuery=query(collection(db,'patients'),where('mobile','==',payload.mobile),where('branch','==',payload.branch),limit(1));
+      patientId=(await getDocs(patientQuery)).docs[0]?.id;
     }
     const [generatedPatientId]=patientId
       ?[patientId]
@@ -702,11 +743,7 @@ window.saveAppointment=async()=>{
       ...(!patientId?{createdAt:new Date()}:{}),
       ...pdata
     },{merge:true});
-    if(window.allPatientsCacheLoaded){
-      window.allPatientsDocumentIdsByBranch[patientCacheKey]=savedPatientId;
-      window.allPatientsCache[payload.mobile]=pdata;
-      window.allPatientsCacheByBranch[patientCacheKey]=pdata;
-    }
+    clientSearchCache.clear();
     await window.syncTransactions(appointmentId,payload);
     alert(id?'Appointment updated successfully!':'New appointment saved successfully!');
     window.closeAppointmentForm();window.resetAptForm();document.getElementById('filterDateFrom').value=payload.date;document.getElementById('filterDateTo').value=payload.date;invalidateAppointmentsRequestCache();await window.loadAppointments();
@@ -1011,7 +1048,7 @@ window.importAppointmentsCSV=async file=>{
         const patientId=existingPatientId||(
           await reserveNextDocumentIds(db,'patients','PAT',1,window.currentUser?.role==='admin')
         )[0];
-        const patientData={id:patientId,patientId,mobile,name:r.name,age:r.age,gender:r.gender,category:payload.category,location:r.location,notes:r.patientNotes,branch:r.branch};
+        const patientData={id:patientId,patientId,mobile,name:r.name,nameSearch:normalizePatientName(r.name),age:r.age,gender:r.gender,category:payload.category,location:r.location,notes:r.patientNotes,branch:r.branch};
         if(patientSnapshot.empty){
           await setDoc(doc(db,'patients',patientId),{...patientData,createdAt:new Date()},{merge:true});
         }else{

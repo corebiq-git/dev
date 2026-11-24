@@ -1,4 +1,4 @@
-const CACHE="corebiq-v19";
+const CACHE="corebiq-v20";
 const CORE=[
     "./",
     "./index.html",
@@ -20,6 +20,7 @@ const CORE=[
     "./js/firebase-config.js",
     "./js/corebiq-locale.js",
     "./js/app-metadata.js",
+    "./js/patient-search.mjs",
     "./modules/templates/template-invoice/template-invoice.html",
     "./modules/templates/template-invoice/template-invoice.css",
     "./modules/templates/template-invoice/template-invoice.js",

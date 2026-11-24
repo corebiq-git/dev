@@ -113,7 +113,7 @@
       <input type="hidden" id="aptDocId">
       <div class="section"><h4>1. Patient Details</h4>
         <div class="grid">
-          <div class="field span2"><label>Search Patient</label><input list="patients-datalist" id="aptPatientSearch" class="form-input" placeholder="Search by patient name or mobile" onchange="window.handlePatientSelect()" autocomplete="off"><datalist id="patients-datalist"></datalist></div>
+          <div class="field span2"><label for="aptPatientSearch">Search client name</label><input type="search" id="aptPatientSearch" class="form-input" placeholder="Type a name or 10-digit mobile number" oninput="window.searchAppointmentClients(this)" autocomplete="off"><div id="aptClientResults" class="actions" aria-live="polite"></div></div>
           <div class="field"><label>Patient Mobile *</label><input type="tel" id="aptMobile" class="form-input" maxlength="10" placeholder="10-digit number" required></div>
           <div class="field"><label>Patient Name *</label><input id="aptName" class="form-input" placeholder="Full Name" required></div>
           <div class="field"><label>Age</label><input type="number" id="aptAge" class="form-input" min="1" max="120"></div>

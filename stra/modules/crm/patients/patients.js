@@ -1,6 +1,7 @@
+import { normalizePatientName, patientBranchFilters } from '../../../js/patient-search.mjs';
 import { db } from "../../../js/firebase-config.js";
         import { reserveNextDocumentIds } from "../../../js/document-ids.js";
-        import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { collection, query, where, limit, getDocs, doc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         let patientSort = { key: 'time', direction: 'desc' };
         let patientDateFilter = { from: '', to: '' };
         let editingPatientId = null;
@@ -431,7 +432,7 @@ import { db } from "../../../js/firebase-config.js";
 
             try {
                 // Check if they are already in the PATIENTS database
-                const pSnap = await getDocs(query(collection(db, "patients"), where("mobile", "==", mobileInput)));
+                const pSnap = await getDocs(query(collection(db, "patients"), ...patientBranchFilters(window.currentUser, where), where("mobile", "==", mobileInput), limit(1)));
 
                 if (!pSnap.empty) {
                     let existingName = pSnap.docs[0].data().name; 
@@ -489,6 +490,7 @@ import { db } from "../../../js/firebase-config.js";
                     ...(editingPatientId ? { patientId: editingPatientId } : {}),
                     mobile: mobile,
                     name: name,
+                    nameSearch: normalizePatientName(name),
                     age: age,
                     category: category,
                     gender: gender,

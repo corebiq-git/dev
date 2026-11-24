@@ -138,15 +138,8 @@ import { db } from "../../../js/firebase-config.js";
                     const mobileQuery = isBranchUser
                         ? query(base, where('branch', '==', branch), where('mobile', '==', mobile))
                         : query(base, where('mobile', '==', mobile));
-                    try {
-                        const snapshot = await getDocs(mobileQuery);
-                        return snapshot.docs;
-                    } catch (error) {
-                        if (!isBranchUser || error?.code !== 'failed-precondition') throw error;
-                        console.warn(`Mobile lookup index unavailable for ${collectionName}; falling back to the assigned-branch query.`, error);
-                        const branchSnapshot = await getDocs(query(base, where('branch', '==', branch)));
-                        return branchSnapshot.docs.filter(item => item.data().mobile === mobile);
-                    }
+                    const snapshot = await getDocs(mobileQuery);
+                    return snapshot.docs;
                 };
                 const [patientMatches, patientTransactions] = await Promise.all([
                     loadMobileMatches('patients'),
@@ -219,17 +212,7 @@ import { db } from "../../../js/firebase-config.js";
                 if (toDate) constraints.push(where("date", "<=", toDate));
                 const transactionCollection = collection(db, "transactions");
                 const transactionQuery = constraints.length ? query(transactionCollection, ...constraints) : transactionCollection;
-                let querySnapshot;
-                try {
-                    querySnapshot = await getDocs(transactionQuery);
-                } catch (error) {
-                    if (!isBranchUser || error?.code !== 'failed-precondition') throw error;
-                    console.warn('Transaction date index unavailable; falling back to the assigned-branch query.', error);
-                    querySnapshot = await getDocs(query(
-                        transactionCollection,
-                        where("branch", "==", branch)
-                    ));
-                }
+                const querySnapshot = await getDocs(transactionQuery);
                 if (loadId !== transactionLoadId) return;
                 tableBody.innerHTML = ''; 
                 window.txnDataCache = {};
