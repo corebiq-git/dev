@@ -267,7 +267,7 @@ body{margin:0!important;padding:0!important}
     background: var(--care-canvas) !important;
 }
 #app-container .dashboard-header {
-    background: var(--care-canvas);
+    background: #fff;
     border: 0;
     box-shadow: none;
 }

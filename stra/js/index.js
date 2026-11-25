@@ -204,28 +204,14 @@ window.applyRoleVisibility = function() {
     });
 };
 
-window.updateMobileSidebarSelectionStyle = function() {
-    const links = document.querySelectorAll('#sidebar-container .nav-link');
-    links.forEach(link => {
-        link.classList.remove('mobile-selected');
-        if (link.dataset.mobileSelectedStyle !== 'true') return;
-        link.style.removeProperty('background-color');
-        link.style.removeProperty('color');
-        link.style.removeProperty('box-shadow');
-        delete link.dataset.mobileSelectedStyle;
+function updateSidebarSelection(targetId) {
+    document.querySelectorAll('#sidebar-nav .nav-link[data-target]').forEach(link => {
+        const selected = link.dataset.target === targetId;
+        link.classList.toggle('active', selected);
+        if (selected) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
     });
-
-    if (window.innerWidth > 768) return;
-    const selected = document.querySelector('#sidebar-container .nav-link.active');
-    if (!selected) return;
-    selected.classList.add('mobile-selected');
-    selected.dataset.mobileSelectedStyle = 'true';
-    selected.style.setProperty('background-color', 'transparent', 'important');
-    selected.style.setProperty('color', '#071630', 'important');
-    selected.style.setProperty('box-shadow', 'none', 'important');
-};
-
-window.addEventListener('resize', window.updateMobileSidebarSelectionStyle);
+}
 
 window.buildSidebarNavigation = function() {
     const nav = document.querySelector('#sidebar-container #sidebar-nav');
@@ -333,7 +319,7 @@ window.buildSidebarNavigation = function() {
     if (email) nav.appendChild(email);
 
     nav.dataset.grouped = 'true';
-    window.updateMobileSidebarSelectionStyle();
+    updateSidebarSelection(document.querySelector('.view-section.active')?.id || 'view-dashboard');
     allOriginalLinks.forEach(link => {
         if (link !== dashboard && link !== email && !nav.contains(link)) {
             console.error('A sidebar module link was not assigned to a navigation group:', link);
@@ -1105,7 +1091,6 @@ window.switchView = async function(targetId, navElement) {
         .querySelectorAll('.nav-link, .top-nav-link, .nav-item, .bottom-nav-item')
         .forEach(el => {
             el.classList.remove('active');
-            el.classList.remove('mobile-selected');
         });
 
     if (
@@ -1114,7 +1099,7 @@ window.switchView = async function(targetId, navElement) {
     ) {
         navElement.classList.add('active');
     }
-    window.updateMobileSidebarSelectionStyle();
+    updateSidebarSelection(targetId);
     document.querySelectorAll('#top-module-nav [data-target]').forEach(link => {
         if (link.dataset.target === targetId) {
             link.setAttribute('aria-current', 'page');

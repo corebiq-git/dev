@@ -558,44 +558,15 @@
             font-size: 14px;
         }
 
-        #sidebar-container.open #sidebar-nav > .nav-link[data-target="view-dashboard"].active,
-        #sidebar-container.open #sidebar-nav > .nav-link[data-target="view-dashboard"].active:hover {
-            width: calc(100% - 24px);
-            margin: 0 12px;
-            border-color: transparent;
-            border-radius: 9px;
-            background: #EEF0F4;
-            color: #80868B;
-            box-shadow: none;
-        }
-
         .nav-link .material-symbols-rounded {
             font-size: 21px;
             margin-right: 12px;
         }
 
-        #sidebar-container.open #sidebar-nav .nav-link:active,
-        #sidebar-container.open #sidebar-nav .nav-link.active,
-        #sidebar-container.open #sidebar-nav .nav-link.active:hover {
-            background: transparent !important;
-            border-color: transparent;
-            color: #071630 !important;
-            box-shadow: none;
-        }
-
-        #sidebar-container.open #sidebar-nav > .nav-link[data-target="view-dashboard"].active.mobile-selected,
-        #sidebar-container.open #sidebar-nav > .nav-link[data-target="view-dashboard"].active.mobile-selected:hover {
-            background: transparent !important;
-            color: #071630 !important;
-            box-shadow: none;
-        }
-
-        #sidebar-container.open #sidebar-nav .nav-link.mobile-selected,
-        #sidebar-container.open #sidebar-nav .nav-link.mobile-selected:hover {
-            background: transparent !important;
-            border-color: transparent;
-            color: #071630 !important;
-            box-shadow: none;
+        #sidebar-nav > .nav-link:is(:hover, :active, .active) {
+            width: calc(100% - 24px);
+            margin-inline: 12px;
+            border-radius: 9px;
         }
 
         .nav-divider {
@@ -624,6 +595,19 @@
             height: 34px;
         }
     }
+    #sidebar-nav .nav-link[aria-current="page"],
+    #sidebar-nav > .sidebar-nav-group > .sidebar-nav-trigger[aria-expanded="true"],
+    #sidebar-nav > .sidebar-nav-group:has(.nav-link[aria-current="page"]) > .sidebar-nav-trigger {
+        background: var(--care-icon-surface);
+        color: var(--care-charcoal);
+        box-shadow: none;
+    }
+
+    #sidebar-nav .nav-link[aria-current="page"] .material-symbols-rounded {
+        background: transparent;
+        color: var(--care-charcoal);
+    }
+
     #sidebar-nav > .nav-link,
     #sidebar-nav > .sidebar-nav-group > .sidebar-nav-trigger {
         font-size: 17px;
