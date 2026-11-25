@@ -43,3 +43,73 @@
 .care-dialog[data-tone="danger"] [data-care-accept] { background: #a52820; }
 .care-dialog-actions button:focus-visible { outline: 2px solid #5e625e; outline-offset: 2px; }
 @media print { .care-dialog { display: none !important; } }
+
+.care-dialog-result { display: none; }
+
+.care-dialog[data-tone="success"] {
+    --result-surface: #edf8ef;
+    --result-line: #c4e2cb;
+    --result-badge: #d9efdf;
+    --result-ink: #21643b;
+}
+
+.care-dialog[data-tone="error"] {
+    --result-surface: #fff0ef;
+    --result-line: #f1cac6;
+    --result-badge: #f9dcd8;
+    --result-ink: #9f2e28;
+}
+
+.care-dialog:is([data-tone="success"], [data-tone="error"]) {
+    padding: clamp(16px, 5vw, 24px);
+    border-color: var(--result-line);
+    border-radius: 20px;
+    background: var(--result-surface);
+}
+
+.care-dialog:is([data-tone="success"], [data-tone="error"]) .care-dialog-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.care-dialog:is([data-tone="success"], [data-tone="error"]) header {
+    margin: 0;
+    color: var(--result-ink);
+}
+
+.care-dialog:is([data-tone="success"], [data-tone="error"]) .care-dialog-result {
+    display: grid;
+    flex: 0 0 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid var(--result-line);
+    border-radius: 12px;
+    background: var(--result-badge);
+    color: var(--result-ink);
+}
+
+.care-dialog-result svg { width: 24px; height: 24px; }
+.care-dialog-result path {
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.care-dialog[data-tone="success"] .care-dialog-cross,
+.care-dialog[data-tone="error"] .care-dialog-tick { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .care-dialog[open] .care-dialog-result path {
+        stroke-dasharray: 1;
+        animation: care-result-draw 260ms ease-out both;
+    }
+    .care-dialog[open] .care-dialog-cross + .care-dialog-cross { animation-delay: 120ms; }
+}
+
+@keyframes care-result-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+}

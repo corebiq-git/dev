@@ -11,7 +11,16 @@
         element.setAttribute('aria-labelledby', 'care-dialog-title');
         element.setAttribute('aria-describedby', 'care-dialog-message');
         element.innerHTML = `
-            <header id="care-dialog-title"></header>
+            <div class="care-dialog-heading">
+                <span class="care-dialog-result" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                        <path class="care-dialog-tick" pathLength="1" d="m5 12 4 4L19 6"/>
+                        <path class="care-dialog-cross" pathLength="1" d="m6 6 12 12"/>
+                        <path class="care-dialog-cross" pathLength="1" d="M18 6 6 18"/>
+                    </svg>
+                </span>
+                <header id="care-dialog-title"></header>
+            </div>
             <p id="care-dialog-message"></p>
             <div class="care-dialog-actions">
                 <button type="button" data-care-cancel>Cancel</button>
@@ -73,13 +82,14 @@
 
     window.careNotice = (message, tone) => {
         const text = String(message ?? '');
-        const warning = /\b(error|failed|unable|could not|cannot|must|required|denied|invalid)\b/i.test(text);
+        const failure = /\b(error|fail(?:ed|ure)?|unable|could not|cannot|denied|unsuccessful|not (?:saved|updated|submitted|added|deleted))\b/i.test(text);
+        const warning = /\b(must|required|invalid)\b/i.test(text);
         const success = /\b(saved|updated|submitted|added|successfully|deleted)\b/i.test(text);
-        const kind = tone || (warning ? 'warning' : success ? 'success' : 'info');
+        const kind = tone || (failure ? 'error' : warning ? 'warning' : success ? 'success' : 'info');
         return enqueue({
             message: text,
             tone: kind,
-            title: kind === 'warning' ? 'Warning' : kind === 'success' ? 'Done' : 'Notice',
+            title: { error: 'Action failed', warning: 'Warning', success: 'Success' }[kind] || 'Notice',
             action: 'OK'
         });
     };
