@@ -815,7 +815,7 @@ import { db } from "../../../js/firebase-config.js";
             if (window.currentUser?.role !== 'admin' && data.branch !== window.currentUser?.branch) {
                 return alert('You can only delete transactions for your assigned branch.');
             }
-            if(confirm("Are you sure you want to permanently delete this transaction?")) {
+            if(await (window.careConfirm ?? window.confirm.bind(window))("Are you sure you want to permanently delete this transaction?")) {
                 try {
                     await deleteDoc(doc(db, "transactions", docId));
                     alert("Transaction deleted.");

@@ -137,7 +137,7 @@ import { db } from "../../../js/firebase-config.js";
         }
 
         window.deleteStaff = async function(docId) {
-            if(confirm("Are you sure you want to remove this staff member?")) {
+            if(await (window.careConfirm ?? window.confirm.bind(window))("Are you sure you want to remove this staff member?")) {
                 try {
                     await deleteDoc(doc(db, "staff", docId));
                     window.loadStaff();

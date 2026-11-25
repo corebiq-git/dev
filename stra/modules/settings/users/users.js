@@ -29,6 +29,7 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
     function showMessage(text, isError = false) {
         message.textContent = text;
         message.style.color = isError ? 'var(--danger)' : 'var(--success)';
+        if (text) void window.careNotice?.(text, isError ? 'warning' : 'success');
     }
 
     window.toggleBranchInput = function() {
@@ -160,7 +161,8 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
             await window.loadUsers();
         } catch (error) {
             console.error('Unable to save user:', error);
-            showMessage(error.message || 'Unable to save this user. Please try again.', true);
+            const warning = error.message || 'Unable to save this user. Please try again.';
+            showMessage(warning, true);
         } finally {
             saveButton.disabled = false;
             saveButton.textContent = editingEmail ? 'Save Changes' : 'Create User';
@@ -168,7 +170,7 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
     }
 
     async function removeUser(email) {
-        if (!window.confirm(`Delete ${email} and their sign-in account? This cannot be undone.`)) return;
+        if (!await (window.careConfirm ?? window.confirm.bind(window))(`Delete ${email} and their sign-in account? This cannot be undone.`)) return;
         try {
             await deleteManagedUser({ email });
             showMessage(`Successfully deleted ${email}.`);

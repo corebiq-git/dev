@@ -17,6 +17,7 @@ import '../../../js/corebiq-locale.js';
         function showNotice(message, isError = false) {
             notice.textContent = message;
             notice.className = `notice show ${isError ? 'error' : 'success'}`;
+            void window.careNotice?.(message, isError ? 'warning' : 'success');
         }
 
         mobileInput.addEventListener('input', () => {

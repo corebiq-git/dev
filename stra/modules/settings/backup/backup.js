@@ -240,7 +240,7 @@ import { auth, db } from '../../../js/firebase-config.js';
                 if (config.dedicatedImport) {
                     throw new Error('Import appointments from Appointments → More Actions → Import CSV so linked patient and transaction records are handled correctly.');
                 }
-                if (!window.confirm(`Import this ${config.label} CSV? Existing records will not be overwritten.`)) return;
+                if (!await (window.careConfirm ?? window.confirm.bind(window))(`Import this ${config.label} CSV? Existing records will not be overwritten.`)) return;
                 button.disabled = true;
                 fileInput.disabled = true;
                 status.textContent = 'Validating CSV...';
@@ -739,7 +739,7 @@ import { auth, db } from '../../../js/firebase-config.js';
                 return alert('The start date must be on or before the end date.');
             }
             const formatLabel = format === 'csv' ? 'a ZIP of CSV files' : format.toUpperCase();
-            if (!confirm(`Are you sure you want to download the full database backup as ${formatLabel}? This may take some time.`)) return;
+            if (!await (window.careConfirm ?? window.confirm.bind(window))(`Are you sure you want to download the full database backup as ${formatLabel}? This may take some time.`)) return;
 
             buttons.forEach(button => { button.disabled = true; });
             const activeButton = format === 'csv' ? csvBtn : format === 'zip' ? zipBtn : jsonBtn;
@@ -866,7 +866,7 @@ import { auth, db } from '../../../js/firebase-config.js';
                 alert('Select a CSV backup ZIP first.');
                 return;
             }
-            if (!window.confirm('Import this CSV backup? New document IDs will be added; existing IDs will be skipped. No existing documents will be overwritten or deleted.')) return;
+            if (!await (window.careConfirm ?? window.confirm.bind(window))('Import this CSV backup? New document IDs will be added; existing IDs will be skipped. No existing documents will be overwritten or deleted.')) return;
 
             button.disabled = true;
             fileInput.disabled = true;

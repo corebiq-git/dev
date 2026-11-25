@@ -264,7 +264,7 @@ import { auth } from '../../../js/firebase-config.js';
 
         async function removeTask(taskId) {
             const task = taskItems.get(taskId);
-            if (!task || !window.confirm(`Delete "${task.title}"? This cannot be undone.`)) return;
+            if (!task || !await (window.careConfirm ?? window.confirm.bind(window))(`Delete "${task.title}"? This cannot be undone.`)) return;
 
             try {
                 taskItems.delete(taskId);
@@ -312,6 +312,7 @@ import { auth } from '../../../js/firebase-config.js';
                 closeForm();
                 updateSummary();
                 await loadTasks();
+                window.alert('Task saved.');
             } catch (error) {
                 console.error('Unable to save local task:', error);
                 window.alert(`Could not save task: ${error.message}`);

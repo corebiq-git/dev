@@ -10,7 +10,7 @@ let clientSearchTimer;
 let clientSearchVersion=0;
 let clientDueVersion=0;
 const clientSearchCache=new Map();
-let allAppointments=[]; let sortMode='dateDesc'; let confirmHandler=null;
+let allAppointments=[]; let sortMode='dateDesc';
 const appointmentsRequestCache=new Map();
 let appointmentsLoadVersion=0;
 
@@ -428,7 +428,7 @@ window.declinePublicBooking=async requestId=>{
   const request=window.publicBookingRequestsCache?.[requestId];
   if(!request)return;
   if(!window.canReviewPublicBookingRequest(request))return alert('You can only decline public bookings for your assigned branch.');
-  if(!confirm(`Decline the booking request from ${request.name||'this patient'}?`))return;
+  if(!await (window.careConfirm ?? window.confirm.bind(window))(`Decline the booking request from ${request.name||'this patient'}?`))return;
   try{
     await updateDoc(doc(db,'booking_requests',requestId),{status:'declined',reviewedAt:serverTimestamp()});
     delete window.publicBookingRequestsCache[requestId];
@@ -986,7 +986,10 @@ window.confirmBulkCopy=async()=>{
 window.executeBulkCopy=()=>window.showBulkDate();
 window.confirmBulkReschedule=window.confirmBulkCopy;
 window.executeBulkReschedule=window.executeBulkCopy;
-function showConfirm(title,message,ok,fn){document.getElementById('confirmTitle').textContent=title;document.getElementById('confirmMessage').textContent=message;document.getElementById('confirmOk').textContent=ok;confirmHandler=fn;document.getElementById('confirmModal').classList.add('show');document.getElementById('confirmOk').onclick=async()=>{const f=confirmHandler;window.closeModal('confirmModal');confirmHandler=null;if(f)await f()}}
+async function showConfirm(title,message,ok,fn){
+  const accepted=await (window.careConfirm ?? window.confirm.bind(window))(message,{title,action:ok});
+  if(accepted)await fn();
+}
 
 const CSV_HEADERS=['id','mobile','name','age','gender','category','location','patientNotes','branch','date','time','previousDate','previousTime','duration','sessionsPerDay','therapist','status','fee','advance','prevDues','notes','paymentMode','paymentReference','paymentRemarks'];
 function csvCell(v){const s=String(v??'');return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
@@ -1070,4 +1073,3 @@ window.openBulkReschedule=window.executeBulkReschedule;
 
 document.getElementById('aptModal').addEventListener('click',e=>{if(e.target.id==='aptModal')window.closeAppointmentForm()});
 document.getElementById('notesModal').addEventListener('click',e=>{if(e.target.id==='notesModal')window.closeModal('notesModal')});
-document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target.id==='confirmModal')window.closeModal('confirmModal')});

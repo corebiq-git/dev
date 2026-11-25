@@ -102,7 +102,7 @@ import { db } from "../../../js/firebase-config.js";
                 return;
             }
 
-            if (action === 'delete' && window.confirm(`Delete ${row.dataset.name || 'this patient'}? This cannot be undone.`)) {
+            if (action === 'delete' && await (window.careConfirm ?? window.confirm.bind(window))(`Delete ${row.dataset.name || 'this patient'}? This cannot be undone.`)) {
                 button.disabled = true;
                 try {
                     await deleteDoc(doc(db, 'patients', row.dataset.id));

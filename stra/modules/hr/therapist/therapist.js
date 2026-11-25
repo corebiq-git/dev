@@ -160,7 +160,7 @@
         }
 
         window.deleteTherapist = async function(docId) {
-            if(confirm("Are you sure you want to remove this therapist?")) {
+            if(await (window.careConfirm ?? window.confirm.bind(window))("Are you sure you want to remove this therapist?")) {
                 try {
                     await deleteDoc(doc(db, "therapists", docId));
                     window.loadTherapists();

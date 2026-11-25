@@ -208,7 +208,7 @@ import { db } from "../../../js/firebase-config.js";
         }
 
         window.deleteTxn = async function(docId) {
-            if(confirm("Are you sure you want to permanently delete this payment voucher?")) {
+            if(await (window.careConfirm ?? window.confirm.bind(window))("Are you sure you want to permanently delete this payment voucher?")) {
                 try {
                     await deleteDoc(doc(db, "transactions", docId));
                     alert("Voucher deleted.");

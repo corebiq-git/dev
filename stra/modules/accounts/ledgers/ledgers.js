@@ -282,7 +282,7 @@ import { db } from '../../../js/firebase-config.js';
         };
 
         window.deleteLedger = async function(id) {
-            if(confirm("Are you sure you want to permanently delete this Ledger?")) {
+            if(await (window.careConfirm ?? window.confirm.bind(window))("Are you sure you want to permanently delete this Ledger?")) {
                 try {
                     await deleteDoc(doc(db, "ledgers", id));
                     window.loadLedgers();

@@ -1,0 +1,45 @@
+.care-dialog {
+    box-sizing: border-box;
+    width: min(360px, calc(100% - 32px));
+    max-height: calc(100% - 32px);
+    margin: auto;
+    padding: 18px;
+    overflow: auto;
+    border: 1px solid var(--care-line, #e3e2dc);
+    border-radius: 16px;
+    background: #fff;
+    color: var(--care-charcoal, #242623);
+    box-shadow: 0 14px 48px rgb(0 0 0 / .22);
+}
+.care-dialog::backdrop { background: rgb(22 23 21 / .42); }
+.care-dialog header {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+}
+.care-dialog[data-tone="warning"] header { color: #745314; }
+.care-dialog[data-tone="danger"] header { color: #a52820; }
+.care-dialog p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+.care-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.care-dialog-actions button {
+    min-width: 64px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 8px;
+    background: #efefea;
+    color: #242623;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+}
+.care-dialog-actions [data-care-accept] { background: #242623; color: #fff; }
+.care-dialog[data-tone="danger"] [data-care-accept] { background: #a52820; }
+.care-dialog-actions button:focus-visible { outline: 2px solid #5e625e; outline-offset: 2px; }
+@media print { .care-dialog { display: none !important; } }

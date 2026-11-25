@@ -531,7 +531,7 @@ import { db } from "../../../js/firebase-config.js";
         }
 
         window.approveLeave = async function(reqId, rDate, rEmpId, rEmpName, rEmpType, rBranch, rReason) {
-            if(!confirm(`Approve leave for ${rEmpName} on ${rDate}?`)) return;
+            if(!await (window.careConfirm ?? window.confirm.bind(window))(`Approve leave for ${rEmpName} on ${rDate}?`)) return;
             try {
                 const monthRecords = await getAttendanceMonth(rDate.slice(0, 7));
                 const existingRecord = monthRecords.find(record =>
@@ -570,7 +570,7 @@ import { db } from "../../../js/firebase-config.js";
         }
 
         window.rejectLeave = async function(reqId) {
-            if(!confirm("Reject this leave request?")) return;
+            if(!await (window.careConfirm ?? window.confirm.bind(window))("Reject this leave request?")) return;
             try {
                 await updateDoc(doc(db, "leave_requests", reqId), { status: 'Rejected' });
                 window.loadLeaveRequests();
@@ -934,7 +934,7 @@ import { db } from "../../../js/firebase-config.js";
             if (!data || !canManageAttendanceRecord(data)) {
                 return alert('You can only delete attendance for your assigned branch.');
             }
-            if(confirm("Are you sure you want to delete this attendance record?")) {
+            if(await (window.careConfirm ?? window.confirm.bind(window))("Are you sure you want to delete this attendance record?")) {
                 try {
                     await deleteDoc(doc(db, "daily_attendance", docId));
                     invalidateAttendanceMonthCache();
