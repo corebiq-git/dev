@@ -124,19 +124,20 @@
             z-index: 1;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding: 15mm 20mm 6mm 10mm; 
+            align-items: center;
+            gap: 5mm;
+            padding: 15mm 20mm 6mm;
             box-sizing: border-box;
             width: 100%;
         }
         
-        #report-module .letterhead-brand { display: flex; align-items: center; gap: 12px; }
-        #report-module .logo-img { width: 18mm; height: 18mm; object-fit: contain; }
+        #report-module .letterhead-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        #report-module .logo-img { display: block; flex: 0 0 18mm; width: 18mm; height: 18mm; aspect-ratio: 1; object-fit: contain; }
         #report-module .company-name-img { width: auto; max-width: 45mm; max-height: 14mm; object-fit: contain; }
         
         #report-module .company-info {
             display: flex; flex-direction: column; gap: 6px; 
-            max-width: 85mm; text-align: left;
+            min-width: 0; max-width: 85mm; text-align: left;
         }
         #report-module .company-contact {
             display: flex; align-items: flex-start; gap: 8px;
@@ -361,11 +362,11 @@
         }
 
         /* --- Responsive Screen --- */
-        @media (max-width: 768px) {
+        @media screen and (max-width: 768px) {
             #report-module { padding: 10px; }
             #report-module .studio-toolbar { flex-direction: column; align-items: stretch; padding: 16px; gap: 16px; }
             #report-module .studio-actions { justify-content: flex-start; }
-            #report-module .letter-header { flex-direction: column; gap: 20px; padding: 20px; }
+            #report-module .letter-header { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px; }
             #report-module .company-info { max-width: 100%; }
             #report-module .letter-body, #report-module .footer-section { padding-left: 20px; padding-right: 20px; }
             #report-module .letterhead-seal-area { padding: 0 20px 10px; gap: 12px; }
@@ -390,7 +391,7 @@
                 width: 210mm !important; min-height: 297mm !important; height: 297mm !important; max-height: 297mm !important;
                 margin: 0 !important; padding: 0 !important; break-after: avoid !important; overflow: hidden !important; 
             }
-            #report-module .letter-header { padding: 15mm 20mm 5mm 10mm !important; flex-direction: row !important; gap: 0 !important; }
+            #report-module .letter-header { padding: 15mm 20mm 5mm !important; }
             #report-module .company-info { max-width: 85mm !important; }
             #report-module .letter-body { padding: 8mm 20mm !important; flex-grow: 1 !important; }
             

@@ -124,19 +124,20 @@
             z-index: 1;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding: 15mm 20mm 6mm 10mm; 
+            align-items: center;
+            gap: 5mm;
+            padding: 15mm 20mm 6mm;
             box-sizing: border-box;
             width: 100%;
         }
         
-        #letterhead-module .letterhead-brand { display: flex; align-items: center; gap: 12px; }
-        #letterhead-module .logo-img { width: 18mm; height: 18mm; object-fit: contain; }
+        #letterhead-module .letterhead-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        #letterhead-module .logo-img { display: block; flex: 0 0 18mm; width: 18mm; height: 18mm; aspect-ratio: 1; object-fit: contain; }
         #letterhead-module .company-name-img { width: auto; max-width: 45mm; max-height: 14mm; object-fit: contain; }
         
         #letterhead-module .company-info {
             display: flex; flex-direction: column; gap: 6px; 
-            max-width: 85mm; text-align: left;
+            min-width: 0; max-width: 85mm; text-align: left;
         }
         #letterhead-module .company-contact {
             display: flex; align-items: flex-start; gap: 8px;
@@ -281,11 +282,11 @@
         }
 
         /* --- Responsive Screen --- */
-        @media (max-width: 768px) {
+        @media screen and (max-width: 768px) {
             #letterhead-module { padding: 10px; }
             #letterhead-module .studio-toolbar { flex-direction: column; align-items: stretch; padding: 16px; gap: 16px; }
             #letterhead-module .studio-actions { justify-content: flex-start; }
-            #letterhead-module .letter-header { flex-direction: column; gap: 20px; padding: 20px; }
+            #letterhead-module .letter-header { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px; }
             #letterhead-module .company-info { max-width: 100%; }
             #letterhead-module .letter-body, #letterhead-module .letterhead-seal-area, #letterhead-module .footer-section { padding-left: 20px; padding-right: 20px; }
             #letterhead-module .letterhead-seal-area { gap: 12px; }
@@ -306,7 +307,7 @@
                 width: 210mm !important; min-height: 297mm !important; height: 297mm !important; max-height: 297mm !important;
                 margin: 0 !important; padding: 0 !important; break-after: avoid !important; overflow: hidden !important; 
             }
-            #letterhead-module .letter-header { padding: 15mm 20mm 5mm 10mm !important; flex-direction: row !important; gap: 0 !important; }
+            #letterhead-module .letter-header { padding: 15mm 20mm 5mm !important; }
             #letterhead-module .company-info { max-width: 85mm !important; }
             #letterhead-module .letter-body { padding: 8mm 20mm !important; flex-grow: 1 !important; }
             #letterhead-module .letter-body textarea { min-height: 0 !important; }

@@ -61,10 +61,10 @@ body {
     content: "";
     position: absolute;
     inset: 50% auto auto 50%;
-    width: 125mm;
-    height: 125mm;
+    width: min(72%, 125mm);
+    aspect-ratio: 1;
     transform: translate(-50%, -50%);
-    background: url("../../../assets/logo-client-display.png") center / contain no-repeat;
+    background: url("../../../assets/document-logo.webp") center / contain no-repeat;
     opacity: 0.01;
     mix-blend-mode: multiply;
     pointer-events: none;
@@ -107,6 +107,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
     width: 100%;
     margin: 0;
     padding: 8px 0 18px;
@@ -125,6 +126,7 @@ body {
 #invoice-container .invoice-logo {
     display: block;
     flex: 0 0 18mm;
+    aspect-ratio: 1;
     width: 18mm;
     height: 18mm;
     object-fit: contain;
@@ -146,7 +148,7 @@ body {
     align-items: flex-start;
     justify-self: end;
     width: auto;
-    max-width: 85mm;
+    max-width: min(100%, 85mm);
     min-width: 0;
     gap: 6px;
     color: #344054;
@@ -937,8 +939,8 @@ input.clean-input:focus {
 /* =========================================
    11. RESPONSIVE SCREEN ADJUSTMENTS
    ========================================= */
-@media (max-width: 640px) {
-    #invoice-container .invoice-letterhead {
+@media screen and (max-width: 640px) {
+    #invoice-container:not(.pdf-export-mode) .invoice-letterhead {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
@@ -950,7 +952,7 @@ input.clean-input:focus {
         grid-template-columns: minmax(0, 1fr);
         gap: 18px;
     }
-    #invoice-container .invoice-company-info {
+    #invoice-container:not(.pdf-export-mode) .invoice-company-info {
         width: 100%;
         justify-self: stretch;
         font-size: 10px;
@@ -970,7 +972,7 @@ input.clean-input:focus {
     }
 }
 
-@media (max-width: 520px) {
+@media screen and (max-width: 520px) {
     body { padding: 8px 8px 18px; gap: 8px; }
     .invoice-actions-card { align-items: stretch; flex-direction: column; gap: 10px; padding: 8px; }
     .invoice-toolbar { justify-content: space-between; gap: 4px; }
@@ -980,7 +982,7 @@ input.clean-input:focus {
     .invoice-seal-control select { max-width: 42vw; padding: 0 8px; font-size: 11px; }
 }
 
-@media (min-width: 521px) and (max-width: 760px) {
+@media screen and (min-width: 521px) and (max-width: 760px) {
     .invoice-actions-card { align-items: stretch; flex-direction: column; gap: 10px; }
     .invoice-seal-controls { justify-content: flex-start; }
     .invoice-toolbar { justify-content: flex-end; }
