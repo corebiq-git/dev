@@ -795,3 +795,27 @@
     .dashboard-entry-title-text, .card-title, .cal-month-title, .schedule-table-heading h4) {
     color: var(--care-gold);
 }
+
+
+@media (max-width: 768px) {
+    .dashboard-quick-tools-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(4px, 1.4vw, 8px);
+        width: 100%;
+    }
+
+    .dashboard-quick-tool {
+        min-height: 0;
+        gap: 4px;
+        padding: 4px 2px;
+        border-radius: 10px;
+    }
+
+    .dashboard-quick-tool-icon { width: clamp(18px, 6vw, 30px); }
+
+    .dashboard-module .dashboard-quick-tool-name {
+        display: block;
+        font-size: clamp(10px, 2.8vw, 13px);
+        line-height: 1.1;
+    }
+}
