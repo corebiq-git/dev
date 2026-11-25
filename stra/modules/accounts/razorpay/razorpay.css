@@ -1,0 +1,50 @@
+#razorpay-module {
+    display: grid;
+    gap: 12px;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: var(--care-charcoal);
+}
+
+.razorpay-panel {
+    min-width: 0;
+    padding: clamp(14px, 3vw, 22px);
+    border: 1px solid var(--care-line);
+    border-radius: 16px;
+    background: white;
+}
+
+#razorpay-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+#razorpay-form label { display: grid; gap: 4px; }
+#razorpay-module :is(input, select, button, .razorpay-open) {
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--care-line);
+    border-radius: var(--care-button-radius);
+    background: var(--care-icon-surface);
+    color: inherit;
+}
+#razorpay-module :is(input, select) { width: 100%; }
+#razorpay-module button[type="submit"] { background: var(--care-charcoal); color: white; }
+#razorpay-module button:disabled { opacity: .55; }
+#razorpay-status { margin: 0; }
+.razorpay-toolbar, .razorpay-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+}
+.razorpay-toolbar h2 { margin: 0; font-size: 1.2rem; }
+.razorpay-row { padding: 12px 0; border-bottom: 1px solid var(--care-line); overflow-wrap: anywhere; }
+.razorpay-row p { margin: 4px 0; }
+.razorpay-row img { display: block; width: min(100%, 160px); margin: 8px 0; }
+.razorpay-actions { justify-content: flex-start; }
+.razorpay-open { display: inline-flex; align-items: center; }
+#razorpay-list { margin: 10px 0; }

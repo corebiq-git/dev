@@ -9,6 +9,7 @@ export const APP_METADATA = Object.freeze({
         'view-contacts': 'modules/crm/contacts/contacts.html',
         'view-appointments': 'modules/crm/appointments/appointments.html',
         'view-my-tasks': 'modules/crm/my-task/my-task.html',
+        'view-razorpay': 'modules/accounts/razorpay/razorpay.html',
         'view-transaction': 'modules/accounts/transaction/transaction.html',
         'view-cash-ledger': 'modules/accounts/cash/cash.html',
         'view-bank-ledger': 'modules/accounts/bank/bank.html',

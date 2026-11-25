@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Care | Razorpay</title>
+    <link rel="stylesheet" href="../../../css/corebiq.css">
+    <link rel="stylesheet" href="./razorpay.css" data-module-style>
+</head>
+<body>
+<section class="module-container" id="razorpay-module">
+    <form class="razorpay-panel" id="razorpay-form">
+        <label>Payment type
+            <select name="kind">
+                <option value="link">Payment link</option>
+                <option value="qr">Single-use UPI QR</option>
+            </select>
+        </label>
+        <label>Amount (₹)<input name="amount" type="number" inputmode="decimal" min="1" step=".01" required></label>
+        <label>Description<input name="description" maxlength="80" placeholder="Invoice reference" required></label>
+        <button type="submit">Create</button>
+    </form>
+    <p id="razorpay-status" role="status"></p>
+    <section class="razorpay-panel" aria-labelledby="razorpay-list-title">
+        <header class="razorpay-toolbar">
+            <h2 id="razorpay-list-title">Payment requests</h2>
+            <button type="button" data-razorpay-refresh>Refresh status</button>
+        </header>
+        <div id="razorpay-list"></div>
+        <div class="razorpay-toolbar">
+            <button type="button" data-page="-1" disabled>Previous</button>
+            <button type="button" data-page="1" disabled>Next</button>
+        </div>
+    </section>
+</section>
+<script type="module" src="./razorpay.js"></script>
+</body>
+</html>

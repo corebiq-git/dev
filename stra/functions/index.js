@@ -604,3 +604,81 @@ exports.reviewCareAccess = onCall({ region: 'us-central1' }, async request => {
     return { status: decision };
   });
 });
+
+const { defineSecret } = require('firebase-functions/params');
+const razorpayKeyId = defineSecret('RAZORPAY_KEY_ID');
+const razorpayKeySecret = defineSecret('RAZORPAY_KEY_SECRET');
+
+exports.manageRazorpayPayments = onCall({
+  region: 'us-central1',
+  secrets: [razorpayKeyId, razorpayKeySecret]
+}, async request => {
+  await requireAdmin(request);
+  const { kind, action, amount, description, id, skip = 0 } = request.data || {};
+  if (!['link', 'qr'].includes(kind)) throw new HttpsError('invalid-argument', 'Choose a payment link or UPI QR.');
+  const isLink = kind === 'link';
+  const collectionPath = isLink ? 'payment_links' : 'payments/qr_codes';
+  let path = collectionPath;
+  let payload;
+
+  if (action === 'create') {
+    if (!Number.isSafeInteger(amount) || amount < 100) {
+      throw new HttpsError('invalid-argument', 'Enter a valid amount of at least ₹1.');
+    }
+    const label = typeof description === 'string' ? description.trim() : '';
+    if (!label || label.length > 80) throw new HttpsError('invalid-argument', 'Enter a description of up to 80 characters.');
+    payload = isLink
+      ? { amount, currency: 'INR', description: label, accept_partial: false, notify: { sms: false, email: false }, reminder_enable: false }
+      : { type: 'upi_qr', name: 'STRA CARE', usage: 'single_use', fixed_amount: true, payment_amount: amount, description: label };
+  } else if (action === 'close') {
+    const validId = isLink ? /^plink_[a-zA-Z0-9]+$/ : /^qr_[a-zA-Z0-9]+$/;
+    if (typeof id !== 'string' || !validId.test(id)) throw new HttpsError('invalid-argument', 'Invalid payment reference.');
+    path += `/${id}/${isLink ? 'cancel' : 'close'}`;
+  } else if (action === 'list') {
+    if (!Number.isSafeInteger(skip) || skip < 0) throw new HttpsError('invalid-argument', 'Invalid page.');
+    path += `?count=20&skip=${skip}`;
+  } else {
+    throw new HttpsError('invalid-argument', 'Unsupported payment operation.');
+  }
+
+  const keyId = razorpayKeyId.value().trim();
+  const keySecret = razorpayKeySecret.value().trim();
+  if (!keyId || !keySecret) throw new HttpsError('failed-precondition', 'Razorpay credentials are missing.');
+  let response;
+  let data;
+  try {
+    response = await fetch(`https://api.razorpay.com/v1/${path}`, {
+      method: action === 'list' ? 'GET' : 'POST',
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`,
+        'Content-Type': 'application/json'
+      },
+      body: payload ? JSON.stringify(payload) : undefined,
+      signal: AbortSignal.timeout(12000)
+    });
+    data = await response.json();
+  } catch {
+    throw new HttpsError('unavailable', action === 'list' ? 'Razorpay is unavailable. Try refreshing.' :
+      'Razorpay did not confirm the result. Refresh the list before retrying.');
+  }
+  if (!response.ok) {
+    logger.warn('Razorpay API rejected request', { action, kind, status: response.status, code: data.error?.code });
+    throw new HttpsError('failed-precondition', response.status === 401
+      ? 'Razorpay rejected the configured credentials.'
+      : String(data.error?.description || 'Razorpay rejected the request.').slice(0, 240));
+  }
+
+  const summarize = item => ({
+    id: item.id,
+    description: item.description || '',
+    amount: isLink ? item.amount : item.payment_amount,
+    received: isLink ? item.amount_paid : item.payments_amount_received,
+    status: item.status,
+    url: isLink ? item.short_url : item.image_url,
+    created: item.created_at
+  });
+  return {
+    mode: keyId.startsWith('rzp_test_') ? 'Test' : 'Live',
+    items: (action === 'list' ? (data.payment_links || data.items || []) : [data]).map(summarize)
+  };
+});
