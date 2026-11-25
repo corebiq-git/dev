@@ -60,49 +60,10 @@
         color: var(--care-charcoal);
     }
 
-    .care-bottom-add {
-        position: relative;
-        display: grid;
-        flex: 1 1 0;
-        max-width: 120px;
-        min-width: 48px;
-        place-items: center;
-    }
-    .care-bottom-add summary {
-        display: grid;
-        width: 50px;
-        height: 50px;
-        place-items: center;
-        border-radius: 16px;
+    .bottom-nav-menu-button .bottom-nav-icon-wrap {
         background: var(--care-icon-surface);
         color: var(--care-charcoal);
-        cursor: pointer;
-        list-style: none;
     }
-    .care-bottom-add summary::-webkit-details-marker { display: none; }
-    .care-bottom-add[open] summary { outline: 1px solid var(--care-icon); }
-    .care-bottom-actions {
-        position: absolute;
-        right: 0;
-        bottom: calc(100% + 8px);
-        display: grid;
-        min-width: 170px;
-        padding: 6px;
-        border: 1px solid var(--care-line);
-        border-radius: 14px;
-        background: #fff;
-        box-shadow: var(--shadow);
-    }
-    .care-bottom-actions button {
-        min-height: 44px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        background: #fff;
-        text-align: left;
-        cursor: pointer;
-    }
-    .care-bottom-actions button:hover,
-    .care-bottom-actions button:focus-visible { background: var(--care-icon-surface); }
 
     @media (prefers-reduced-motion: reduce) {
         .bottom-nav-icon-wrap { transition: none; }
@@ -122,12 +83,9 @@
         <span class="bottom-nav-icon-wrap"><span class="material-symbols-rounded bottom-nav-icon bottom-nav-attendance-icon" aria-hidden="true">how_to_reg</span></span>
         <span>Attendance</span>
     </button>
-    <details class="care-bottom-add">
-        <summary aria-label="Quick add"><span class="material-symbols-rounded" aria-hidden="true">add</span></summary>
-        <div class="care-bottom-actions">
-            <button type="button" onclick="window.openCareQuickAction('appointment', this)">Appointment</button>
-            <button type="button" onclick="window.openCareQuickAction('transaction', this)">Transaction</button>
-            <button type="button" onclick="window.openCareQuickAction('attendance', this)">Attendance</button>
-        </div>
-    </details>
+    <button class="bottom-nav-item bottom-nav-menu-button" type="button" aria-label="Open menu"
+            aria-expanded="false" aria-controls="sidebar-container" onclick="window.toggleMobileNavigationMenu()">
+        <span class="bottom-nav-icon-wrap"><span class="material-symbols-rounded bottom-nav-icon" aria-hidden="true">menu</span></span>
+        <span>Menu</span>
+    </button>
 </nav>

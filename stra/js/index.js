@@ -526,7 +526,7 @@ window.toggleSidebarCollapse = function() {
 window.toggleMobileNavigationMenu = function(forceOpen) {
     const sidebar = document.getElementById('sidebar-container');
     const backdrop = document.getElementById('mobile-nav-backdrop');
-    const menuButton = document.querySelector('.care-header-menu');
+    const menuButtons = document.querySelectorAll('.bottom-nav-menu-button');
     if (!sidebar) return;
 
     if (!window.matchMedia('(max-width: 768px)').matches) {
@@ -540,16 +540,25 @@ window.toggleMobileNavigationMenu = function(forceOpen) {
         : !sidebar.classList.contains('open');
     sidebar.classList.toggle('open', isOpen);
     backdrop?.classList.toggle('visible', isOpen);
-    menuButton?.setAttribute('aria-expanded', String(isOpen));
-    menuButton?.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
-    const menuIcon = menuButton?.querySelector('.material-symbols-rounded');
-    if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+    menuButtons.forEach(button => {
+        button.setAttribute('aria-expanded', String(isOpen));
+        button.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+        const icon = button.querySelector('.material-symbols-rounded');
+        if (icon instanceof SVGElement) {
+            icon.innerHTML = isOpen
+                ? '<path d="m18 6-12 12M6 6l12 12"/>'
+                : '<path d="M4 6h16M4 12h16M4 18h16"/>';
+        } else if (icon) {
+            icon.textContent = isOpen ? 'close' : 'menu';
+        }
+    });
 };
 window.toggleSidebar = window.toggleMobileNavigationMenu;
 
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && document.getElementById('sidebar-container')?.classList.contains('open')) {
         window.toggleMobileNavigationMenu(false);
+        document.querySelector('.bottom-nav-menu-button')?.focus();
     }
 });
 
@@ -1051,13 +1060,13 @@ function dragElement(elmnt) {
    Keeps relative imports working from /development/.
 ------------------------------------------------------- */
 document.addEventListener('click', event => {
-    if (!event.target.closest('.care-bottom-add')) {
-        document.querySelector('.care-bottom-add[open]')?.removeAttribute('open');
+    if (!event.target.closest('.care-hero-add')) {
+        document.querySelector('.care-hero-add[open]')?.removeAttribute('open');
     }
 });
 document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
-    const menu = document.querySelector('.care-bottom-add[open]');
+    const menu = document.querySelector('.care-hero-add[open]');
     if (!menu) return;
     menu.removeAttribute('open');
     menu.querySelector('summary')?.focus();

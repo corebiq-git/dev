@@ -577,16 +577,13 @@ body{margin:0!important;padding:0!important}
     box-shadow: none;
 }
 #app-container .dashboard-header .header-actions { margin-left: auto; }
-#app-container .dashboard-header .profile-button,
-#app-container .dashboard-header .care-header-menu {
+#app-container .dashboard-header .profile-button {
     width: 44px;
     height: 44px;
     border-radius: 14px;
     background: #fff;
     color: var(--care-charcoal);
 }
-.care-header-menu { display: none; }
 @media (max-width: 768px) {
     #app-container .dashboard-header { padding: 9px 16px; }
-    .care-header-menu { display: grid; place-items: center; }
 }

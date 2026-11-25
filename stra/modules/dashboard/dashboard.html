@@ -13,17 +13,14 @@
                         <time id="dashboard-as-of-time"></time>
                     </div>
                     <h1 id="dash-company-name" data-no-translate>Care overview</h1>
-                    <div class="care-hero-actions" aria-label="Quick add">
-                        <button type="button" onclick="window.openCareQuickAction('appointment', this)">
-                            <span class="material-symbols-rounded" aria-hidden="true">add</span>Appointment
-                        </button>
-                        <button type="button" onclick="window.openCareQuickAction('transaction', this)">
-                            <span class="material-symbols-rounded" aria-hidden="true">add</span>Transaction
-                        </button>
-                        <button type="button" onclick="window.openCareQuickAction('attendance', this)">
-                            <span class="material-symbols-rounded" aria-hidden="true">add</span>Attendance
-                        </button>
-                    </div>
+                    <details class="care-hero-add">
+                        <summary><span class="material-symbols-rounded" aria-hidden="true">add</span>Add</summary>
+                        <div class="care-hero-options" aria-label="Add a record">
+                            <button type="button" onclick="window.openCareQuickAction('appointment', this)">Appointment</button>
+                            <button type="button" onclick="window.openCareQuickAction('transaction', this)">Transaction</button>
+                            <button type="button" onclick="window.openCareQuickAction('attendance', this)">Attendance</button>
+                        </div>
+                    </details>
                 </section>
 
                 <div class="dashboard-calendar-kpi-row">
