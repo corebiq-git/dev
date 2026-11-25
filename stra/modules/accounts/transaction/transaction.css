@@ -238,3 +238,29 @@
             #transaction-module .saas-table th { background: white; color: black; border-bottom: 1px solid #000; }
             #transaction-module .saas-table td { border-bottom: 1px solid #E8E5E1; }
         }
+
+.report-date-range {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.report-date-range label {
+    display: grid;
+    gap: 4px;
+    flex: 1 1 130px;
+    font-weight: 600;
+}
+
+.report-date-range input {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px;
+    border: 1px solid var(--care-line);
+    border-radius: var(--care-button-radius);
+    background: #fff;
+    color: var(--care-charcoal);
+}
+
+.report-status:empty { display: none; }

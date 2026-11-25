@@ -203,10 +203,15 @@
                 </button>
             </header>
             <div class="patient-report-body">
+                <div class="report-date-range">
+                    <label>From <input id="patientReportFrom" type="date" onchange="window.renderPatientTxnReport()"></label>
+                    <label>To <input id="patientReportTo" type="date" onchange="window.renderPatientTxnReport()"></label>
+                </div>
+                <p id="patientReportStatus" class="report-status" role="status"></p>
                 <div class="report-summary">
                     <div class="report-metric"><span>Total Billed</span><strong id="reportTotalBilled">₹0.00</strong></div>
                     <div class="report-metric"><span>Total Received</span><strong id="reportTotalReceived" style="color:#059669">₹0.00</strong></div>
-                    <div class="report-metric"><span>Outstanding Balance</span><strong id="reportTotalDue" style="color:#DC2626">₹0.00</strong></div>
+                    <div class="report-metric"><span>Closing Balance</span><strong id="reportTotalDue" style="color:#DC2626">₹0.00</strong></div>
                 </div>
                 <label class="patient-report-search">
                     <span class="material-symbols-rounded">search</span>
@@ -214,7 +219,7 @@
                 </label>
                 <div class="report-table-wrap">
                     <table class="report-table">
-                        <thead><tr><th>Patient</th><th>Mobile</th><th style="text-align:right">Bills</th><th style="text-align:right">Receipts</th><th style="text-align:right">Balance Due</th><th style="text-align:right">Actions</th></tr></thead>
+                        <thead><tr><th>Patient</th><th>Mobile</th><th style="text-align:right">Bills</th><th style="text-align:right">Receipts</th><th style="text-align:right">Closing Balance</th><th style="text-align:right">Actions</th></tr></thead>
                         <tbody id="patientReportBody"></tbody>
                     </table>
                 </div>

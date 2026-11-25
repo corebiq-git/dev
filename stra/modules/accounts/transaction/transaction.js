@@ -399,15 +399,20 @@ import { db } from "../../../js/firebase-config.js";
             ? window.formatCorebiqCurrency(value)
             : `₹${(Number(value) || 0).toFixed(2)}`;
 
-        function getPatientTxnReports() {
+        let reportRecords = [];
+        let reportPatients = [];
+        let reportLoadId = 0;
+        let reportStatus = '';
+
+        function getPatientTxnReports(from, to) {
             const patients = new Map();
-            Object.entries(window.txnDataCache).forEach(([id, data]) => {
+            reportRecords.forEach(({ id, data }) => {
                 const type = String(data.type || '').toLowerCase();
                 if (type !== 'sales' && type !== 'receipt') return;
 
                 const name = String(data.name || 'Unknown patient').trim();
-                const mobile = String(data.mobile || '').replace(/\D/g, '');
-                const key = mobile ? `mobile:${mobile}` : `name:${name.toLowerCase()}`;
+                const mobile = String(data.mobile || '').replace(/\D/g, '').replace(/^(?:91|0)(?=\d{10}$)/, '');
+                const key = JSON.stringify([mobile, name.toLowerCase().replace(/\s+/g, ' '), mobile ? '' : String(data.branch || '')]);
                 if (!patients.has(key)) {
                     patients.set(key, { key, name, mobile, transactions: [], billed: 0, received: 0 });
                 }
@@ -416,44 +421,81 @@ import { db } from "../../../js/firebase-config.js";
                 transaction.billAmount = type === 'sales' ? Number(data.cashOut) || 0 : 0;
                 transaction.receiptAmount = type === 'receipt' ? Number(data.cashIn) || 0 : 0;
                 patient.transactions.push(transaction);
-                patient.billed += transaction.billAmount;
-                patient.received += transaction.receiptAmount;
             });
 
             return [...patients.values()].map(patient => {
-                patient.transactions.sort((a, b) =>
-                    String(a.date || '').localeCompare(String(b.date || ''))
-                    || String(a.txnId || a.id).localeCompare(String(b.txnId || b.id))
-                );
-                patient.balance = patient.billed - patient.received;
+                const days = getDailyPatientStatement(patient);
+                const openingDays = from ? days.filter(day => day.date < from) : [];
+                patient.opening = openingDays.at(-1)?.due ?? 0;
+                patient.days = days.filter(day => (!from || day.date >= from) && (!to || day.date <= to));
+                patient.billed = patient.days.reduce((sum, day) => sum + day.sales, 0);
+                patient.received = patient.days.reduce((sum, day) => sum + day.cashReceipts + day.bankReceipts, 0);
+                patient.balance = patient.days.at(-1)?.due ?? patient.opening;
+                patient.period = `${from || 'Beginning'} to ${to || 'Latest'}`;
                 return patient;
-            }).sort((a, b) => a.name.localeCompare(b.name));
+            }).filter(patient => patient.days.length || patient.opening !== 0)
+                .sort((a, b) => a.name.localeCompare(b.name));
         }
 
-        window.openPatientTxnReport = function() {
+        window.openPatientTxnReport = async function() {
+            const loadId = ++reportLoadId;
             document.getElementById('patientReportModal').classList.add('show');
             document.getElementById('patientReportSearch').value = '';
-            document.getElementById('patientReportDetail').classList.remove('show');
+            document.getElementById('patientReportFrom').value = document.getElementById('filterTxnDateFrom').value;
+            document.getElementById('patientReportTo').value = document.getElementById('filterTxnDateTo').value;
+            reportRecords = [];
+            reportStatus = 'Loading patient statements…';
+            window.renderPatientTxnReport();
+            try {
+                const user = window.currentUser;
+                const branch = String(user?.branch || '').trim();
+                if (!user || (user.role !== 'admin' && (!branch || branch === 'Unknown'))) {
+                    throw new Error('Patient report requires a signed-in account with access to transactions.');
+                }
+                const transactions = collection(db, 'transactions');
+                const source = user.role === 'admin' ? transactions : query(transactions, where('branch', '==', branch));
+                const snapshot = await getDocs(source);
+                if (loadId !== reportLoadId) return;
+                reportRecords = snapshot.docs.map(entry => ({ id: entry.id, data: entry.data() }));
+                reportStatus = '';
+            } catch (error) {
+                if (loadId !== reportLoadId) return;
+                console.error('Unable to load patient statements:', error);
+                reportStatus = 'Unable to load patient statements. Close and reopen the report to retry.';
+            }
             window.renderPatientTxnReport();
         };
 
         window.closePatientTxnReport = function() {
+            ++reportLoadId;
+            reportRecords = [];
+            reportPatients = [];
             document.getElementById('patientReportModal').classList.remove('show');
         };
 
         window.renderPatientTxnReport = function() {
-            const patients = getPatientTxnReports();
+            document.getElementById('patientReportDetail').classList.remove('show');
+            const from = document.getElementById('patientReportFrom').value;
+            const to = document.getElementById('patientReportTo').value;
+            const status = reportStatus || (from && to && from > to ? 'From date must be on or before To date.' : '');
+            document.getElementById('patientReportStatus').textContent = status;
+            reportPatients = status ? [] : getPatientTxnReports(from, to);
+            const patients = reportPatients;
             const search = document.getElementById('patientReportSearch').value.toLowerCase().trim();
             const body = document.getElementById('patientReportBody');
             const totalBilled = patients.reduce((sum, patient) => sum + patient.billed, 0);
             const totalReceived = patients.reduce((sum, patient) => sum + patient.received, 0);
             document.getElementById('reportTotalBilled').textContent = formatReportMoney(totalBilled);
             document.getElementById('reportTotalReceived').textContent = formatReportMoney(totalReceived);
-            document.getElementById('reportTotalDue').textContent = formatReportMoney(totalBilled - totalReceived);
+            document.getElementById('reportTotalDue').textContent = formatReportMoney(patients.reduce((sum, patient) => sum + patient.balance, 0));
 
             const visiblePatients = patients.filter(patient =>
                 `${patient.name} ${patient.mobile}`.toLowerCase().includes(search)
             );
+            if (status) {
+                body.innerHTML = '';
+                return;
+            }
             if (!visiblePatients.length) {
                 body.innerHTML = `<tr><td colspan="6" class="report-empty">${patients.length ? 'No patients match your search.' : 'No bills or receipts found in the available transaction records.'}</td></tr>`;
                 return;
@@ -478,7 +520,7 @@ import { db } from "../../../js/firebase-config.js";
         };
 
         function getPatientReport(key) {
-            return getPatientTxnReports().find(patient => patient.key === key);
+            return reportPatients.find(patient => patient.key === key);
         }
 
         function getDailyPatientStatement(patient) {
@@ -512,7 +554,7 @@ import { db } from "../../../js/firebase-config.js";
 
         function renderPatientReportDetails(patient) {
             const detail = document.getElementById('patientReportDetail');
-            const dailyStatement = getDailyPatientStatement(patient);
+            const dailyStatement = patient.days;
             const rows = dailyStatement.map(day => `<tr>
                 <td>${escapeReportHtml(day.date || '—')}</td>
                 <td>${escapeReportHtml(day.particulars.join('; ') || 'Account activity')}</td>
@@ -523,12 +565,12 @@ import { db } from "../../../js/firebase-config.js";
             </tr>`).join('');
             const dueColor = patient.balance > 0 ? '#B42318' : '#067647';
             detail.innerHTML = `<div class="report-detail-head">
-                <div><h4>${escapeReportHtml(patient.name)} · Account Statement</h4><div style="margin-top:3px;color:var(--text-muted);font-size:12px">Mobile: ${escapeReportHtml(patient.mobile || '—')} · ${dailyStatement.length} transaction date(s)</div></div>
-                <div style="text-align:right;font-size:12px"><div>Sales ${formatReportMoney(patient.billed)} · Receipts ${formatReportMoney(patient.received)}</div><div class="report-detail-balance" style="color:${dueColor}">Final due ${formatReportMoney(patient.balance)}</div></div>
+                <div><h4>${escapeReportHtml(patient.name)} · Account Statement</h4><div style="margin-top:3px;color:var(--text-muted);font-size:12px">Mobile: ${escapeReportHtml(patient.mobile || '—')} · ${escapeReportHtml(patient.period)}</div></div>
+                <div style="text-align:right;font-size:12px"><div>Opening balance ${formatReportMoney(patient.opening)}</div><div>Sales ${formatReportMoney(patient.billed)} · Receipts ${formatReportMoney(patient.received)}</div><div class="report-detail-balance" style="color:${dueColor}">Closing balance ${formatReportMoney(patient.balance)}</div></div>
             </div>
             <div class="report-table-wrap"><table class="report-table">
-                <thead><tr><th>Date</th><th>Particulars</th><th style="text-align:right">Sales (+)</th><th style="text-align:right">Cash Receipt (−)</th><th style="text-align:right">Bank Receipt (−)</th><th style="text-align:right">Running Due</th></tr></thead>
-                <tbody>${rows}</tbody>
+                <thead><tr><th>Date</th><th>Particulars</th><th style="text-align:right">Sales (+)</th><th style="text-align:right">Cash Receipt (−)</th><th style="text-align:right">Bank Receipt (−)</th><th style="text-align:right">Running Balance</th></tr></thead>
+                <tbody>${rows || '<tr><td colspan="6" class="report-empty">No transactions in this date range.</td></tr>'}</tbody>
                 <tfoot><tr style="background:#F8FAFC;font-weight:800">
                     <td colspan="2" style="text-align:right">Closing due</td>
                     <td style="text-align:right;color:#B42318">${formatReportMoney(patient.billed)}</td>
@@ -545,17 +587,19 @@ import { db } from "../../../js/firebase-config.js";
         }
 
         function downloadPatientTxnReport(patient) {
-            const dailyStatement = getDailyPatientStatement(patient);
+            const dailyStatement = patient.days;
             const rows = [
                 ['ACCOUNT STATEMENT'],
-                ['Patient', patient.name],
+                ['Patient', /^[\s]*[=+@-]/.test(patient.name) ? "'" + patient.name : patient.name],
+                ['Period', patient.period],
+                ['Opening balance', patient.opening.toFixed(2)],
                 ['Mobile', patient.mobile],
                 ['Total sales', patient.billed.toFixed(2)],
                 ['Cash receipts', dailyStatement.reduce((sum, day) => sum + day.cashReceipts, 0).toFixed(2)],
                 ['Bank receipts', dailyStatement.reduce((sum, day) => sum + day.bankReceipts, 0).toFixed(2)],
-                ['Final due', patient.balance.toFixed(2)],
+                ['Closing balance', patient.balance.toFixed(2)],
                 [],
-                ['Date', 'Particulars', 'Sales (+) INR', 'Cash Receipt (-) INR', 'Bank Receipt (-) INR', 'Running Due INR']
+                ['Date', 'Particulars', 'Sales (+) INR', 'Cash Receipt (-) INR', 'Bank Receipt (-) INR', 'Running Balance INR']
             ];
             dailyStatement.forEach(day => rows.push([
                 day.date,
@@ -565,7 +609,7 @@ import { db } from "../../../js/firebase-config.js";
                 day.bankReceipts ? day.bankReceipts.toFixed(2) : '',
                 day.due.toFixed(2)
             ]));
-            rows.push([], ['CLOSING DUE', '', '', '', '', patient.balance.toFixed(2)]);
+            rows.push([], ['CLOSING BALANCE', '', '', '', '', patient.balance.toFixed(2)]);
             const csv = '\uFEFF' + rows.map(row => row.map(reportCsvCell).join(',')).join('\r\n');
             const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
             const link = document.createElement('a');
@@ -590,7 +634,7 @@ import { db } from "../../../js/firebase-config.js";
                 alert('Patient mobile number must be a valid 10-digit Indian number.');
                 return;
             }
-            const dailyStatement = getDailyPatientStatement(patient);
+            const dailyStatement = patient.days;
             const formatMoney = value => window.formatCorebiqCurrency
                 ? window.formatCorebiqCurrency(value)
                 : `₹${Number(value || 0).toFixed(2)}`;
@@ -599,10 +643,12 @@ import { db } from "../../../js/firebase-config.js";
             );
             const message = [
                 `Account statement: ${patient.name}`,
+                `Period: ${patient.period}`,
+                `Opening balance: ${formatMoney(patient.opening)}`,
                 `Total sales: ${formatMoney(patient.billed)}`,
                 `Cash receipts: ${formatMoney(dailyStatement.reduce((sum, day) => sum + day.cashReceipts, 0))}`,
                 `Bank receipts: ${formatMoney(dailyStatement.reduce((sum, day) => sum + day.bankReceipts, 0))}`,
-                `Final due: ${formatMoney(patient.balance)}`,
+                `Closing balance: ${formatMoney(patient.balance)}`,
                 '',
                 'Date-wise statement:',
                 ...lines
