@@ -8,8 +8,8 @@ import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument }
         };
         let pendingReportDocumentPart = null;
         function closeReportMenus() {
-            document.querySelectorAll('#letterhead-module .action-menu').forEach(item => item.classList.remove('visible'));
-            document.querySelectorAll('#letterhead-module .action-button[aria-haspopup="true"]').forEach(button => button.setAttribute('aria-expanded', 'false'));
+            document.querySelectorAll('#report-module .action-menu').forEach(item => item.classList.remove('visible'));
+            document.querySelectorAll('#report-module .action-button[aria-haspopup="true"]').forEach(button => button.setAttribute('aria-expanded', 'false'));
         }
         window.toggleReportMenu = function(menuName) {
             const menuIds = {
@@ -58,7 +58,7 @@ import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument }
             closeReportMenus();
             try {
                 await downloadA4PdfDocument(
-                    document.querySelector('#letterhead-module .a4-canvas'),
+                    document.querySelector('#report-module .a4-canvas'),
                     'Physiotherapy_Report'
                 );
             } catch (error) {
@@ -70,7 +70,7 @@ import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument }
             closeReportMenus();
             try {
                 await downloadA4JpegDocument(
-                    document.querySelector('#letterhead-module .a4-canvas'),
+                    document.querySelector('#report-module .a4-canvas'),
                     'Physiotherapy_Report'
                 );
             } catch (error) {
@@ -82,7 +82,7 @@ import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument }
             closeReportMenus();
             try {
                 await downloadA4WordDocument(
-                    document.querySelector('#letterhead-module .a4-canvas'),
+                    document.querySelector('#report-module .a4-canvas'),
                     'Physiotherapy_Report.doc'
                 );
             } catch (error) {

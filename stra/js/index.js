@@ -609,12 +609,6 @@ window.fetchFresh = async function(filename) {
 };
 
 window.applyLucideIcons = function(root = document) {
-    const categoryColors = {
-        CRM: '#34A853',
-        Accounts: '#4285F4',
-        HR: '#8E5AE8'
-    };
-    const defaultColor = '#80868B';
     const icons = {
         dashboard: '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
         contact_page: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6 16c.8-1.6 1.8-2.4 3-2.4s2.2.8 3 2.4M15 9h3M15 13h3"/>',
@@ -691,37 +685,8 @@ window.applyLucideIcons = function(root = document) {
     const targets = [];
     if (root instanceof Element && root.matches(selector)) targets.push(root);
     targets.push(...root.querySelectorAll(selector));
-    const activeView = root instanceof Element && root.matches('.view-section')
-        ? root
-        : root instanceof Element
-            ? root.closest('.view-section')
-            : document.querySelector('.view-section.active');
-    const activeNavLink = activeView
-        ? [...document.querySelectorAll('#sidebar-container .nav-link')]
-            .find(link => link.dataset.target === activeView.id)
-        : null;
-    const moduleCategory = activeNavLink?.dataset.iconCategory || '';
     targets.forEach(icon => {
-        const navLink = icon.closest('.nav-link, .top-nav-link, .bottom-nav-item');
-        const navGroup = icon.closest('.sidebar-nav-group');
-        const topNavGroup = icon.closest('.top-nav-group');
-        const category = navLink?.dataset.iconCategory ||
-            (icon.classList.contains('top-nav-category-icon') ? topNavGroup?.dataset.category : '') ||
-            (navGroup?.dataset.category === 'CRM' || navGroup?.dataset.category === 'Accounts' || navGroup?.dataset.category === 'HR'
-                ? navGroup.dataset.category
-                : moduleCategory);
-        const isChevron = icon.classList.contains('sidebar-nav-chevron') ||
-            icon.classList.contains('sidebar-nav-submenu-chevron') ||
-            icon.classList.contains('top-nav-chevron') ||
-            icon.classList.contains('top-nav-submenu-chevron');
-        const isBottomNav = navLink?.classList.contains('bottom-nav-item');
-        const isSelectedBottomNav = isBottomNav &&
-            (navLink.classList.contains('active') || navLink.getAttribute('aria-expanded') === 'true');
-        const color = isSelectedBottomNav
-            ? '#FFFFFF'
-            : isBottomNav
-                ? 'rgba(11, 31, 75, .55)'
-                : isChevron ? defaultColor : categoryColors[category] || defaultColor;
+        const color = icon.classList.contains('bottom-nav-icon') ? 'inherit' : 'var(--care-icon)';
         icon.style.setProperty('color', color, 'important');
         if (!(icon instanceof SVGElement)) {
             icon.style.setProperty('font-variation-settings', '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24', 'important');

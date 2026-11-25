@@ -13,7 +13,7 @@
         }
 
         /* --- Global & Container --- */
-        body { background-color: #F8FAFC; margin: 0; }
+        body:not(:has(#app-container)) { background-color: #F8FAFC; margin: 0; }
         #letterhead-module { 
             font-family: 'Inter', sans-serif; 
             display: flex; 
