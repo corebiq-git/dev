@@ -1,4 +1,4 @@
-const CACHE="corebiq-v39";
+const CACHE="corebiq-v40";
 const CORE=[
     "./",
     "./index.html",
@@ -21,6 +21,7 @@ const CORE=[
     "./css/care-loader.css",
     "./js/care-loader.js",
     "./assets/trefoil-loader.svg",
+    "./assets/biq-ai-logo.svg",
     "./js/sign-in.js",
     "./js/care-access.js",
     "./js/indian-phone.mjs",

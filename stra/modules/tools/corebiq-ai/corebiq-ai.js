@@ -1,6 +1,8 @@
+import { indianMobileDigits } from '../../../js/indian-phone.mjs';
+import { normalizePatientName, patientBranchFilters } from '../../../js/patient-search.mjs';
 import { auth, db } from '../../../js/firebase-config.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import { collection, getDocs, limit, query, where } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 
 const root=document.getElementById('corebiq-ai');
 const searchInput=document.getElementById('aiPatientSearch');
@@ -9,7 +11,9 @@ const loading=document.getElementById('aiLoading');
 const errorBox=document.getElementById('aiError');
 const results=document.getElementById('aiResults');
 const searchButton=document.getElementById('aiSearchButton');
-let patients=[];
+let searchTimer;
+let searchVersion=0;
+let lastSearch;
 let visiblePatients=[];
 let activeUser=null;
 
@@ -41,20 +45,33 @@ const setError=message=>{
   errorBox.hidden=!message;
 };
 
-function renderSuggestions(value){
-  const term=value.trim().toLocaleLowerCase();
-  if(!term){suggestions.classList.remove('show');suggestions.innerHTML='';visiblePatients=[];return}
-  const digits=term.replace(/\D/g,'');
-  const matches=patients.filter(({data})=>{
-    const name=String(data.name||'').toLocaleLowerCase();
-    const mobile=String(data.mobile||'').replace(/\D/g,'');
-    return name.includes(term)||(digits.length>0&&mobile.includes(digits));
-  }).sort((a,b)=>{
-    const aName=String(a.data.name||'').toLocaleLowerCase(),bName=String(b.data.name||'').toLocaleLowerCase();
-    const aExact=String(a.data.mobile||'').replace(/\D/g,'')===digits||aName===term;
-    const bExact=String(b.data.mobile||'').replace(/\D/g,'')===digits||bName===term;
-    return Number(bExact)-Number(aExact)||aName.localeCompare(bName);
-  }).slice(0,8);
+function findPatients(value){
+  const term=normalizePatientName(value);
+  const mobileSearch=/^\+?[\d\s()-]+$/.test(value.trim());
+  const digits=mobileSearch?indianMobileDigits(value):'';
+  if(!activeUser||term.length<2||(mobileSearch&&digits.length!==10))return Promise.resolve([]);
+  const key=JSON.stringify([activeUser.email,activeUser.role,activeUser.branch,term]);
+  if(lastSearch?.key===key&&lastSearch.expires>Date.now())return lastSearch.promise;
+  const scope=patientBranchFilters(activeUser,where);
+  const directory=collection(db,'patients');
+  const prefix=(field,text)=>getDocs(query(directory,...scope,where(field,'>=',text),where(field,'<=',text+'\uf8ff'),limit(8)));
+  const promise=(async()=>{
+    const found=mobileSearch
+      ? await getDocs(query(directory,...scope,where('mobile','==',digits),limit(8)))
+      : await prefix('nameSearch',term);
+    if(mobileSearch||!found.empty)return found.docs.map(doc=>({id:doc.id,data:doc.data()}));
+    // Legacy records may not have the normalized field until backfill completes.
+    for(const name of new Set([value.trim(),term.replace(/(^|\s)\S/g,letter=>letter.toUpperCase()),term])){
+      const legacy=await prefix('name',name);
+      if(!legacy.empty)return legacy.docs.map(doc=>({id:doc.id,data:doc.data()}));
+    }
+    return [];
+  })().catch(error=>{if(lastSearch?.promise===promise)lastSearch=null;throw error});
+  lastSearch={key,promise,expires:Date.now()+30000};
+  return promise;
+}
+
+function renderSuggestions(matches){
   visiblePatients=matches;
   if(!matches.length){
     suggestions.innerHTML='<div class="ai-empty">No matching patients found in your permitted records.</div>';
@@ -71,10 +88,11 @@ function renderSuggestions(value){
 }
 
 async function loadPatientAppointments(patient){
-  let appointmentQuery=query(collection(db,'appointments'),where('mobile','==',String(patient.mobile||'')));
-  if(activeUser.role!=='admin'){
-    appointmentQuery=query(collection(db,'appointments'),where('mobile','==',String(patient.mobile||'')),where('branch','==',activeUser.branch));
-  }
+  if(!patient.mobile)return [];
+  const constraints=[where('mobile','==',String(patient.mobile))];
+  const branch=activeUser.role==='admin'?patient.branch:activeUser.branch;
+  if(branch)constraints.push(where('branch','==',branch));
+  const appointmentQuery=query(collection(db,'appointments'),...constraints);
   const snapshot=await getDocs(appointmentQuery);
   return snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
 }
@@ -138,6 +156,8 @@ function renderPatient(patient,appointments){
 
 async function selectPatient(patientRecord){
   const patient=patientRecord.data;
+  const version=++searchVersion;
+  clearTimeout(searchTimer);
   suggestions.classList.remove('show');
   searchInput.value=patient.name||patient.mobile||'';
   setError('');
@@ -147,30 +167,58 @@ async function selectPatient(patientRecord){
   searchButton.disabled=true;
   try{
     const appointments=await loadPatientAppointments(patient);
-    renderPatient(patient,appointments);
+    if(version===searchVersion)renderPatient(patient,appointments);
   }catch(error){
     console.error('COREBIQ AI patient lookup failed:',error);
-    setError('Unable to load this patient’s appointment details. Check your account access and try again.');
+    if(version===searchVersion)setError('Unable to load this patient’s appointment details. Check your account access and try again.');
   }finally{
+    if(version===searchVersion){loading.hidden=true;searchButton.disabled=false;}
+  }
+}
+
+async function searchPatients(submit=false){
+  const value=searchInput.value.trim();
+  const version=++searchVersion;
+  clearTimeout(searchTimer);
+  suggestions.classList.remove('show');
+  suggestions.replaceChildren();
+  visiblePatients=[];
+  results.hidden=true;
+  loading.hidden=true;
+  searchButton.disabled=!activeUser;
+  if(!activeUser)return;
+  if(value.length<2||(/^\+?[\d\s()-]+$/.test(value)&&indianMobileDigits(value).length!==10)){
+    if(submit)setError('Enter at least two letters or a complete 10-digit mobile number.');
+    return;
+  }
+  setError('');
+  loading.textContent='Searching patient records…';
+  loading.hidden=false;
+  try{
+    const matches=await findPatients(value);
+    if(version!==searchVersion)return;
     loading.hidden=true;
-    searchButton.disabled=false;
+    if(submit&&matches.length===1)await selectPatient(matches[0]);
+    else renderSuggestions(matches);
+  }catch(error){
+    if(version!==searchVersion)return;
+    loading.hidden=true;
+    console.error('BIQ AI patient search failed:',error);
+    setError('Unable to search patients. Check your connection and account access.');
   }
 }
 
 document.getElementById('aiSearchForm').addEventListener('submit',event=>{
   event.preventDefault();
-  const term=searchInput.value.trim().toLocaleLowerCase();
-  if(!term){setError('Enter a patient name or mobile number to search.');searchInput.focus();return}
-  const digits=term.replace(/\D/g,'');
-  const exact=patients.find(({data})=>String(data.mobile||'').replace(/\D/g,'')===digits||String(data.name||'').toLocaleLowerCase()===term);
-  const match=exact||visiblePatients[0];
-  if(!match){renderSuggestions(searchInput.value);setError('No matching patient found. Check the spelling or mobile number.');return}
-  setError('');
-  selectPatient(match);
+  void searchPatients(true);
 });
 searchInput.addEventListener('input',()=>{
+  searchVersion++;
+  clearTimeout(searchTimer);
+  suggestions.classList.remove('show');
+  visiblePatients=[];
   setError('');
-  renderSuggestions(searchInput.value);
+  searchTimer=setTimeout(()=>void searchPatients(),300);
 });
 suggestions.addEventListener('click',event=>{
   const button=event.target.closest('[data-patient-index]');
@@ -182,21 +230,15 @@ document.addEventListener('click',event=>{
   if(!root.contains(event.target))suggestions.classList.remove('show');
 });
 
-onAuthStateChanged(auth,async user=>{
-  if(!user){setError('Access denied. Please sign in to use the patient assistant.');loading.hidden=true;searchButton.disabled=true;return}
-  activeUser=window.currentUser;
-  if(!activeUser){setError('Your user profile is still loading. Please refresh and try again.');loading.hidden=true;return}
-  loading.textContent='Loading patients available to your account…';
-  loading.hidden=false;
-  try{
-    let patientQuery=query(collection(db,'patients'));
-    if(activeUser.role!=='admin')patientQuery=query(collection(db,'patients'),where('branch','==',activeUser.branch));
-    const snapshot=await getDocs(patientQuery);
-    patients=snapshot.docs.map(doc=>({id:doc.id,data:doc.data()})).filter(item=>item.data.name||item.data.mobile);
-    loading.textContent=patients.length?`Ready · ${patients.length} patient${patients.length===1?'':'s'} available in your records.`:'No patients were found in your records.';
-  }catch(error){
-    console.error('COREBIQ AI patient list failed to load:',error);
-    loading.hidden=true;
-    setError('Unable to load patients. Check your account access and connection, then refresh this page.');
+onAuthStateChanged(auth,user=>{
+  searchVersion++;
+  lastSearch=null;
+  activeUser=user?window.currentUser:null;
+  loading.hidden=true;
+  searchButton.disabled=!activeUser;
+  if(!activeUser){
+    suggestions.classList.remove('show');
+    results.hidden=true;
+    setError('Sign in to Care to use the patient assistant.');
   }
 });

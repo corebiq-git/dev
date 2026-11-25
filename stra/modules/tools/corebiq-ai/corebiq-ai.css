@@ -1,29 +1,19 @@
 #corebiq-ai{--ai-ink:#17213c;--ai-muted:#69738a;--ai-border:#e6e9f2;--ai-surface:#fff;position:relative;isolation:isolate;max-width:1120px;margin:0 auto;color:var(--ai-ink);font-family:Inter,sans-serif}
     #corebiq-ai *{box-sizing:border-box}
-    #corebiq-ai .ai-shell{position:relative;overflow:hidden;min-height:650px;padding:clamp(20px,4vw,44px);border:1px solid #e8eaf2;border-radius:26px;background:linear-gradient(145deg,#fbfaff 0%,#f5f8ff 48%,#fff9fc 100%);box-shadow:0 16px 55px rgba(38,46,82,.08)}
-    #corebiq-ai .ai-orb{position:absolute;z-index:-1;width:320px;height:320px;border-radius:50%;filter:blur(65px);opacity:.25;pointer-events:none;animation:corebiqAiDrift 12s ease-in-out infinite alternate}
-    #corebiq-ai .ai-orb.one{top:-175px;left:-75px;background:#8b72ff}
-    #corebiq-ai .ai-orb.two{top:150px;right:-205px;background:#ff7797;animation-delay:-4s}
-    #corebiq-ai .ai-orb.three{bottom:-250px;left:30%;background:#56c8ff;animation-delay:-7s}
-    #corebiq-ai .ai-head{position:relative;display:flex;align-items:center;gap:15px;margin-bottom:30px}
-    #corebiq-ai .ai-mark{position:relative;display:grid;place-items:center;width:54px;height:54px;flex:0 0 54px;border-radius:19px;color:#fff;background:conic-gradient(from 15deg,#7187ff,#ad70ff,#ff7ea7,#50c9e9,#7187ff);box-shadow:0 8px 24px rgba(127,103,255,.25)}
-    #corebiq-ai .ai-mark:before{position:absolute;inset:2px;border:1px solid rgba(255,255,255,.55);border-radius:17px;content:""}
-    #corebiq-ai .ai-mark .material-symbols-rounded{font-size:29px}
-    #corebiq-ai .ai-title{margin:0;font-size:clamp(21px,3vw,29px);font-weight:750;letter-spacing:-.8px}
-    #corebiq-ai .ai-title .gradient-text{color:#725fe5;background:linear-gradient(100deg,#5e73ea,#9a62db 54%,#e16d9c);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    #corebiq-ai .ai-subtitle{margin:5px 0 0;color:var(--ai-muted);font-size:13px}
-    #corebiq-ai .ai-kicker{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding:7px 10px;border:1px solid rgba(125,111,219,.18);border-radius:999px;background:rgba(255,255,255,.7);color:#655bb0;font-size:11px;font-weight:650}
-    #corebiq-ai .ai-kicker .material-symbols-rounded{font-size:15px}
+    #corebiq-ai .ai-shell{position:relative;overflow:hidden;min-height:650px;padding:clamp(20px,4vw,44px);border:1px solid #e8eaf2;border-radius:26px;background:radial-gradient(ellipse at top,#eef4ff,#f8fafc 64%);box-shadow:0 16px 55px rgba(38,46,82,.08)}
+    #corebiq-ai .ai-head{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:14px;text-align:center}
+    #corebiq-ai .ai-mark{display:block;width:clamp(96px,26vw,176px);height:auto;aspect-ratio:1}
+    #corebiq-ai .ai-title{margin:0;color:#17213c;font-size:clamp(28px,6vw,42px)!important;font-weight:750!important;letter-spacing:-.02em}
+    #corebiq-ai .ai-subtitle{margin:5px 0 0;color:var(--ai-muted);font-size:14px}
     #corebiq-ai .ai-intro{max-width:720px;margin:0 auto 25px;text-align:center}
-    #corebiq-ai .ai-intro h1{margin:0;color:#18213a;font-size:clamp(25px,5vw,40px);font-weight:650;letter-spacing:-1.5px;line-height:1.15}
     #corebiq-ai .ai-intro p{margin:10px 0 0;color:var(--ai-muted);font-size:14px;line-height:1.6}
     #corebiq-ai .ai-search-wrap{position:relative;max-width:760px;margin:0 auto}
-    #corebiq-ai .ai-search-card{position:relative;padding:2px;border-radius:20px;background:linear-gradient(105deg,#7588ff,#bd71e9 48%,#ff87a7,#62c7ed);background-size:220% 220%;animation:corebiqAiGradient 8s ease infinite;box-shadow:0 9px 30px rgba(113,105,223,.15)}
+    #corebiq-ai .ai-search-card{position:relative;padding:2px;border-radius:20px;background:#dce6f8;box-shadow:0 9px 30px rgba(113,105,223,.15)}
     #corebiq-ai .ai-search-inner{display:flex;align-items:center;gap:10px;min-height:66px;padding:9px 10px 9px 18px;border-radius:18px;background:#fff}
     #corebiq-ai .ai-search-icon{flex:0 0 auto;color:#8584a1}
     #corebiq-ai .ai-search-inner input{width:100%;min-width:0;height:44px;border:0;outline:0;background:transparent;color:#202943;font:500 15px Inter,sans-serif}
     #corebiq-ai .ai-search-inner input::placeholder{color:#9aa1b3}
-    #corebiq-ai .ai-search-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 17px;border:0;border-radius:13px;background:linear-gradient(110deg,#6679e8,#936be3 58%,#d570a5);color:#fff;font:650 13px Inter,sans-serif;white-space:nowrap;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+    #corebiq-ai .ai-search-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 17px;border:0;border-radius:13px;background:#2458c5;color:#fff;font:650 13px Inter,sans-serif;white-space:nowrap;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
     #corebiq-ai .ai-search-button:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(119,103,220,.28)}
     #corebiq-ai .ai-search-button:disabled{opacity:.65;cursor:wait;transform:none}
     #corebiq-ai .ai-suggestions{position:absolute;z-index:5;top:calc(100% + 8px);left:0;right:0;display:none;overflow:hidden;border:1px solid var(--ai-border);border-radius:16px;background:#fff;box-shadow:0 14px 34px rgba(30,39,72,.14)}
@@ -73,9 +63,19 @@
     #corebiq-ai .ai-status.completed{background:#eaf8f1;color:#16835b}
     #corebiq-ai .ai-status.cancelled{background:#fff0f0;color:#c44646}
     #corebiq-ai .ai-footnote{margin:14px 4px 0;color:#8b92a2;font-size:10px;line-height:1.5}
-    @keyframes corebiqAiGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-    @keyframes corebiqAiDrift{from{transform:translate3d(-10px,0,0) scale(.95)}to{transform:translate3d(24px,22px,0) scale(1.08)}}
     @keyframes corebiqAiRise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
-    @media(max-width:700px){#corebiq-ai .ai-shell{min-height:0;padding:20px 14px;border-radius:20px}#corebiq-ai .ai-head{gap:10px;margin-bottom:26px}#corebiq-ai .ai-kicker{padding:6px 8px;font-size:10px}#corebiq-ai .ai-kicker .kicker-label{display:none}#corebiq-ai .ai-intro p{font-size:13px}#corebiq-ai .ai-search-inner{gap:7px;padding-left:12px}#corebiq-ai .ai-search-button{padding:0 12px;font-size:12px}#corebiq-ai .ai-metrics{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;gap:8px}#corebiq-ai .ai-metric{min-height:98px;padding:11px}#corebiq-ai .ai-detail-grid{grid-template-columns:1fr;padding:0 12px 12px;gap:9px}#corebiq-ai .ai-patient-head{padding:15px 13px}#corebiq-ai .ai-patient-id{font-size:10px}#corebiq-ai .ai-patient-name{font-size:16px}}
     @media(max-width:400px){#corebiq-ai .ai-search-inner{flex-wrap:wrap;padding:10px 11px}#corebiq-ai .ai-search-icon{display:none}#corebiq-ai .ai-search-inner input{height:40px;flex:1 1 100%}#corebiq-ai .ai-search-button{width:100%}#corebiq-ai .ai-patient-id{display:none}}
     @media(prefers-reduced-motion:reduce){#corebiq-ai *,#corebiq-ai *:before,#corebiq-ai *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+    @media(max-width:700px){
+      #corebiq-ai .ai-shell{min-height:0;padding:18px 14px;border-radius:20px}
+      #corebiq-ai .ai-intro p{font-size:13px}
+      #corebiq-ai .ai-search-inner{gap:7px;padding-left:12px}
+      #corebiq-ai .ai-search-button{padding:0 12px;font-size:12px}
+      #corebiq-ai .ai-metrics{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;gap:8px}
+      #corebiq-ai .ai-metric{min-height:98px;padding:11px}
+      #corebiq-ai .ai-detail-grid{grid-template-columns:1fr;padding:0 12px 12px;gap:9px}
+      #corebiq-ai .ai-patient-head{padding:15px 13px}
+      #corebiq-ai .ai-patient-id{font-size:10px}
+      #corebiq-ai .ai-patient-name{font-size:16px}
+    }

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <style>
+    .rotation { transform-origin: 50px 50px; animation: spin 32s linear infinite; }
+    .flow { stroke-dasharray: 36 64; animation: flow 6.5s linear infinite; }
+    .silver { stroke-dasharray: 14 86; stroke-dashoffset: -11; opacity: .92; animation: shine 6.5s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes flow { to { stroke-dashoffset: -100; } }
+    @keyframes shine { to { stroke-dashoffset: -111; } }
+    @media (prefers-reduced-motion: reduce) {
+      .rotation, .flow, .silver { animation: none; }
+      .flow { stroke-dasharray: none; }
+      .silver { display: none; }
+    }
+  </style>
+  <defs>
+    <linearGradient id="cobalt" x1="15%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#1D4ED8"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    <path id="trefoil" pathLength="100" d="M 50 38.5 C 70.07 38.5 85.90 56.82 79.88 67.25 C 73.86 77.68 50.08 73.13 40.04 55.75 C 30 38.37 37.96 15.5 50 15.5 C 62.04 15.5 70 38.37 59.96 55.75 C 49.92 73.13 26.14 77.68 20.12 67.25 C 14.10 56.82 29.93 38.5 50 38.5 Z"/>
+  </defs>
+  <g class="rotation" stroke-linecap="round" stroke-linejoin="round">
+    <use href="#trefoil" stroke="#2563EB" stroke-opacity=".14" stroke-width="8.5"/>
+    <use href="#trefoil" class="flow" stroke="url(#cobalt)" stroke-width="8.5"/>
+    <use href="#trefoil" class="silver" stroke="#fff" stroke-width="2.8"/>
+  </g>
+</svg>

@@ -73,7 +73,7 @@ const titleOverrides = {
     'view-developer': 'Developer Workspace',
     'view-invoice': 'Invoice',
     'view-calender': 'Calendar',
-    'view-corebiq-ai': 'COREBIQ AI',
+    'view-corebiq-ai': 'BIQ AI',
     'view-qr': 'UPI QR',
     'view-licenceinfo': 'Licence Information',
     'view-aboutapp': 'About Care'
@@ -121,7 +121,7 @@ function styleModuleButtons(view) {
 }
 
 export function mountModuleCard(view, title, home) {
-    if (view.id === 'view-dashboard') {
+    if (view.id === 'view-dashboard' || view.querySelector('[data-care-page-heading]')) {
         styleModuleButtons(view);
         return;
     }
