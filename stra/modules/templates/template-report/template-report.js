@@ -1,4 +1,4 @@
-import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument } from '../../../js/a4-word-export.js';
+import { printA4Document, downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument } from '../../../js/a4-word-export.js';
         import { db } from '../../../js/firebase-config.js';
         import { collection, doc, getDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 
@@ -53,6 +53,17 @@ import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument }
         window.cancelReportDocumentPart = function() {
             pendingReportDocumentPart = null;
             document.getElementById('reportPlacementModal').classList.remove('visible');
+        };
+        window.printReport = async function() {
+            try {
+                await printA4Document(
+                    document.querySelector('#report-module .a4-canvas'),
+                    new URL('./template-report.css', import.meta.url).href
+                );
+            } catch (error) {
+                console.error('Could not print the report:', error);
+                alert(`Could not print the report: ${error.message}`);
+            }
         };
         window.downloadReportPdf = async function() {
             closeReportMenus();

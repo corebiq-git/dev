@@ -1,4 +1,4 @@
-import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument } from '../../../js/a4-word-export.js';
+import { printA4Document, downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument } from '../../../js/a4-word-export.js';
         import { db } from '../../../js/firebase-config.js';
         import { collection, doc, getDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 
@@ -53,6 +53,17 @@ import { downloadA4JpegDocument, downloadA4PdfDocument, downloadA4WordDocument }
         window.cancelLetterheadDocumentPart = function() {
             pendingLetterheadDocumentPart = null;
             document.getElementById('letterheadPlacementModal').classList.remove('visible');
+        };
+        window.printLetterhead = async function() {
+            try {
+                await printA4Document(
+                    document.querySelector('#letterhead-module .a4-canvas'),
+                    new URL('./template-letterhead.css', import.meta.url).href
+                );
+            } catch (error) {
+                console.error('Could not print the letterhead:', error);
+                alert(`Could not print the letterhead: ${error.message}`);
+            }
         };
         window.downloadLetterheadPdf = async function() {
             closeLetterheadMenus();

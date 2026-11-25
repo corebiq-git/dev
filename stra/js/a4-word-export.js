@@ -67,6 +67,72 @@ function copyFormControlValues(source, clone) {
     });
 }
 
+export async function printA4Document(source, stylesheetUrl) {
+    const moduleRoot = source?.closest('.module-container');
+    if (!moduleRoot) throw new Error('The document preview is not available.');
+
+    document.querySelector('iframe[data-care-print]')?.remove();
+    const frame = document.createElement('iframe');
+    frame.dataset.carePrint = '';
+    frame.title = 'Document print preview';
+    frame.setAttribute('aria-hidden', 'true');
+    frame.tabIndex = -1;
+    frame.style.cssText = 'position:fixed;inset:0 auto auto 0;width:210mm;height:297mm;border:0;opacity:0;pointer-events:none';
+    document.body.appendChild(frame);
+
+    try {
+        const printWindow = frame.contentWindow;
+        const printDocument = frame.contentDocument;
+        const base = printDocument.createElement('base');
+        base.href = document.baseURI;
+        printDocument.head.appendChild(base);
+        document.querySelectorAll('link[rel="stylesheet"][href^="https://fonts.googleapis.com/"]').forEach(font => {
+            printDocument.head.appendChild(font.cloneNode());
+        });
+        const stylesheet = printDocument.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.href = stylesheetUrl;
+        const styled = new Promise((resolve, reject) => {
+            stylesheet.onload = resolve;
+            stylesheet.onerror = () => reject(new Error('Could not load the template print styles.'));
+        });
+        printDocument.head.appendChild(stylesheet);
+
+        const wrapper = moduleRoot.cloneNode(false);
+        const page = source.cloneNode(true);
+        copyFormControlValues(source, page);
+        page.querySelectorAll('.no-print, button, script').forEach(element => element.remove());
+        wrapper.appendChild(page);
+        printDocument.body.appendChild(wrapper);
+
+        const sizing = printDocument.createElement('style');
+        sizing.textContent = `
+            @page { size: A4 portrait; margin: 0; }
+            html, body { margin: 0; padding: 0; }
+            body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+            @media print {
+                body > .module-container > .a4-canvas {
+                    height: 296mm !important;
+                    min-height: 296mm !important;
+                    max-height: 296mm !important;
+                }
+            }
+        `;
+        printDocument.head.appendChild(sizing);
+
+        await styled;
+        await Promise.all([...page.querySelectorAll('img')].map(image => image.decode?.().catch(() => {})));
+        await printDocument.fonts?.ready;
+        if (!frame.isConnected) return;
+        printWindow.addEventListener('afterprint', () => frame.remove(), { once: true });
+        printWindow.focus();
+        printWindow.print();
+    } catch (error) {
+        frame.remove();
+        throw error;
+    }
+}
+
 let html2pdfLoadPromise;
 let html2canvasLoadPromise;
 
@@ -318,12 +384,12 @@ export async function downloadA4PdfDocument(container, fileName) {
                 windowWidth: 794,
                 windowHeight: 1123,
                 width: 794,
-                height: 1123,
+                height: 1122,
                 scrollX: 0,
                 scrollY: 0
             },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['css', 'legacy'] }
+            pagebreak: { mode: [] }
         }).from(page).save();
     } finally {
         page.remove();
