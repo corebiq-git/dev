@@ -1,8 +1,9 @@
-const CACHE="corebiq-v38";
+const CACHE="corebiq-v39";
 const CORE=[
     "./",
     "./index.html",
     "./login.html",
+    "./components/splash-screen.html",
     "./manifest.webmanifest",
     "./assets/app-icon.png",
     "./assets/logo-client.png",
@@ -17,6 +18,9 @@ const CORE=[
     "./css/care-theme.css",
     "./css/week-calendar.css",
     "./css/sign-in.css",
+    "./css/care-loader.css",
+    "./js/care-loader.js",
+    "./assets/trefoil-loader.svg",
     "./js/sign-in.js",
     "./js/care-access.js",
     "./js/indian-phone.mjs",

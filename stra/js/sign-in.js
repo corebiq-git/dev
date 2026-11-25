@@ -98,12 +98,15 @@ async function run(control, action) {
     acting = true;
     control.disabled = true;
     notice('');
+    const loader = window.createCareLoader?.('Please wait', 'inline');
+    if (loader) feedback.before(loader);
     try { await action(); }
     catch (error) {
         if (auth.currentUser) showPanel('access');
         notice(friendlyError(error), true);
     }
     finally {
+        loader?.remove();
         control.disabled = false;
         acting = false;
     }

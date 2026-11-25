@@ -16,9 +16,22 @@
 <link rel="stylesheet" href="css/index.css">
 <link rel="stylesheet" href="css/module-page.css">
 <link rel="stylesheet" href="css/care-dialogs.css">
+<link rel="stylesheet" href="css/care-loader.css">
 </head>
 
 <body>
+<div id="care-startup" class="care-startup">
+    <div class="care-loading" role="status">
+        <img class="care-loading-icon" src="assets/trefoil-loader.svg" alt="">
+        <span class="care-loading-sweep" aria-hidden="true"></span>
+        <span class="care-loading-label">Loading Care</span>
+    </div>
+    <div class="care-startup-retry" role="status" hidden>
+        <p>Care is taking longer than expected to open.</p>
+        <a href="./index.html">Try again</a>
+    </div>
+    <noscript><p>Enable JavaScript to open Care.</p><style>#care-startup .care-loading{display:none}</style></noscript>
+</div>
 <div id="app-container">
 
     <div id="sidebar-container"></div>
@@ -123,6 +136,7 @@
 <!-- Load scoped form overrides after the module styles inside the app. -->
 <link rel="stylesheet" href="components/form-view.css">
 <script src="js/care-dialogs.js"></script>
+<script src="js/care-loader.js"></script>
 <script type="module" src="js/index.js"></script>
 
 </body>

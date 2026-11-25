@@ -157,8 +157,10 @@ onAuthStateChanged(auth, async (user) => {
 
         /* Sidebar is loaded separately; hide the Users item after it appears too. */
         window.applyRoleVisibility();
+        window.finishCareStartup?.();
 
     } catch (error) {
+        window.finishCareStartup?.();
         console.error(error);
         await (window.careNotice ?? window.alert)(error.message || "Unable to authenticate.", "warning");
         window.location.replace('./login.html');
@@ -597,6 +599,7 @@ window.fetchFresh = async function(filename) {
 
     return fetch(url, {
         cache: 'no-store',
+        signal: globalThis.AbortSignal?.timeout?.(12000),
         headers: {
             'Cache-Control': 'no-cache'
         }
@@ -1188,7 +1191,8 @@ window.switchView = async function(targetId, navElement) {
         targetDiv.dataset.loading !== 'true'
     ) {
 
-        targetDiv.replaceChildren();
+        const loader = window.createCareLoader?.('Loading ' + modulePageTitle(targetId));
+        targetDiv.replaceChildren(...(loader ? [loader] : []));
 
         targetDiv.classList.add('active');
         targetDiv.dataset.loading = 'true';
@@ -1296,9 +1300,9 @@ window.switchView = async function(targetId, navElement) {
                 ">
                     <span class="material-symbols-rounded" style="font-size:32px;margin-bottom:8px">error</span>
                     <br>
-                    <b>Module Not Found.</b>
+                    <b>Unable to load this module.</b>
                     <br>
-                    Ensure the file <b>${filename}</b> exists in the /development/ folder.
+                    Check your connection and try again.
                     <br><br>
                     <button
                         onclick="window.switchView('${targetId}',null)"
