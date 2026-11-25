@@ -5,14 +5,19 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function profileKey() {
+      return request.auth.token.get('email', null) is string
+        ? request.auth.token.email.lower() : 'phone_' + request.auth.uid;
+    }
+
     function hasUserProfile() {
       return signedIn()
-        && request.auth.token.email is string
-        && exists(/databases/$(database)/documents/users/$(request.auth.token.email.lower()));
+        && exists(/databases/$(database)/documents/users/$(profileKey()))
+        && getUserData().get('authUid', '') == request.auth.uid;
     }
 
     function getUserData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.token.email.lower())).data;
+      return get(/databases/$(database)/documents/users/$(profileKey())).data;
     }
 
     function isAdmin() {
@@ -42,7 +47,7 @@ service cloud.firestore {
     }
 
     match /users/{email} {
-      allow read: if signedIn() && request.auth.token.email.lower() == email;
+      allow get: if hasUserProfile() && profileKey() == email;
       allow read, write, delete: if isAdmin();
     }
 

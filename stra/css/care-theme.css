@@ -86,3 +86,18 @@
 }
 
 .care-dashboard-hero:has(.care-hero-add[open]) { z-index: 2; }
+
+.care-field-phone {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 6px;
+  min-width: 0;
+}
+.care-field-phone > span {
+  flex: 0 0 auto;
+  color: var(--care-charcoal);
+  font-size: 14px;
+  font-weight: 650;
+}
+.care-field-phone > input { min-width: 0; width: 100%; }

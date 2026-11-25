@@ -1,11 +1,10 @@
+import { careProfileKey, resolveCareAccess } from './care-access.js';
 import './corebiq-locale.js';
 import { modulePageTitle, mountModuleCard, mountModuleList } from './module-page.mjs';
 import { auth, db } from './firebase-config.js';
 import { initializeDocumentIdCounters } from './document-ids.js';
 import { APP_METADATA } from './app-metadata.js';
 import {
-    doc,
-    getDoc,
     collection,
     getDocs,
     query,
@@ -128,21 +127,16 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     try {
-        const emailLower = (user.email || '').toLowerCase();
-        if (!emailLower) throw new Error("Authenticated account has no email.");
-
-        const userDocRef = doc(db, "users", emailLower);
-        const userDoc = await getDoc(userDocRef);
-
-        if (!userDoc.exists()) {
-            throw new Error("No database access found. Contact Administrator.");
+        const access = await resolveCareAccess(user);
+        if (access.status !== 'approved') {
+            window.location.replace('./login.html');
+            return;
         }
-
-        const userData = userDoc.data();
-
+        const userData = access.profile;
+        const identity = user.email?.toLowerCase() || user.phoneNumber || careProfileKey(user);
         window.currentUser = {
-            email: emailLower,
-            name: userData.name || userData.fullName || user.displayName || emailLower,
+            email: identity,
+            name: userData.name || userData.fullName || user.displayName || identity,
             role: userData.role || "user",
             branch: userData.branch || "Unknown"
         };
@@ -166,8 +160,8 @@ onAuthStateChanged(auth, async (user) => {
 
     } catch (error) {
         console.error(error);
-        try { await signOut(auth); } catch (_) {}
-        alert(error.message || "Unable to authenticate.");
+        await (window.careNotice ?? window.alert)(error.message || "Unable to authenticate.", "warning");
+        window.location.replace('./login.html');
     }
 });
 

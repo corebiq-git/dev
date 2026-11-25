@@ -35,6 +35,25 @@ body.sign-in-page {
 .auth-submit:disabled { opacity: .65; cursor: wait; }
 .auth-error, .auth-message { display: none; margin-top: 12px; }
 .auth-error, .auth-message.error { color: var(--danger); }
-#reset-form-box { display: none; }
 .auth-message:is(.success,.error) { display: block; }
 .sign-in-footer { display: flex; justify-content: center; margin-top: 18px; }
+.sign-in-page [hidden] { display: none !important; }
+.auth-methods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-bottom: 12px; }
+.auth-methods button {
+    min-height: 44px;
+    padding: 6px;
+    border: 1px solid var(--care-line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--care-charcoal);
+    cursor: pointer;
+}
+.auth-methods button[aria-pressed="true"] { background: var(--care-icon-surface); font-weight: 700; }
+#login-methods .remember-option { margin-bottom: 12px; }
+.auth-phone { display: flex; align-items: center; gap: 8px; }
+.auth-phone > span { flex: 0 0 auto; font-weight: 600; }
+.auth-phone input { min-width: 0; }
+.auth-spaced, .auth-feedback { margin-top: 12px; }
+.auth-feedback { color: var(--care-charcoal); }
+.auth-feedback.is-error { color: var(--danger); }
+.auth-hint { margin: 4px 0 10px; font-size: 13px; color: var(--care-icon); }

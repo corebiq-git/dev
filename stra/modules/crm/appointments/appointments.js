@@ -1,3 +1,4 @@
+import { indianMobileDigits } from '../../../js/indian-phone.mjs';
 import { normalizePatientName, patientBranchFilters } from '../../../js/patient-search.mjs';
 import { auth, db } from '../../../js/firebase-config.js';
 import { advanceDocumentIdCounter, reserveNextDocumentIds } from '../../../js/document-ids.js';
@@ -1073,3 +1074,7 @@ window.openBulkReschedule=window.executeBulkReschedule;
 
 document.getElementById('aptModal').addEventListener('click',e=>{if(e.target.id==='aptModal')window.closeAppointmentForm()});
 document.getElementById('notesModal').addEventListener('click',e=>{if(e.target.id==='notesModal')window.closeModal('notesModal')});
+
+document.getElementById('aptMobile')?.addEventListener('input', event => {
+    event.target.value = indianMobileDigits(event.target.value);
+});

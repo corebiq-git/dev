@@ -53,6 +53,13 @@
         <section class="developer-card developer-wide" id="developer-refresh-panel" hidden>
             <button type="button" class="developer-action" id="developer-refresh">Refresh cloud metrics</button>
         </section>
+        <section class="developer-card developer-wide" aria-labelledby="developer-approval-title">
+            <h2 id="developer-approval-title">Account Approval Requests</h2>
+            <p>Approve a verified account as a standard user and assign a clinic branch.</p>
+            <button type="button" class="developer-action" id="developer-approval-refresh">Refresh requests</button>
+            <p id="developer-approval-status" role="status"></p>
+            <div id="developer-approval-list"></div>
+        </section>
         <section class="developer-card developer-wide" id="developer-admin-panel" hidden>
             <h2>Admin Visibility</h2>
             <form id="developer-settings-form">

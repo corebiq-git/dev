@@ -1,3 +1,4 @@
+import { careProfileKey } from '../../../js/care-access.js';
 import { auth, db } from '../../../js/firebase-config.js';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { collection, getDocs, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -157,8 +158,8 @@ import { auth, db } from '../../../js/firebase-config.js';
       grid.innerHTML = '<div class="loading-state" style="grid-column:1/-1">Loading appointments…</div>';
       try {
         let context = window.currentUser;
-        if (!context && user.email) {
-          const profile = await getDoc(doc(db, 'users', user.email.toLowerCase()));
+        if (!context) {
+          const profile = await getDoc(doc(db, 'users', careProfileKey(user)));
           if (profile.exists()) {
             const profileData = profile.data();
             context = { role: profileData.role || 'user', branch: profileData.branch || 'Unknown' };

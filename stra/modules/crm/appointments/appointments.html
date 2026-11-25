@@ -114,7 +114,7 @@
       <div class="section"><h4>1. Patient Details</h4>
         <div class="grid">
           <div class="field span2"><label for="aptPatientSearch">Search client name</label><input type="search" id="aptPatientSearch" class="form-input" placeholder="Type a name or 10-digit mobile number" oninput="window.searchAppointmentClients(this)" autocomplete="off"><div id="aptClientResults" class="actions" aria-live="polite"></div></div>
-          <div class="field"><label>Patient Mobile *</label><input type="tel" id="aptMobile" class="form-input" maxlength="10" placeholder="10-digit number" required></div>
+          <div class="field"><label>Patient Mobile *</label><span class="care-field-phone"><span aria-hidden="true">+91</span><input type="tel" inputmode="numeric" id="aptMobile" aria-label="Indian mobile number, country code plus 91" class="form-input" placeholder="10-digit number" required></span></div>
           <div class="field"><label>Patient Name *</label><input id="aptName" class="form-input" placeholder="Full Name" required></div>
           <div class="field"><label>Age</label><input type="number" id="aptAge" class="form-input" min="1" max="120"></div>
           <div class="field"><label>Gender</label><select id="aptGender" class="form-input"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>

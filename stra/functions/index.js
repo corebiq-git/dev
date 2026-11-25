@@ -49,17 +49,51 @@ function validateUserFields(data) {
   return { role, branch };
 }
 
-async function requireAdmin(request) {
-  const email = request.auth?.token.email;
-  if (typeof email !== 'string' || !email.trim()) {
-    throw new HttpsError('unauthenticated', 'Sign in with an administrator account to manage users.');
-  }
+function careProfileKey(auth) {
+  const email = auth.token.email;
+  if (typeof email === 'string' && email.trim()) return email.trim().toLowerCase();
+  return typeof auth.token.phone_number === 'string' ? `phone_${auth.uid}` : null;
+}
+
+async function careProfile(request) {
+  if (!request.auth?.uid) throw new HttpsError('unauthenticated', 'Sign in to Care first.');
+  const key = careProfileKey(request.auth);
+  if (!key) throw new HttpsError('permission-denied', 'An email or verified mobile number is required.');
   const db = getFirestore();
-  const userSnapshot = await db.doc(`users/${email.toLowerCase()}`).get();
-  if (!userSnapshot.exists || userSnapshot.data().role !== 'admin') {
-    throw new HttpsError('permission-denied', 'Only administrators can manage users.');
+  const ref = db.doc(`users/${key}`);
+  const uid = request.auth.uid;
+  const snapshot = await ref.get();
+  if (!snapshot.exists) return { db, key, profile: null };
+  const data = snapshot.data();
+  if (data.authUid === uid) return { db, key, profile: data };
+  if (data.authUid || key.startsWith('phone_')) return { db, key, profile: null };
+
+  // Only bind a legacy email profile to an Auth account that already existed at profile creation.
+  const identity = await getAuth().getUser(uid);
+  const createdAt = Date.parse(identity.metadata.creationTime);
+  if (identity.disabled || identity.email?.trim().toLowerCase() !== key ||
+      !Number.isFinite(createdAt) || !snapshot.createTime || createdAt > snapshot.createTime.toMillis()) {
+    return { db, key, profile: null };
   }
-  return { db, callerEmail: email.toLowerCase() };
+  const profile = await db.runTransaction(async transaction => {
+    const current = await transaction.get(ref);
+    if (!current.exists || current.createTime.toMillis() !== snapshot.createTime.toMillis()) return null;
+    const currentData = current.data();
+    if (currentData.authUid && currentData.authUid !== uid) return null;
+    if (!currentData.authUid) transaction.update(ref, { authUid: uid });
+    return { ...currentData, authUid: uid };
+  });
+  return { db, key, profile };
+}
+
+async function requireAdmin(request) {
+  const { db, key, profile } = await careProfile(request);
+  if (profile?.role !== 'admin') throw new HttpsError('permission-denied', 'Only administrators can manage users.');
+  return { db, callerEmail: key };
+}
+
+function managedProfileKey(value) {
+  return typeof value === 'string' && /^phone_[A-Za-z0-9_-]{1,128}$/.test(value) ? value : normalizeEmail(value);
 }
 
 function preventSelfManagement(targetEmail, callerEmail) {
@@ -90,6 +124,7 @@ exports.createManagedUser = onCall({ region: 'us-central1' }, async request => {
     await db.doc(`users/${email}`).create({
       role,
       branch,
+      authUid: userRecord.uid,
       updatedAt: new Date()
     });
   } catch (error) {
@@ -112,8 +147,9 @@ exports.createManagedUser = onCall({ region: 'us-central1' }, async request => {
 
 exports.updateManagedUser = onCall({ region: 'us-central1' }, async request => {
   const { db, callerEmail } = await requireAdmin(request);
-  const currentEmail = normalizeEmail(request.data?.currentEmail);
-  const email = normalizeEmail(request.data?.email);
+  const currentEmail = managedProfileKey(request.data?.currentEmail);
+  const phoneOnly = currentEmail.startsWith('phone_') && !currentEmail.includes('@');
+  const email = phoneOnly ? currentEmail : normalizeEmail(request.data?.email);
   preventSelfManagement(currentEmail, callerEmail);
   const { role, branch } = validateUserFields(request.data || {});
   const password = request.data?.password;
@@ -130,6 +166,13 @@ exports.updateManagedUser = onCall({ region: 'us-central1' }, async request => {
     throw new HttpsError('already-exists', 'A user profile already exists for this email.');
   }
   const existingData = profileSnapshot.data();
+  if (phoneOnly) {
+    if (role !== 'user' || password) {
+      throw new HttpsError('invalid-argument', 'Mobile sign-in accounts can only be assigned a standard user branch here.');
+    }
+    await profileRef.update({ branch, updatedAt: new Date() });
+    return { email };
+  }
   if (existingData.role === 'admin' && role !== 'admin') {
     await preventLastAdminRemoval(db, currentEmail);
   }
@@ -156,7 +199,7 @@ exports.updateManagedUser = onCall({ region: 'us-central1' }, async request => {
     }
     const newProfileRef = db.doc(`users/${email}`);
     const batch = db.batch();
-    batch.set(newProfileRef, { ...existingData, role, branch, updatedAt: new Date() });
+    batch.set(newProfileRef, { ...existingData, role, branch, authUid: userRecord.uid, updatedAt: new Date() });
     if (email !== currentEmail) batch.delete(profileRef);
     await batch.commit();
   } catch (error) {
@@ -178,7 +221,7 @@ exports.updateManagedUser = onCall({ region: 'us-central1' }, async request => {
 
 exports.deleteManagedUser = onCall({ region: 'us-central1' }, async request => {
   const { db, callerEmail } = await requireAdmin(request);
-  const email = normalizeEmail(request.data?.email);
+  const email = managedProfileKey(request.data?.email);
   preventSelfManagement(email, callerEmail);
   const profileRef = db.doc(`users/${email}`);
   const profileSnapshot = await profileRef.get();
@@ -191,7 +234,9 @@ exports.deleteManagedUser = onCall({ region: 'us-central1' }, async request => {
 
   let userRecord;
   try {
-    userRecord = await getAuth().getUserByEmail(email);
+    userRecord = email.startsWith('phone_') && !email.includes('@')
+      ? await getAuth().getUser(profileSnapshot.data().authUid)
+      : await getAuth().getUserByEmail(email);
   } catch (error) {
     if (error.code === 'auth/user-not-found') {
       throw new HttpsError('not-found', 'The Firebase Authentication account was not found.');
@@ -278,20 +323,7 @@ function aggregateDailyValues(series, days, mode) {
 }
 
 exports.getFirestoreUsage = onCall({ region: 'us-central1' }, async request => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Sign in with an administrator account to view usage.');
-  }
-
-  const email = request.auth.token.email;
-  if (typeof email !== 'string' || !email.trim()) {
-    throw new HttpsError('permission-denied', 'An administrator email is required.');
-  }
-
-  const userSnapshot = await getFirestore().doc(`users/${email.toLowerCase()}`).get();
-  if (!userSnapshot.exists || userSnapshot.data().role !== 'admin') {
-    throw new HttpsError('permission-denied', 'Firestore usage is available to administrators only.');
-  }
-
+  await requireAdmin(request);
   return fetchFirestoreUsage();
 });
 
@@ -353,12 +385,8 @@ let billingCache;
 let billingRequest;
 
 async function requireDeveloperWorkspaceRole(request) {
-  const email = request.auth?.token.email;
-  if (typeof email !== 'string' || !email.trim()) {
-    throw new HttpsError('unauthenticated', 'Sign in to open the Developer Workspace.');
-  }
-  const profile = await getFirestore().doc(`users/${email.trim().toLowerCase()}`).get();
-  const role = profile.data()?.role;
+  const { profile } = await careProfile(request);
+  const role = profile?.role;
   if (role !== 'admin' && role !== 'developer') {
     throw new HttpsError('permission-denied', 'Developer Workspace requires the Developer or Admin role.');
   }
@@ -476,4 +504,103 @@ exports.getDeveloperWorkspaceMetrics = onCall({ region: 'us-central1' }, async r
     }) : null
   ]);
   return result;
+});
+
+function registrationRef(db, uid) {
+  return db.collection('registration_requests').doc(uid);
+}
+
+exports.getCareAccess = onCall({ region: 'us-central1' }, async request => {
+  const { db, profile } = await careProfile(request);
+  if (profile) return { status: 'approved' };
+  const registration = await registrationRef(db, request.auth.uid).get();
+  const status = registration.data()?.status;
+  return { status: status === 'approved' ? 'unavailable' : status || 'unregistered' };
+});
+
+exports.requestCareAccess = onCall({ region: 'us-central1' }, async request => {
+  const { db, key, profile } = await careProfile(request);
+  if (profile) return { status: 'approved' };
+  const { token, uid } = request.auth;
+  const isEmail = typeof token.email === 'string';
+  if (isEmail && token.email_verified !== true) {
+    throw new HttpsError('failed-precondition', 'Verify your email address before requesting access.');
+  }
+  if (!isEmail && !/^\+91[6-9]\d{9}$/.test(token.phone_number || '')) {
+    throw new HttpsError('failed-precondition', 'Verify your Indian mobile number before requesting access.');
+  }
+  const name = typeof request.data?.name === 'string' ? request.data.name.trim() : '';
+  if (name.length < 2 || name.length > 100) throw new HttpsError('invalid-argument', 'Enter your full name (2–100 characters).');
+  const ref = registrationRef(db, uid);
+  return db.runTransaction(async transaction => {
+    const existing = await transaction.get(ref);
+    if (existing.exists) return { status: existing.data().status };
+    transaction.create(ref, {
+      key, uid, name,
+      email: isEmail ? key : '',
+      phone: /^\+91[6-9]\d{9}$/.test(token.phone_number || '') ? token.phone_number : '',
+      status: 'pending',
+      requestedAt: new Date()
+    });
+    return { status: 'pending' };
+  });
+});
+
+exports.listCareAccessRequests = onCall({ region: 'us-central1' }, async request => {
+  await requireDeveloperWorkspaceRole(request);
+  const db = getFirestore();
+  const [registration, branches] = await Promise.all([
+    db.collection('registration_requests').where('status', '==', 'pending').limit(50).get(),
+    db.collection('branches').get()
+  ]);
+  return {
+    requests: registration.docs.map(item => {
+      const { name, email, phone, requestedAt } = item.data();
+      return { id: item.id, name, email, phone, requestedAt: requestedAt.toDate().toISOString() };
+    }).sort((a, b) => a.requestedAt.localeCompare(b.requestedAt)),
+    branches: [...new Set(branches.docs.map(item => item.data().name).filter(name => typeof name === 'string' && name.trim()))].sort()
+  };
+});
+
+exports.reviewCareAccess = onCall({ region: 'us-central1' }, async request => {
+  await requireDeveloperWorkspaceRole(request);
+  const { id, decision, branch } = request.data || {};
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(id) || !['approved', 'rejected'].includes(decision)) {
+    throw new HttpsError('invalid-argument', 'Select a valid registration and decision.');
+  }
+  const db = getFirestore();
+  const ref = registrationRef(db, id);
+  let branchRef;
+  let identity;
+  if (decision === 'approved') {
+    if (typeof branch !== 'string' || !branch.trim()) throw new HttpsError('invalid-argument', 'Choose a clinic branch.');
+    const branches = await db.collection('branches').where('name', '==', branch).limit(1).get();
+    if (branches.empty) throw new HttpsError('failed-precondition', 'That clinic branch is unavailable.');
+    branchRef = branches.docs[0].ref;
+    identity = await getAuth().getUser(id);
+  }
+  return db.runTransaction(async transaction => {
+    const snapshot = await transaction.get(ref);
+    if (!snapshot.exists || snapshot.data().status !== 'pending') {
+      throw new HttpsError('failed-precondition', 'This request has already been reviewed or is unavailable.');
+    }
+    const data = snapshot.data();
+    if (decision === 'approved') {
+      const validIdentity = !identity.disabled && (data.email
+        ? identity.emailVerified && identity.email?.toLowerCase() === data.email
+        : identity.phoneNumber === data.phone && /^\+91[6-9]\d{9}$/.test(data.phone));
+      if (!validIdentity) throw new HttpsError('failed-precondition', 'The verified sign-in identity changed. Contact the applicant.');
+      const branchSnapshot = await transaction.get(branchRef);
+      if (branchSnapshot.data()?.name !== branch) throw new HttpsError('failed-precondition', 'The clinic branch changed. Refresh the list.');
+      const profileRef = db.doc(`users/${data.email || `phone_${id}`}`);
+      if ((await transaction.get(profileRef)).exists) {
+        throw new HttpsError('already-exists', 'A Care profile already exists. An admin must resolve the conflict.');
+      }
+      transaction.create(profileRef, {
+        authUid: id, role: 'user', branch, name: data.name, ...(data.phone ? { phone: data.phone } : {}), updatedAt: new Date()
+      });
+    }
+    transaction.update(ref, { status: decision, reviewedAt: new Date(), reviewedBy: request.auth.uid });
+    return { status: decision };
+  });
 });

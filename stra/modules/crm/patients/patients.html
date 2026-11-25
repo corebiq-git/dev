@@ -120,7 +120,7 @@
                 <div style="grid-column: span 2;">
                     <label class="form-label">Mobile Number (Search / Validate) *</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="tel" id="mobileInput" class="form-input" placeholder="Enter 10-digit mobile number" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="font-weight: 600; letter-spacing: 1px;">
+                        <span class="care-field-phone"><span aria-hidden="true">+91</span><input type="tel" inputmode="numeric" id="mobileInput" aria-label="Indian mobile number, country code plus 91" class="form-input" placeholder="Enter 10-digit mobile number" required style="font-weight: 600; letter-spacing: 1px;"></span>
                         <button type="button" class="btn-verify" id="verifyBtn" onclick="window.verifyMobile()">Verify</button>
                     </div>
                     <div id="mobileValidationMsg" class="validation-msg"></div>

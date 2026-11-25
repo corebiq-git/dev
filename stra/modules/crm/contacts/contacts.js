@@ -1,3 +1,4 @@
+import { careProfileKey } from '../../../js/care-access.js';
 import { auth, db } from '../../../js/firebase-config.js';
         import {
             collection,
@@ -148,9 +149,7 @@ import { auth, db } from '../../../js/firebase-config.js';
 
             try {
                 if (!currentUserProfile) {
-                    const email = String(user.email || '').toLowerCase();
-                    if (!email) throw new Error('Signed-in account has no email address.');
-                    const userSnapshot = await getDoc(doc(db, 'users', email));
+                    const userSnapshot = await getDoc(doc(db, 'users', careProfileKey(user)));
                     if (!userSnapshot.exists()) throw new Error('User profile was not found.');
                     currentUserProfile = userSnapshot.data();
                 }

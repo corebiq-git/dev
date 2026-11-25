@@ -140,10 +140,84 @@ form.addEventListener('submit', async event => {
     }
 });
 
+const refreshApproval = byId('approval-refresh');
+const listCareAccessRequests = httpsCallable(functions, 'listCareAccessRequests');
+const reviewCareAccess = httpsCallable(functions, 'reviewCareAccess');
+
+function renderApproval(item, branches) {
+    const card = document.createElement('article');
+    card.className = 'developer-approval-row';
+    const name = document.createElement('h3');
+    name.textContent = item.name;
+    const identity = document.createElement('p');
+    identity.textContent = [item.email, item.phone, date.format(new Date(item.requestedAt))].filter(Boolean).join(' · ');
+    const branch = document.createElement('select');
+    branch.setAttribute('aria-label', 'Assign branch to ' + item.name);
+    branch.add(new Option('Select branch', ''));
+    branches.forEach(option => branch.add(new Option(option, option)));
+    const approve = document.createElement('button');
+    approve.type = 'button';
+    approve.className = 'developer-action';
+    approve.textContent = 'Approve';
+    const reject = document.createElement('button');
+    reject.type = 'button';
+    reject.className = 'developer-action';
+    reject.textContent = 'Decline';
+    approve.disabled = true;
+    branch.addEventListener('change', () => { approve.disabled = !branch.value; });
+    async function review(decision) {
+        branch.disabled = approve.disabled = reject.disabled = true;
+        try {
+            const accepted = await window.careConfirm(
+                decision === 'approved' ? `Approve ${item.name} for ${branch.value}?` : `Decline ${item.name}’s access request?`,
+                { action: decision === 'approved' ? 'Approve' : 'Decline' }
+            );
+            if (!accepted) return;
+            await reviewCareAccess({ id: item.id, decision, branch: branch.value });
+            await refreshApprovals();
+            window.alert(decision === 'approved' ? 'Care access approved.' : 'Care access request declined.');
+        } catch (error) {
+            window.alert(error.message || 'Unable to review this request.');
+        } finally {
+            branch.disabled = reject.disabled = false;
+            approve.disabled = !branch.value;
+        }
+    }
+    approve.addEventListener('click', () => void review('approved'));
+    reject.addEventListener('click', () => void review('rejected'));
+    const actions = document.createElement('div');
+    actions.className = 'developer-approval-actions';
+    actions.append(branch, approve, reject);
+    card.append(name, identity, actions);
+    return card;
+}
+
+async function refreshApprovals() {
+    if (refreshApproval.disabled) return;
+    refreshApproval.disabled = true;
+    put('approval-status', 'Loading requests…');
+    try {
+        const { data } = await listCareAccessRequests();
+        byId('approval-list').replaceChildren(...data.requests.map(item => renderApproval(item, data.branches)));
+        put('approval-status', data.requests.length
+            ? `Showing ${data.requests.length} pending request${data.requests.length === 1 ? '' : 's'}.`
+            : 'No pending requests.');
+    } catch (error) {
+        byId('approval-list').replaceChildren();
+        put('approval-status', error.code === 'functions/not-found'
+            ? 'Deploy the Care approval functions to enable this list.'
+            : 'Approval requests could not be loaded. Try refreshing.');
+    } finally {
+        refreshApproval.disabled = false;
+    }
+}
+
+refreshApproval.addEventListener('click', refreshApprovals);
+
 try {
     renderWorkspace((await load()).data);
-    await refreshMetrics();
     byId('status').hidden = true;
+    void Promise.allSettled([refreshMetrics(), refreshApprovals()]);
 } catch (error) {
     put('status', error.code === 'functions/not-found'
         ? 'Deploy the Developer Workspace functions to enable this page.'

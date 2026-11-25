@@ -17,157 +17,85 @@
 <body class="sign-in-page">
     <main class="sign-in-shell">
         <div class="care-brand"><img src="assets/header-brand.png" alt="Care" width="343" height="115"></div>
-        <section class="auth-card" aria-label="Sign in to COREBIQ">
-            <div id="login-form-box">
-                <div class="auth-heading">
-                    <h1>Sign in</h1>
+        <section class="auth-card" aria-label="Care account">
+            <div id="login-methods">
+                <div class="auth-heading"><h1>Sign in</h1></div>
+                <div class="auth-methods" aria-label="Sign-in method">
+                    <button type="button" data-method="email" aria-pressed="true">Email</button>
+                    <button type="button" data-method="mobile" aria-pressed="false">Mobile</button>
+                    <button type="button" id="google-login">Google</button>
                 </div>
-                <form id="login-form" novalidate>
-                    <label class="auth-field">
-                        <span class="auth-field-label">Email address</span>
-                        <input type="email" id="loginEmail" class="auth-input" placeholder="you@example.com" autocomplete="username" aria-label="Email address">
-                    </label>
-                    <label class="auth-field">
-                        <span class="auth-field-label">Password</span>
+                <label class="remember-option"><input id="rememberMe" type="checkbox"> Remember me on this browser</label>
+                <form id="login-form">
+                    <label class="auth-field">Email address <input type="email" id="loginEmail" class="auth-input" autocomplete="username" required></label>
+                    <label class="auth-field">Password
                         <span class="auth-input-wrap">
-                            <input type="password" id="loginPassword" class="auth-input has-trailing" placeholder="Enter your password" autocomplete="current-password" aria-label="Password">
-                            <button class="password-toggle" type="button" id="togglePassIcon" onclick="window.togglePassword()" aria-label="Show password" title="Show password">
+                            <input type="password" id="loginPassword" class="auth-input has-trailing" autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" id="toggle-login-password" aria-label="Show password">
                                 <span class="material-symbols-rounded" aria-hidden="true">visibility_off</span>
                             </button>
                         </span>
                     </label>
+                    <button class="auth-submit" type="submit">Sign in with email</button>
                     <div class="auth-options">
-                        <label class="remember-option"><input type="checkbox" id="rememberMe"><span>Remember me on this browser</span></label>
-                        <button class="auth-action" type="button" onclick="window.toggleResetView(true)">Forgot password?</button>
+                        <button class="auth-action" type="button" data-panel="reset">Forgot password?</button>
+                        <button class="auth-action" type="button" data-panel="signup">Create an account</button>
                     </div>
-                    <button id="loginBtn" class="auth-submit" type="submit">
-                        <span>Sign in</span>
-                        <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
-                    </button>
-                    <div id="login-error" class="auth-error" role="alert" aria-live="polite">Authentication failed.</div>
                 </form>
+                <div id="mobile-form-box" hidden>
+                    <form id="mobile-form">
+                        <label class="auth-field">Indian mobile number
+                            <span class="auth-phone"><span aria-hidden="true">+91</span><input id="mobile-number" class="auth-input" type="tel" inputmode="numeric" autocomplete="tel-national" aria-label="Indian mobile number, country code plus 91" required></span>
+                        </label>
+                        <p class="auth-hint">Firebase will send a verification SMS to this number.</p>
+                        <div id="care-recaptcha"></div>
+                        <button class="auth-submit" type="submit">Send OTP</button>
+                    </form>
+                    <form id="otp-form" hidden>
+                        <label class="auth-field">Verification code <input id="mobile-otp" class="auth-input" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
+                        <button class="auth-submit" type="submit">Verify and sign in</button>
+                        <button class="auth-action auth-spaced" type="button" id="change-mobile">Change number</button>
+                    </form>
+                </div>
             </div>
 
-            <div id="reset-form-box">
-                <div class="auth-heading">
-                    <h2>Reset password</h2>
-                    <p>Enter your registered email address and we’ll send you a secure reset link.</p>
-                </div>
-                <form id="reset-form" novalidate>
-                    <label class="auth-field">
-                        <span class="auth-field-label">Email address</span>
-                        <input type="email" id="resetEmail" class="auth-input" placeholder="you@example.com" autocomplete="email" aria-label="Email address">
-                    </label>
-                    <button id="resetBtn" class="auth-submit" type="submit"><span>Send reset link</span><span class="material-symbols-rounded" aria-hidden="true">mail</span></button>
-                    <div id="reset-msg" class="auth-message" role="status" aria-live="polite"></div>
-                    <button class="back-to-login" type="button" onclick="window.toggleResetView(false)">
-                        <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Back to sign in
-                    </button>
+            <div id="signup-panel" hidden>
+                <div class="auth-heading"><h1>Create an account</h1><p>Verify your email, then request access to Care.</p></div>
+                <form id="signup-form">
+                    <label class="auth-field">Full name <input id="signup-name" class="auth-input" autocomplete="name" minlength="2" maxlength="100" required></label>
+                    <label class="auth-field">Email address <input id="signup-email" class="auth-input" type="email" autocomplete="email" required></label>
+                    <label class="auth-field">Password <input id="signup-password" class="auth-input" type="password" autocomplete="new-password" minlength="6" required></label>
+                    <button class="auth-submit" type="submit">Create account</button>
                 </form>
+                <button class="back-to-login" type="button" data-panel="login">Back to sign in</button>
             </div>
+
+            <div id="reset-panel" hidden>
+                <div class="auth-heading"><h1>Reset password</h1></div>
+                <form id="reset-form">
+                    <label class="auth-field">Email address <input type="email" id="resetEmail" class="auth-input" autocomplete="email" required></label>
+                    <button class="auth-submit" type="submit">Send reset link</button>
+                </form>
+                <button class="back-to-login" type="button" data-panel="login">Back to sign in</button>
+            </div>
+
+            <div id="access-panel" hidden>
+                <div class="auth-heading"><h1 id="access-title">Request access</h1></div>
+                <p id="access-description"></p>
+                <form id="access-form" class="auth-spaced" hidden>
+                    <label class="auth-field">Full name <input id="access-name" class="auth-input" autocomplete="name" minlength="2" maxlength="100" required></label>
+                    <button class="auth-submit" type="submit">Send approval request</button>
+                </form>
+                <div class="auth-options">
+                    <button class="auth-action" type="button" id="check-access">Check status</button>
+                    <button class="auth-action" type="button" id="resend-verification" hidden>Resend email</button>
+                    <button class="auth-action" type="button" id="auth-signout">Sign out</button>
+                </div>
+            </div>
+            <p id="auth-status" class="auth-feedback" role="status" aria-live="polite" hidden></p>
         </section>
         <footer class="sign-in-footer"><img src="assets/poweredby.png" alt="Powered by COREBIQ. Building Intelligent Businesses" width="768" height="191" class="care-powered-brand"></footer>
     </main>
-    <script type="module">
-        import { auth } from './js/firebase-config.js';
-        import {
-            signInWithEmailAndPassword,
-            onAuthStateChanged,
-            setPersistence,
-            browserLocalPersistence,
-            browserSessionPersistence,
-            sendPasswordResetEmail
-        } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        onAuthStateChanged(auth, user => {
-            if (user) window.location.replace('./index.html');
-        });
-
-        window.toggleResetView = function(showReset) {
-            document.getElementById('login-form-box').style.display = showReset ? 'none' : 'block';
-            document.getElementById('reset-form-box').style.display = showReset ? 'block' : 'none';
-            const message = document.getElementById('reset-msg');
-            message.innerText = '';
-            message.className = 'auth-message';
-            if (showReset) document.getElementById('resetEmail').value = document.getElementById('loginEmail').value;
-        };
-
-        window.togglePassword = function() {
-            const input = document.getElementById('loginPassword');
-            const button = document.getElementById('togglePassIcon');
-            const icon = button.querySelector('.material-symbols-rounded');
-            const showPassword = input.type === 'password';
-            input.type = showPassword ? 'text' : 'password';
-            icon.textContent = showPassword ? 'visibility' : 'visibility_off';
-            button.setAttribute('aria-label', showPassword ? 'Hide password' : 'Show password');
-            button.title = showPassword ? 'Hide password' : 'Show password';
-        };
-
-        window.handleLogin = async function() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            const error = document.getElementById('login-error');
-            const button = document.getElementById('loginBtn');
-
-            if (!email || !password) {
-                error.innerText = 'Please enter both email and password.';
-                error.style.display = 'block';
-                return;
-            }
-
-            button.innerHTML = '<span>Signing in…</span>';
-            button.disabled = true;
-            error.style.display = 'none';
-
-            try {
-                await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (authError) {
-                error.innerText = 'Invalid credentials or user not found.';
-                error.style.display = 'block';
-                button.innerHTML = '<span>Sign in</span><span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>';
-                button.disabled = false;
-            }
-        };
-
-        window.handlePasswordReset = async function() {
-            const email = document.getElementById('resetEmail').value.trim();
-            const message = document.getElementById('reset-msg');
-            const button = document.getElementById('resetBtn');
-
-            if (!email) {
-                message.innerText = 'Please enter your email address.';
-                message.className = 'auth-message error';
-                return;
-            }
-
-            button.disabled = true;
-            button.querySelector('span:first-child').innerText = 'Sending…';
-            message.className = 'auth-message';
-            message.innerText = '';
-
-            try {
-                await sendPasswordResetEmail(auth, email);
-                message.innerText = 'Reset link sent. Please check your inbox.';
-                message.className = 'auth-message success';
-            } catch (resetError) {
-                message.innerText = 'Could not send the reset link. Check the email address and try again.';
-                message.className = 'auth-message error';
-            } finally {
-                button.querySelector('span:first-child').innerText = 'Send reset link';
-                button.disabled = false;
-            }
-        };
-
-        document.getElementById('login-form').addEventListener('submit', event => {
-            event.preventDefault();
-            window.handleLogin();
-        });
-        document.getElementById('reset-form').addEventListener('submit', event => {
-            event.preventDefault();
-            window.handlePasswordReset();
-        });
-
-    </script>
+    <script type="module" src="./js/sign-in.js"></script>
 </body>
 </html>

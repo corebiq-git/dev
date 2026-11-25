@@ -25,3 +25,7 @@
 .developer-action { min-height: 44px; padding: 7px 12px; border-radius: 9px; background: var(--care-icon-surface); cursor: pointer; }
 .developer-action:disabled { opacity: .6; }
 @media (max-width: 700px) { .developer-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.developer-approval-row { border-top: 1px solid var(--care-line); margin-top: 10px; padding: 10px 0; }
+.developer-approval-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.developer-approval-actions select { min-height: 44px; min-width: min(200px, 100%); }

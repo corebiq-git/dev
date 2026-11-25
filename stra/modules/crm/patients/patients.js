@@ -1,3 +1,4 @@
+import { indianMobileDigits } from '../../../js/indian-phone.mjs';
 import { normalizePatientName, patientBranchFilters } from '../../../js/patient-search.mjs';
 import { db } from "../../../js/firebase-config.js";
         import { reserveNextDocumentIds } from "../../../js/document-ids.js";
@@ -548,3 +549,7 @@ import { db } from "../../../js/firebase-config.js";
                 document.getElementById('patientBranch').value = "";
             }
         }
+
+document.getElementById('mobileInput')?.addEventListener('input', event => {
+    event.target.value = indianMobileDigits(event.target.value);
+});

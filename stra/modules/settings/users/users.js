@@ -46,6 +46,8 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
         emailInput.value = '';
         emailInput.disabled = false;
         passwordInput.value = '';
+        passwordInput.disabled = false;
+        roleInput.disabled = false;
         passwordInput.required = true;
         passwordInput.placeholder = 'Required for new users';
         roleInput.value = 'user';
@@ -78,7 +80,7 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
                     : 'background: #E8EEF7; color: #0B1F4B;';
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr style="border-bottom: 1px solid var(--border);">
-                        <td data-label="Email" style="padding: 12px; font-weight: bold;">${escapeHtml(email)}</td>
+                        <td data-label="Email" style="padding: 12px; font-weight: bold;">${escapeHtml(data.phone || email)}</td>
                         <td data-label="Role" style="padding: 12px;"><span style="padding: 4px 8px; border-radius: 6px; font-size: 11px; text-transform: uppercase; font-weight: bold; ${badgeStyle}">${escapeHtml(data.role || 'user')}</span></td>
                         <td data-label="Branch" style="padding: 12px; font-weight: 600;">${escapeHtml(data.branch || '-')}</td>
                         <td data-label="Actions" class="users-actions-cell" style="padding: 12px; text-align: right;">
@@ -105,9 +107,12 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
             return;
         }
         editingEmail = email;
-        emailInput.value = email;
-        emailInput.disabled = false;
+        const phoneOnly = email.startsWith('phone_') && !email.includes('@');
+        emailInput.value = phoneOnly ? user.phone || '' : email;
+        emailInput.disabled = phoneOnly;
         passwordInput.value = '';
+        passwordInput.disabled = phoneOnly;
+        roleInput.disabled = phoneOnly;
         passwordInput.required = false;
         passwordInput.placeholder = 'Leave blank to keep current password';
         roleInput.value = user.role || 'user';
@@ -120,12 +125,13 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
     };
 
     async function saveUser() {
-        const email = emailInput.value.trim().toLowerCase();
+        const phoneOnly = editingEmail?.startsWith('phone_') && !editingEmail.includes('@');
+        const email = phoneOnly ? editingEmail : emailInput.value.trim().toLowerCase();
         const password = passwordInput.value;
         const role = roleInput.value;
         const branch = role === 'admin' ? 'ALL' : role === 'developer' ? 'DEVELOPER' : branchInput.value.trim();
 
-        if (!email || !emailInput.checkValidity()) {
+        if (!phoneOnly && (!email || !emailInput.checkValidity())) {
             showMessage('Enter a valid email address.', true);
             emailInput.focus();
             return;
@@ -152,7 +158,7 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
             let successMessage;
             if (editingEmail) {
                 await updateManagedUser({ currentEmail: editingEmail, email, password, role, branch });
-                successMessage = `Successfully updated ${email}.`;
+                successMessage = `Successfully updated ${phoneOnly ? emailInput.value : email}.`;
             } else {
                 await createManagedUser({ email, password, role, branch });
                 successMessage = `Successfully created ${email}.`;
@@ -171,10 +177,11 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
     }
 
     async function removeUser(email) {
-        if (!await (window.careConfirm ?? window.confirm.bind(window))(`Delete ${email} and their sign-in account? This cannot be undone.`)) return;
+        const identity = usersByEmail.get(email)?.phone || email;
+        if (!await (window.careConfirm ?? window.confirm.bind(window))(`Delete ${identity} and their sign-in account? This cannot be undone.`)) return;
         try {
             await deleteManagedUser({ email });
-            showMessage(`Successfully deleted ${email}.`);
+            showMessage(`Successfully deleted ${identity}.`);
             if (editingEmail === email) window.clearUserForm();
             await window.loadUsers();
         } catch (error) {

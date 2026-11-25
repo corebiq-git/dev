@@ -1,3 +1,4 @@
+import { indianMobileDigits } from '../../../js/indian-phone.mjs';
 import '../../../js/corebiq-locale.js';
         import { db } from '../../../js/firebase-config.js';
         import { addDoc, collection, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
@@ -21,7 +22,7 @@ import '../../../js/corebiq-locale.js';
         }
 
         mobileInput.addEventListener('input', () => {
-            mobileInput.value = mobileInput.value.replace(/\D/g, '').slice(0, 10);
+            mobileInput.value = indianMobileDigits(mobileInput.value);
         });
 
         async function loadBranches() {
