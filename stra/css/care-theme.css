@@ -52,6 +52,7 @@
 }
 .care-powered-brand {
   display: block;
-  width: min(100%, 138px);
+  width: min(100%, 216px);
   height: auto;
+  border-radius: 6px;
 }
