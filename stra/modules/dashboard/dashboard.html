@@ -7,26 +7,22 @@
                     <span id="dash-error-text">Database connection failed.</span>
                 </div>
 
-                <section class="dash-welcome-card" aria-label="Dashboard welcome">
-                    <div class="dash-welcome-copy">
-                        <div class="dash-welcome-eyebrow">
-                            <span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span>
-                            Welcome back,
-                        </div>
-                        <h2 class="dash-welcome-title" id="dash-company-name" data-no-translate>Loading company...</h2>
-                        <p class="dash-welcome-company">Run Your Clinic With Confidence</p>
+                <section class="care-dashboard-hero" aria-labelledby="dash-company-name">
+                    <div class="care-hero-date">
+                        <time id="dashboard-as-of-date"></time>
+                        <time id="dashboard-as-of-time"></time>
                     </div>
-                    <div class="dashboard-finance-summary">
-                        <div class="dashboard-as-of" aria-label="Current date and time">
-                            <span class="dashboard-clock-item">
-                                <span class="material-symbols-rounded" aria-hidden="true">calendar_today</span>
-                                <time id="dashboard-as-of-date">Loading date...</time>
-                            </span>
-                            <span class="dashboard-clock-item dashboard-clock-time">
-                                <span class="material-symbols-rounded" aria-hidden="true">schedule</span>
-                                <time id="dashboard-as-of-time">--:--:--</time>
-                            </span>
-                        </div>
+                    <h1 id="dash-company-name" data-no-translate>Care overview</h1>
+                    <div class="care-hero-actions" aria-label="Quick add">
+                        <button type="button" onclick="window.openCareQuickAction('appointment', this)">
+                            <span class="material-symbols-rounded" aria-hidden="true">add</span>Appointment
+                        </button>
+                        <button type="button" onclick="window.openCareQuickAction('transaction', this)">
+                            <span class="material-symbols-rounded" aria-hidden="true">add</span>Transaction
+                        </button>
+                        <button type="button" onclick="window.openCareQuickAction('attendance', this)">
+                            <span class="material-symbols-rounded" aria-hidden="true">add</span>Attendance
+                        </button>
                     </div>
                 </section>
 

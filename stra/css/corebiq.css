@@ -7,12 +7,12 @@
   --primary-hover:var(--care-blue-hover);
   --primary-soft:var(--care-blue-soft);
   --surface:#FFFFFF;
-  --surface-soft:#F7F9FC;
+  --surface-soft:var(--care-canvas);
   --surface-container:#F0F4F9;
   --text:#1F1F1F;
   --muted:#6B7280;
   --outline:#C4C7C5;
-  --outline-soft:#E1E4E2;
+  --outline-soft:var(--care-line);
   --danger:#B3261E;
   --success:#188038;
   --radius-sm:10px;
@@ -125,7 +125,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
   --primary-soft:var(--care-blue-soft)!important;
   --primary-light:var(--primary-soft)!important;
   --surface:#FFFFFF!important;
-  --surface-soft:#F7F9FC!important;
+  --surface-soft:var(--care-canvas)!important;
   --surface-container:#F0F4F9!important;
   --bg:var(--surface-soft)!important;
   --text:#1F1F1F!important;
@@ -134,7 +134,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
   --text-muted:var(--muted)!important;
   --secondary:var(--muted)!important;
   --outline:#C4C7C5!important;
-  --outline-soft:#E1E4E2!important;
+  --outline-soft:var(--care-line)!important;
   --border:var(--outline-soft)!important;
   --grey-light:var(--surface-container)!important;
   --grey-med:var(--outline)!important;

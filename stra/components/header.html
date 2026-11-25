@@ -784,6 +784,9 @@
 </style>
 
 <header class="dashboard-header">
+    <a class="care-brand" href="./index.html" onclick="event.preventDefault(); window.switchView('view-dashboard')">
+        <img src="assets/logo.png" alt="" width="44" height="44"><span>Care</span>
+    </a>
     <nav class="top-module-nav" id="top-module-nav" aria-label="Main navigation">
         <div class="top-nav-group" data-category="Dashboard">
             <button class="top-nav-trigger top-nav-dashboard top-nav-link active" type="button" data-target="view-dashboard" aria-current="page" onclick="window.switchView('view-dashboard', this)">
@@ -852,43 +855,10 @@
         </div>
     </nav>
 
-    <div class="module-search">
-        <div class="module-search-box">
-            <button
-                class="module-search-toggle"
-                id="module-search-toggle"
-                type="button"
-                aria-label="Search dashboard modules"
-                aria-expanded="false"
-                aria-controls="module-search-input"
-                title="Search modules"
-                onclick="window.toggleModuleSearch()">
-                <span class="material-symbols-rounded" aria-hidden="true">search</span>
-            </button>
-            <input
-                class="module-search-input"
-                id="module-search-input"
-                type="text"
-                placeholder="Search modules..."
-                autocomplete="off"
-                aria-label="Search dashboard modules"
-                aria-controls="module-search-results"
-                aria-expanded="false"
-                oninput="window.searchModules(this.value)"
-                onkeydown="window.handleModuleSearchKeydown(event)">
-            <button
-                class="module-search-clear"
-                type="button"
-                aria-label="Clear module search"
-                title="Clear search"
-                onclick="window.clearModuleSearch()">
-                <span class="material-symbols-rounded" aria-hidden="true">close</span>
-            </button>
-        </div>
-        <div class="module-search-results" id="module-search-results" role="listbox"></div>
-    </div>
-
     <div class="header-actions">
+        <button class="care-header-menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar-container" onclick="window.toggleMobileNavigationMenu()">
+            <span class="material-symbols-rounded" aria-hidden="true">menu</span>
+        </button>
         <button
             class="profile-button"
             id="profile-button"

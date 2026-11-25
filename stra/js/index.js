@@ -145,6 +145,10 @@ onAuthStateChanged(auth, async (user) => {
             role: userData.role || "user",
             branch: userData.branch || "Unknown"
         };
+        window.updateHeaderProfile();
+
+        const app = document.getElementById('app-container');
+        if (app) app.style.visibility = 'visible';
         if (window.currentUser.role === 'admin') {
             try {
                 await initializeDocumentIdCounters(db);
@@ -152,15 +156,6 @@ onAuthStateChanged(auth, async (user) => {
                 console.error('Unable to initialize sequential document IDs:', error);
                 alert(`Sequential document IDs could not be initialized: ${error.message}\n\nDeploy the updated firebase/firestore.rules file, then reload and sign in as an administrator to initialize the counters.`);
             }
-        }
-        window.updateHeaderProfile();
-
-        const app = document.getElementById('app-container');
-        if (app) app.style.visibility = 'visible';
-        const startupSplash = document.getElementById('startup-splash');
-        if (startupSplash) {
-            startupSplash.classList.add('is-hidden');
-            window.setTimeout(() => startupSplash.remove(), 400);
         }
         await window.switchView('view-dashboard');
 
@@ -531,7 +526,7 @@ window.toggleSidebarCollapse = function() {
 window.toggleMobileNavigationMenu = function(forceOpen) {
     const sidebar = document.getElementById('sidebar-container');
     const backdrop = document.getElementById('mobile-nav-backdrop');
-    const menuButton = document.querySelector('.bottom-nav-menu-button');
+    const menuButton = document.querySelector('.care-header-menu');
     if (!sidebar) return;
 
     if (!window.matchMedia('(max-width: 768px)').matches) {
@@ -547,13 +542,8 @@ window.toggleMobileNavigationMenu = function(forceOpen) {
     backdrop?.classList.toggle('visible', isOpen);
     menuButton?.setAttribute('aria-expanded', String(isOpen));
     menuButton?.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
-    const menuIcon = menuButton?.querySelector('.bottom-nav-icon');
-    if (menuIcon instanceof SVGElement) {
-        menuIcon.innerHTML = isOpen
-            ? '<path d="m18 6-12 12M6 6l12 12"/>'
-            : '<path d="M4 6h16M4 12h16M4 18h16"/>';
-    }
-    window.applyLucideIcons(document.getElementById('bottomnav-container'));
+    const menuIcon = menuButton?.querySelector('.material-symbols-rounded');
+    if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
 };
 window.toggleSidebar = window.toggleMobileNavigationMenu;
 
@@ -1060,6 +1050,39 @@ function dragElement(elmnt) {
    Loads module HTML on demand and reuses its in-memory fetch cache.
    Keeps relative imports working from /development/.
 ------------------------------------------------------- */
+document.addEventListener('click', event => {
+    if (!event.target.closest('.care-bottom-add')) {
+        document.querySelector('.care-bottom-add[open]')?.removeAttribute('open');
+    }
+});
+document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    const menu = document.querySelector('.care-bottom-add[open]');
+    if (!menu) return;
+    menu.removeAttribute('open');
+    menu.querySelector('summary')?.focus();
+});
+
+const careQuickActions = {
+    appointment: ['view-appointments', 'openAppointmentForm'],
+    transaction: ['view-transaction', 'openTxnForm'],
+    attendance: ['view-attendance', 'openAttModal']
+};
+
+window.openCareQuickAction = async function(action, button) {
+    const [viewId, form] = careQuickActions[action] || [];
+    if (!viewId || button.disabled) return;
+    button.disabled = true;
+    button.closest('details')?.removeAttribute('open');
+    try {
+        await window.switchView(viewId);
+        const view = document.getElementById(viewId);
+        if (view?.dataset.loaded === 'true' && view.classList.contains('active')) window[form]?.();
+    } finally {
+        button.disabled = false;
+    }
+};
+
 window.switchView = async function(targetId, navElement) {
     window.closeTopNavMenus();
 
@@ -1152,8 +1175,7 @@ window.switchView = async function(targetId, navElement) {
         targetDiv.dataset.loading !== 'true'
     ) {
 
-        targetDiv.innerHTML =
-            '<div style="text-align:center;padding:40px;color:var(--primary)">Loading module...</div>';
+        targetDiv.replaceChildren();
 
         targetDiv.classList.add('active');
         targetDiv.dataset.loading = 'true';

@@ -46,33 +46,63 @@
 
     .bottom-nav-icon-wrap {
         display: grid;
-        width: 38px;
-        aspect-ratio: 1;
+        width: 48px;
+        height: 32px;
         place-items: center;
-        border: 1px solid #d8dde5;
-        border-radius: var(--care-button-radius);
-        background: var(--care-icon-surface);
+        border-radius: 16px;
         color: var(--care-icon);
-        transition: background-color .18s ease, border-color .18s ease;
     }
 
-    .bottom-nav-icon {
-        display: block;
-        font-size: 21px;
-        line-height: 1;
+    .bottom-nav-icon { display: block; font-size: 22px; line-height: 1; }
+    .bottom-nav-item[aria-current="page"] { color: var(--care-charcoal); }
+    .bottom-nav-item[aria-current="page"] .bottom-nav-icon-wrap {
+        background: var(--care-icon-surface);
+        color: var(--care-charcoal);
     }
 
-    .bottom-nav-item:is([aria-current="page"], [aria-expanded="true"]) .bottom-nav-icon-wrap {
-        border-color: var(--care-blue);
-        background: var(--care-blue);
-        color: var(--care-icon-on-blue);
+    .care-bottom-add {
+        position: relative;
+        display: grid;
+        flex: 1 1 0;
+        max-width: 120px;
+        min-width: 48px;
+        place-items: center;
     }
-
-    @media (hover: hover) {
-        .bottom-nav-item:hover:not([aria-current="page"], [aria-expanded="true"]) .bottom-nav-icon-wrap {
-            background: #e4e9f0;
-        }
+    .care-bottom-add summary {
+        display: grid;
+        width: 50px;
+        height: 50px;
+        place-items: center;
+        border-radius: 16px;
+        background: var(--care-icon-surface);
+        color: var(--care-charcoal);
+        cursor: pointer;
+        list-style: none;
     }
+    .care-bottom-add summary::-webkit-details-marker { display: none; }
+    .care-bottom-add[open] summary { outline: 1px solid var(--care-icon); }
+    .care-bottom-actions {
+        position: absolute;
+        right: 0;
+        bottom: calc(100% + 8px);
+        display: grid;
+        min-width: 170px;
+        padding: 6px;
+        border: 1px solid var(--care-line);
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: var(--shadow);
+    }
+    .care-bottom-actions button {
+        min-height: 44px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: #fff;
+        text-align: left;
+        cursor: pointer;
+    }
+    .care-bottom-actions button:hover,
+    .care-bottom-actions button:focus-visible { background: var(--care-icon-surface); }
 
     @media (prefers-reduced-motion: reduce) {
         .bottom-nav-icon-wrap { transition: none; }
@@ -92,8 +122,12 @@
         <span class="bottom-nav-icon-wrap"><span class="material-symbols-rounded bottom-nav-icon bottom-nav-attendance-icon" aria-hidden="true">how_to_reg</span></span>
         <span>Attendance</span>
     </button>
-    <button class="bottom-nav-item bottom-nav-menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-icon-category="" onclick="window.toggleMobileNavigationMenu()">
-        <span class="bottom-nav-icon-wrap"><span class="material-symbols-rounded bottom-nav-icon bottom-nav-menu-icon" aria-hidden="true">menu</span></span>
-        <span>Menu</span>
-    </button>
+    <details class="care-bottom-add">
+        <summary aria-label="Quick add"><span class="material-symbols-rounded" aria-hidden="true">add</span></summary>
+        <div class="care-bottom-actions">
+            <button type="button" onclick="window.openCareQuickAction('appointment', this)">Appointment</button>
+            <button type="button" onclick="window.openCareQuickAction('transaction', this)">Transaction</button>
+            <button type="button" onclick="window.openCareQuickAction('attendance', this)">Attendance</button>
+        </div>
+    </details>
 </nav>

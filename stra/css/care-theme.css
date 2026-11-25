@@ -1,11 +1,15 @@
 /* Shared Care palette and action shape. */
 :root {
-  --care-blue: #175cd3;
-  --care-blue-hover: #124aa9;
-  --care-blue-soft: #eaf2ff;
-  --care-icon: #526174;
+  --care-charcoal: #242623;
+  --care-canvas: #f8f7f2;
+  --care-line: #e3e2dc;
+  --care-yellow: #f3cc72;
+  --care-blue: var(--care-charcoal);
+  --care-blue-hover: #3a3c38;
+  --care-blue-soft: #eeeee9;
+  --care-icon: #5e625e;
   --care-icon-on-blue: #edf0f4;
-  --care-icon-surface: #f1f4f8;
+  --care-icon-surface: #f0f0eb;
   --care-button-radius: 6px;
 }
 
@@ -30,4 +34,25 @@
 
 #app-container .bottom-nav-item .bottom-nav-icon {
   color: inherit !important;
+}
+
+
+.care-brand {
+  display: inline-flex;
+  min-width: max-content;
+  align-items: center;
+  gap: 10px;
+  color: var(--care-charcoal);
+  text-decoration: none;
+  font-size: 1.45rem;
+  font-weight: 750;
+}
+.care-brand img {
+  display: block;
+  width: 44px;
+  height: 44px;
+  padding: 3px;
+  border-radius: 12px;
+  background: #fff;
+  object-fit: contain;
 }
