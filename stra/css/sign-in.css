@@ -6,14 +6,27 @@ body.sign-in-page {
     background: var(--care-canvas);
 }
 .sign-in-shell { width: min(100%, 410px); }
-.sign-in-shell .care-brand { margin-bottom: 18px; }
+.sign-in-welcome {
+    margin-bottom: 18px;
+    color: var(--care-charcoal);
+}
+.sign-in-welcome h1 {
+    margin: 0;
+    font-size: clamp(22px, 5vw, 28px);
+    line-height: 1.2;
+}
+.sign-in-welcome p {
+    margin: 8px 0 0;
+    color: var(--care-icon);
+    font-size: 15px;
+}
 .auth-card {
     padding: clamp(20px, 6vw, 32px);
     border: 1px solid var(--care-line);
     border-radius: 24px;
     background: #fff;
 }
-.auth-heading h1, .auth-heading h2 { margin: 0 0 20px; font-size: 24px; }
+.auth-heading h2 { margin: 0 0 20px; font-size: 24px; }
 .auth-heading p { color: var(--care-icon); }
 .auth-field { display: grid; gap: 6px; margin-bottom: 14px; }
 .auth-field-label { font-size: 14px; font-weight: 600; }

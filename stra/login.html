@@ -17,10 +17,13 @@
 </head>
 <body class="sign-in-page">
     <main class="sign-in-shell">
-        <div class="care-brand"><img src="assets/header-brand.png" alt="Care" width="343" height="115"></div>
+        <header class="sign-in-welcome">
+            <h1>Welcome Back to the Intelligent Business Workspace.</h1>
+            <p>Login for authorised personnel only.</p>
+        </header>
         <section class="auth-card" aria-label="Care account">
             <div id="login-methods">
-                <div class="auth-heading"><h1>Sign in</h1></div>
+                <div class="auth-heading"><h2>Sign in</h2></div>
                 <div class="auth-methods" aria-label="Sign-in method">
                     <button type="button" data-method="email" aria-pressed="true">Email</button>
                     <button type="button" data-method="mobile" aria-pressed="false">Mobile</button>
@@ -61,7 +64,7 @@
             </div>
 
             <div id="signup-panel" hidden>
-                <div class="auth-heading"><h1>Create an account</h1><p>Verify your email, then request access to Care.</p></div>
+                <div class="auth-heading"><h2>Create an account</h2><p>Verify your email, then request access to Care.</p></div>
                 <form id="signup-form">
                     <label class="auth-field">Full name <input id="signup-name" class="auth-input" autocomplete="name" minlength="2" maxlength="100" required></label>
                     <label class="auth-field">Email address <input id="signup-email" class="auth-input" type="email" autocomplete="email" required></label>
@@ -72,7 +75,7 @@
             </div>
 
             <div id="reset-panel" hidden>
-                <div class="auth-heading"><h1>Reset password</h1></div>
+                <div class="auth-heading"><h2>Reset password</h2></div>
                 <form id="reset-form">
                     <label class="auth-field">Email address <input type="email" id="resetEmail" class="auth-input" autocomplete="email" required></label>
                     <button class="auth-submit" type="submit">Send reset link</button>
@@ -81,7 +84,7 @@
             </div>
 
             <div id="access-panel" hidden>
-                <div class="auth-heading"><h1 id="access-title">Request access</h1></div>
+                <div class="auth-heading"><h2 id="access-title">Request access</h2></div>
                 <p id="access-description"></p>
                 <form id="access-form" class="auth-spaced" hidden>
                     <label class="auth-field">Full name <input id="access-name" class="auth-input" autocomplete="name" minlength="2" maxlength="100" required></label>
