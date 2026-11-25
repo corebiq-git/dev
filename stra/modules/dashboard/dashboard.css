@@ -665,7 +665,6 @@
     margin-bottom: 22px;
     padding: clamp(18px, 4vw, 34px);
     border-radius: 24px;
-    background: var(--care-charcoal);
     color: #fff;
 }
 .care-dashboard-hero h1 {

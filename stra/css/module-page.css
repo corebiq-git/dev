@@ -8,7 +8,6 @@
     margin: 0 auto 18px;
     width: min(100%, 1200px);
     border-radius: 16px;
-    background: var(--care-charcoal);
     color: #fff;
 }
 .care-module-card > div { min-width: 0; }
