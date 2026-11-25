@@ -1,4 +1,4 @@
-const CACHE="corebiq-v32";
+const CACHE="corebiq-v33";
 const CORE=[
     "./",
     "./index.html",
@@ -9,6 +9,8 @@ const CORE=[
     "./assets/logo-client-display.png",
     "./assets/name-client-display.png",
     "./assets/logo.png",
+    "./assets/header-brand.png",
+    "./assets/poweredby.png",
     "./assets/name.png",
     "./css/index.css",
     "./css/corebiq.css",

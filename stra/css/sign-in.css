@@ -37,3 +37,4 @@ body.sign-in-page {
 .auth-error, .auth-message.error { color: var(--danger); }
 #reset-form-box { display: none; }
 .auth-message:is(.success,.error) { display: block; }
+.sign-in-footer { display: flex; justify-content: center; margin-top: 18px; }

@@ -473,7 +473,13 @@
        ========================================================= */
 
     .sidebar-footer {
-        display: none;
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-top: 1px solid var(--outline-soft);
+        background: var(--surface);
     }
 
 
@@ -571,10 +577,6 @@
 
         .nav-divider {
             margin: 10px 20px;
-        }
-
-        .sidebar-footer {
-            padding: 16px 20px;
         }
 
         #sidebar-container.is-collapsed .sidebar-header {
@@ -993,5 +995,5 @@
 
     </div>
 
-
+    <footer class="sidebar-footer"><img src="assets/poweredby.png" alt="Powered by COREBIQ" width="424" height="56" class="care-powered-brand"></footer>
 </div>
