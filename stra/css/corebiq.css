@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
 
 @import url("./care-theme.css");
+@import url("./week-calendar.css");
 
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:Outfit,"Google Sans",sans-serif;color:var(--text);background:var(--surface-soft)}
@@ -166,7 +167,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
   font-size:14px!important;
 }
 
-.module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#receipt-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button)){
+.module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#receipt-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button,.dashboard-week-day,.dashboard-week-control)){
   min-height:40px;
   border:1px solid var(--outline)!important;
   border-radius:var(--care-button-radius)!important;
@@ -177,7 +178,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
   transition:background-color .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
 }
 
-.module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#receipt-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button)):hover{
+.module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#receipt-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button,.dashboard-week-day,.dashboard-week-control)):hover{
   border-color:var(--primary)!important;
   background:var(--primary-soft)!important;
   color:var(--primary)!important;
@@ -207,7 +208,7 @@ textarea.form-control{height:auto;padding:12px;resize:vertical}
   box-shadow:0 3px 10px rgba(11,31,75,.20)!important;
 }
 
-.module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#receipt-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button)):focus-visible{
+.module-container:is(#about-module,#appointment-module,#calendar-module,#company-module,#cash-ledger-module,#contacts-module,#branches-module,#estimate-module,#licence-module,#ledger-module,#bank-ledger-module,#letterhead-module,#transaction-module,#receipt-module,#export-module,#upi-qr-module,#patient-module,#attendance-module,#my-task-module,#privacy-module,#updates-module,#seal-module,#staff-module,#therapist-module) button:not(:where(.icon-btn,.icon-button,.act,.report-icon-btn,.branch-row-action,.patient-modal-close,.task-icon-button,.drop-item,.btn-tap,.day-cell,.action-button,.dashboard-week-day,.dashboard-week-control)):focus-visible{
   outline:3px solid var(--primary-soft);
   outline-offset:2px;
 }

@@ -3,7 +3,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: clamp(16px, 3vw, 26px);
+    min-height: var(--care-hero-min-height);
+    padding: clamp(16px, 2vw, 24px);
     margin: 0 auto 18px;
     width: min(100%, 1200px);
     border-radius: 16px;

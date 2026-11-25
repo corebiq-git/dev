@@ -1,4 +1,4 @@
-const CACHE="corebiq-v26";
+const CACHE="corebiq-v27";
 const CORE=[
     "./",
     "./index.html",
@@ -13,6 +13,7 @@ const CORE=[
     "./css/index.css",
     "./css/corebiq.css",
     "./css/care-theme.css",
+    "./css/week-calendar.css",
     "./css/sign-in.css",
     "./css/module-page.css",
     "./css/care-dialogs.css",

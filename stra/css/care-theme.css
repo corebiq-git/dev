@@ -1,6 +1,7 @@
 /* Shared Care palette and action shape. */
 :root {
   --care-charcoal: #242623;
+  --care-hero-min-height: clamp(100px, 10vw, 114px);
   --care-canvas: #f8f7f2;
   --care-line: #e3e2dc;
   --care-yellow: #f3cc72;

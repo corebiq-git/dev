@@ -7,8 +7,8 @@
 .btn{border:1px solid var(--border);background:#fff;color:var(--text);height:40px;padding:0 12px;border-radius:10px;font-size:13px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.danger{color:var(--danger);border-color:#FECACA}.btn.blue{color:var(--primary);border-color:#CCD5E3}.btn.small{height:36px;padding:0 10px;font-size:12px}
 .new-btn{height:40px;padding:0 15px;border:0;border-radius:10px;background:var(--primary);color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:7px;cursor:pointer}
-.appointment-schedule-row{display:grid;grid-template-columns:minmax(0,1.8fr) repeat(2,minmax(0,1fr));align-items:stretch;gap:14px;margin-bottom:18px}
-.appointment-schedule-row>.dashboard-week-card{min-width:0;margin:0}
+.appointment-schedule-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:14px;margin-bottom:18px}
+.appointment-schedule-row>.dashboard-week-card{grid-column:1/-1}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
 .appointment-schedule-row>.kpi{display:flex;min-width:0;flex-direction:column;justify-content:center;margin:0}
 .kpi .label{font-size:12px;color:var(--muted);font-weight:600}.kpi .num{font-size:22px;font-weight:800;margin-top:3px}
@@ -164,28 +164,6 @@
 #appointment-module .appointment-filter-select select:focus{border-color:#C8D2E1;background:#fff;box-shadow:0 0 0 3px rgba(11,31,75,.1)}
 #appointment-module .appointment-filter-select .material-symbols-rounded{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#8290A2;font-size:20px}
 #appointment-module .appointment-page-header .new-btn{position:static!important;inset:auto!important;align-self:center;height:48px!important;margin-left:auto;padding:0 22px!important;white-space:nowrap}
-#appointment-module .dashboard-week-card{margin:0 0 20px;padding:18px;border:1px solid #E6E8EF;border-radius:20px;background:#fff;box-shadow:0 2px 8px rgba(31,35,40,.05),0 8px 20px rgba(31,35,40,.035)}
-#appointment-module .dashboard-week-header{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title controls" "days days";align-items:center;gap:10px 12px;margin-bottom:0}
-#appointment-module .dashboard-week-title{grid-area:title;display:flex;align-items:center;gap:9px;margin:0;color:#344054;font-size:15px;font-weight:700}
-#appointment-module .dashboard-week-title>.material-symbols-rounded{color:#667085;font-size:20px}
-#appointment-module .dashboard-week-title-copy{display:flex;flex-direction:column;gap:3px}
-#appointment-module .dashboard-week-range{color:var(--muted);font-size:11px;font-weight:600}
-#appointment-module .dashboard-week-controls{grid-area:controls;display:flex;align-items:center;gap:6px}
-#appointment-module .dashboard-week-control{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:34px;padding:6px 9px;border:1px solid #E5E7EB;border-radius:10px;background:#fff;color:#475467;font:inherit;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer}
-#appointment-module .dashboard-week-control:hover{border-color:#D0D5DD;background:#F9FAFB}
-#appointment-module .dashboard-week-control .material-symbols-rounded{font-size:18px}
-#appointment-module .dashboard-week-control#appointmentPreviousWeek,#appointment-module .dashboard-week-control#appointmentNextWeek{width:34px;min-width:34px;flex:0 0 34px;padding:0}
-#appointment-module .dashboard-week-control#appointmentCurrentWeek{flex:0 0 auto;white-space:nowrap}
-#appointment-module .dashboard-week-days{display:grid;grid-area:days;width:100%;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-#appointment-module button.dashboard-week-day{display:flex;min-width:0;min-height:0!important;aspect-ratio:1;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;border:1px solid #EAECF0!important;border-radius:9px!important;background:#fff!important;color:#344054!important;font:inherit;cursor:pointer;box-shadow:none!important}
-#appointment-module button.dashboard-week-day:hover{border-color:#C8D2E1!important;background:#F8FAFC!important;color:#344054!important}
-#appointment-module button.dashboard-week-day[aria-pressed="true"],#appointment-module button.dashboard-week-day[aria-pressed="true"]:hover{border-color:#0B1F4B!important;background:#0B1F4B!important;color:#fff!important}
-#appointment-module .dashboard-week-day-name{display:flex;min-height:18px;align-self:stretch;align-items:center;justify-content:center;color:#7A8190;font-size:10px;font-weight:500;opacity:1}
-#appointment-module .dashboard-week-day-number{display:grid;min-height:25px;align-self:stretch;place-items:center;background:transparent;color:#344054;font-size:18px;font-weight:750;line-height:1}
-#appointment-module .dashboard-week-day-year{color:#98A2B3;font-size:9px;font-weight:500;line-height:1.2}
-#appointment-module button.dashboard-week-day[aria-pressed="true"] .dashboard-week-day-name,#appointment-module button.dashboard-week-day[aria-pressed="true"] .dashboard-week-day-number,#appointment-module button.dashboard-week-day[aria-pressed="true"] .dashboard-week-day-year{color:#fff}
-#appointment-module button.dashboard-week-day[aria-pressed="true"] .dashboard-week-day-number{color:#FDE68A}
-#appointment-module .dashboard-week-day-today:not([aria-pressed="true"]) .dashboard-week-day-number{color:#1A73E8}
 #appointment-module .appointment-toolbar .tool{flex:0 0 auto}
 #appointment-module .appointment-toolbar .more-actions-btn{height:48px;width:48px;border:1px solid #E1E4E2;border-radius:50%;background:#fff;color:#5E6672}
 #appointment-module .appointment-toolbar .more-actions-btn:hover{background:#F0F4F9;color:#0B1F4B}
@@ -205,7 +183,6 @@
 #appointment-module .public-booking-panel{margin-top:22px}
 @media(max-width:700px){
   #appointment-module .appointment-schedule-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  #appointment-module .appointment-schedule-row>.dashboard-week-card{grid-column:1/-1}
   #appointment-module .appointment-schedule-row>.kpi{min-height:84px}
   #appointment-module .appointment-page-header{align-items:flex-start;flex-wrap:wrap;gap:10px;padding:12px;border-radius:20px}
   #appointment-module .appointment-page-header .title{width:auto;flex:1 1 100%;min-width:0}
@@ -252,13 +229,6 @@
   #appointment-module .appointment-toolbar .more-actions-btn{height:42px;width:42px}
   #appointment-module .appointment-toolbar .searchbox{height:44px;min-width:0;border-radius:14px}
   #appointment-module .appointment-toolbar .searchbox input{height:42px;min-width:0;font-size:13px}
-  #appointment-module .dashboard-week-card{padding:14px}
-  #appointment-module .dashboard-week-header{grid-template-columns:minmax(0,1fr) auto;gap:10px}
-  #appointment-module .dashboard-week-days{gap:4px}
-  #appointment-module button.dashboard-week-day{padding:2px;border-radius:8px!important}
-  #appointment-module .dashboard-week-day-name{min-height:16px;font-size:9px}
-  #appointment-module .dashboard-week-day-number{min-height:20px;font-size:15px}
-  #appointment-module .dashboard-week-day-year{font-size:8px}
   #appointment-module .panel-head{padding:13px 14px}
   #appointment-module .table td,#appointment-module .table th{padding:13px 12px}
   #appointment-module .patient-avatar{flex-basis:36px;width:36px;height:36px}

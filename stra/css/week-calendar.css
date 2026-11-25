@@ -1,0 +1,88 @@
+/* Weekly date picker shared by the Dashboard and Appointments. */
+.dashboard-week-card {
+    min-width: 0;
+    padding: clamp(12px, 2vw, 18px);
+    border: 1px solid var(--care-line);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgb(16 24 40 / .06), 0 4px 12px rgb(16 24 40 / .045);
+}
+.dashboard-week-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "title controls" "days days";
+    align-items: center;
+    gap: 10px 8px;
+}
+.dashboard-week-card .dashboard-week-title {
+    grid-area: title;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+    color: #344054;
+    font-size: 16px !important;
+    font-weight: 700;
+}
+.dashboard-week-title > .material-symbols-rounded { color: var(--care-icon); font-size: 20px; }
+.dashboard-week-title-copy { display: grid; gap: 3px; }
+.dashboard-week-range { color: var(--care-icon); font-size: 12px; font-weight: 600; }
+.dashboard-week-controls { grid-area: controls; display: flex; align-items: center; gap: 5px; }
+.dashboard-week-card .dashboard-week-control {
+    display: inline-grid;
+    min-height: 36px;
+    place-items: center;
+    padding: 4px 8px;
+    border: 1px solid var(--care-line);
+    border-radius: 8px;
+    background: #fff;
+    color: #475467;
+    font-size: 13px !important;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.dashboard-week-control .material-symbols-rounded { font-size: 18px; }
+.dashboard-week-days {
+    grid-area: days;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: clamp(3px, 1vw, 6px);
+}
+.dashboard-week-card .dashboard-week-day {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 2px;
+    width: 100%;
+    min-width: 0;
+    min-height: 56px;
+    padding: 4px 1px;
+    border: 1px solid var(--care-line);
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    cursor: pointer;
+}
+.dashboard-week-card .dashboard-week-day:hover,
+.dashboard-week-card .dashboard-week-control:hover { background: var(--care-icon-surface); }
+.dashboard-week-card :is(.dashboard-week-day, .dashboard-week-control):focus-visible {
+    outline: 2px solid var(--care-charcoal);
+    outline-offset: 2px;
+}
+.dashboard-week-day-name { color: var(--care-icon); font-size: 11px; font-weight: 500; }
+.dashboard-week-day-number { font-size: clamp(15px, 4vw, 18px); font-weight: 750; line-height: 1.15; }
+.dashboard-week-day-year { color: var(--care-icon); font-size: 10px; }
+.dashboard-week-card .dashboard-week-day[aria-pressed="true"] {
+    border-color: var(--care-yellow);
+    background: var(--care-yellow);
+    color: var(--care-charcoal);
+}
+.dashboard-week-day[aria-pressed="true"] :is(.dashboard-week-day-name, .dashboard-week-day-year) { color: inherit; }
+@media (max-width: 360px) {
+    .dashboard-week-header { column-gap: 4px; }
+    .dashboard-week-card .dashboard-week-title { gap: 4px; font-size: 14px !important; }
+    .dashboard-week-card .dashboard-week-control { padding-inline: 6px; font-size: 12px !important; }
+}
