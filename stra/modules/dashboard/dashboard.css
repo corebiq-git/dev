@@ -763,3 +763,8 @@
     .care-dashboard-hero { padding: 16px; column-gap: 10px; }
     .care-hero-date { font-size: 13px; }
 }
+
+.care-hero-copy { min-width: 0; }
+.care-dashboard-hero .care-hero-copy h1 { font-size: clamp(20px, 3.5vw, 34px) !important; }
+.care-hero-company { margin-top: 6px; color: #dddcd7; font-size: 14px; }
+.care-hero-company:empty { display: none; }

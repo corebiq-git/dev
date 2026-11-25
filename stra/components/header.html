@@ -823,11 +823,6 @@
         <div class="top-nav-group" data-category="App Info">
             <button class="top-nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" onclick="window.toggleTopNavMenu('App Info', this)"><span class="material-symbols-rounded top-nav-category-icon" aria-hidden="true">info</span>App Info<span class="material-symbols-rounded top-nav-chevron" aria-hidden="true">expand_more</span></button>
             <div class="top-nav-menu" role="menu" aria-label="App information modules">
-                <button class="top-nav-menu-action notification-button" id="notification-button" type="button" aria-label="App updates" title="App updates" onclick="window.openAppUpdates()">
-                    <span class="material-symbols-rounded" id="bell-icon" aria-hidden="true">notifications</span>
-                    <span>App Updates</span>
-                    <span class="notification-badge" id="notif-badge" aria-hidden="true" hidden></span>
-                </button>
                 <button class="top-nav-menu-action install-app-button" id="install-app-button" type="button" aria-label="Install COREBIQ app" title="Install app" onclick="window.installApp()">
                     <span class="material-symbols-rounded" aria-hidden="true">install_mobile</span>
                     <span>Download App</span>
@@ -856,6 +851,45 @@
     </nav>
 
     <div class="header-actions">
+        <div class="module-search">
+            <div class="module-search-box">
+                <button
+                    class="module-search-toggle"
+                    id="module-search-toggle"
+                    type="button"
+                    aria-label="Search dashboard modules"
+                    aria-expanded="false"
+                    aria-controls="module-search-input"
+                    title="Search modules"
+                    onclick="window.toggleModuleSearch()">
+                    <span class="material-symbols-rounded" aria-hidden="true">search</span>
+                </button>
+                <input
+                    class="module-search-input"
+                    id="module-search-input"
+                    type="text"
+                    placeholder="Search modules..."
+                    autocomplete="off"
+                    aria-label="Search dashboard modules"
+                    aria-controls="module-search-results"
+                    aria-expanded="false"
+                    oninput="window.searchModules(this.value)"
+                    onkeydown="window.handleModuleSearchKeydown(event)">
+                <button
+                    class="module-search-clear"
+                    type="button"
+                    aria-label="Clear module search"
+                    title="Clear search"
+                    onclick="window.clearModuleSearch()">
+                    <span class="material-symbols-rounded" aria-hidden="true">close</span>
+                </button>
+            </div>
+            <div class="module-search-results" id="module-search-results" role="listbox"></div>
+        </div>
+        <button class="notification-button" id="notification-button" type="button" aria-label="App updates" title="App updates" onclick="window.openAppUpdates()">
+            <span class="material-symbols-rounded" id="bell-icon" aria-hidden="true">notifications</span>
+            <span class="notification-badge" id="notif-badge" aria-hidden="true" hidden></span>
+        </button>
         <button
             class="profile-button"
             id="profile-button"

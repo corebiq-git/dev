@@ -445,12 +445,12 @@ window.loadDashboardCompanyName = async function() {
     const companyElement = document.getElementById('dash-company-name');
     if (!companyElement || !window.currentUser) return;
 
-    companyElement.textContent = 'Loading company...';
+    companyElement.textContent = '';
 
     try {
         const companySnapshot = await getDoc(doc(db, 'settings', 'company_profile'));
         if (!companySnapshot.exists()) {
-            companyElement.textContent = 'Company profile not configured';
+            companyElement.textContent = '';
             return;
         }
 
@@ -479,11 +479,11 @@ window.loadDashboardCompanyName = async function() {
                 console.warn('Unable to cache the dashboard company name:', storageError);
             }
         } else {
-            companyElement.textContent = 'Company name not configured';
+            companyElement.textContent = '';
         }
     } catch (error) {
         console.error('Unable to load dashboard company name:', error);
-        companyElement.textContent = 'Company profile unavailable';
+        companyElement.textContent = '';
     }
 };
 

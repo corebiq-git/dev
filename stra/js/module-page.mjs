@@ -5,6 +5,8 @@ const addTargets = {
     'view-appointments': '.new-btn',
     'view-patients': '.patient-add-button',
     'view-transaction': '.txn-add-btn',
+    'view-cash-ledger': '.ledger-head .ledger-btn.primary',
+    'view-bank-ledger': '.ledger-head .ledger-btn.primary',
     'view-attendance': 'button[onclick*="openAttModal"]',
     'view-my-tasks': '#task-new-button',
     'view-staff': '#staff-form input:not([type="hidden"]):not([readonly])',
@@ -12,6 +14,34 @@ const addTargets = {
     'view-ledgers': '#lName',
     'view-users': '#editUserEmail'
 };
+const legacyHeadings = {
+    'view-appointments': '.appointment-page-header',
+    'view-patients': '.patients-hero',
+    'view-transaction': '.txn-topbar',
+    'view-attendance': '#attendance-module > .section-title > h2',
+    'view-my-tasks': '.task-heading',
+    'view-contacts': '.contacts-heading',
+    'view-staff': '#staff-module > .section-title',
+    'view-therapist': '#therapist-module > .section-title',
+    'view-branches': '.branches-heading',
+    'view-ledgers': '#ledger-module > .section-title',
+    'view-users': '.users-page > h2',
+    'view-company': '.company-page-header',
+    'view-cash-ledger': '#cash-ledger-module h1',
+    'view-bank-ledger': '#bank-ledger-module h1',
+    'view-calender': '#calendar-module h1',
+    'view-letterhead': '.studio-heading',
+    'view-report': '.studio-heading',
+    'view-bank-card': '.bank-card-title',
+    'view-licenceinfo': '.licence-header',
+    'view-qr': '#upi-qr-module > .section-title',
+    'view-seal': '#seal-module > .section-title',
+    'view-aboutapp': '.about-heading',
+    'view-privacy': '#privacy-module > .section-title',
+    'view-updates': '#updates-module .section-title',
+    'view-backup': 'div.module-container > .section-title'
+};
+
 const lists = {
     'view-patients': ['#patientTableBody'],
     'view-appointments': ['#therapistWiseReportContent', '.therapist-report-table tbody tr'],
@@ -66,8 +96,35 @@ function addButton(label) {
     return button;
 }
 
+function buttonLabel(button) {
+    const copy = button.cloneNode(true);
+    copy.querySelectorAll('svg, .material-symbols-rounded, .material-symbols-outlined, .material-icons')
+        .forEach(icon => icon.remove());
+    return copy.textContent.trim();
+}
+
+function styleModuleButtons(view) {
+    view.querySelectorAll('button').forEach(button => {
+        const label = buttonLabel(button);
+        if (/^cancel$/i.test(label)) {
+            button.dataset.careButton = 'cancel';
+        } else if (/^(save\b|update\b|submit\b|create\b)/i.test(label)) {
+            button.dataset.careButton = 'save';
+        } else if (/^(clear form|request leave|mark attendance|bulk post attendance)$/i.test(label)) {
+            button.dataset.careButton = 'secondary';
+        }
+        if (button.dataset.careButton && button.parentElement?.matches('div:not(.input-group)')) {
+            button.parentElement.classList.add('care-button-row');
+        }
+    });
+}
+
 export function mountModuleCard(view, title, home) {
-    if (view.id === 'view-dashboard' || view.querySelector(':scope > .care-module-card')) return;
+    if (view.id === 'view-dashboard') {
+        styleModuleButtons(view);
+        return;
+    }
+    if (view.querySelector(':scope > .care-module-card')) return;
     const header = document.createElement('header');
     header.className = 'care-module-card';
     const text = document.createElement('div');
@@ -87,23 +144,42 @@ export function mountModuleCard(view, title, home) {
     text.append(heading, breadcrumb);
     header.append(text);
 
+    const actions = document.createElement('div');
+    actions.className = 'care-module-actions';
     const target = view.querySelector(addTargets[view.id] || '[data-care-add]');
-    if (target && !target.disabled && target.getClientRects().length) {
+    if (target && target.tagName === 'BUTTON') {
+        // Move the original control so its handlers, visibility and disabled state travel with it.
+        let originalLabel = target.getAttribute('aria-label') || buttonLabel(target);
+        if (view.id === 'view-cash-ledger' || view.id === 'view-bank-ledger') {
+            originalLabel = 'Add transaction';
+            target.onclick = () => window.openCareQuickAction('transaction', target);
+        }
+        target.setAttribute('aria-label', originalLabel || 'Add ' + title);
+        target.title = originalLabel || 'Add ' + title;
+        target.classList.add('care-module-add');
+        target.textContent = '+ Add';
+        actions.append(target);
+    } else if (target) {
         const add = addButton('+ Add');
         add.className = 'care-module-add';
         add.addEventListener('click', () => {
-            if (target.disabled || !target.getClientRects().length) return;
-            if (target.tagName === 'BUTTON') {
-                target.click();
-            } else {
-                const reset = inlineResets[view.id];
-                if (reset) view.querySelector(reset)?.click();
-                target.scrollIntoView({ block: 'center' });
-                target.focus({ preventScroll: true });
-            }
+            if (target.disabled || target.hidden) return;
+            const reset = inlineResets[view.id];
+            if (reset) view.querySelector(reset)?.click();
+            target.scrollIntoView({ block: 'center' });
+            target.focus({ preventScroll: true });
         });
-        header.append(add);
+        actions.append(add);
     }
+    const refresh = view.id === 'view-patients' && view.querySelector('.patient-refresh-button');
+    if (refresh) {
+        refresh.classList.add('care-module-secondary');
+        actions.prepend(refresh);
+    }
+    if (actions.childElementCount) header.append(actions);
+    const legacyHeading = legacyHeadings[view.id];
+    if (legacyHeading) view.querySelector(legacyHeading)?.setAttribute('data-care-legacy-heading', '');
+    styleModuleButtons(view);
     view.prepend(header);
 }
 
