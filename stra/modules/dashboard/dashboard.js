@@ -1154,27 +1154,6 @@ window.fetchDashboardData = async function() {
     }
 };
 
-window.updateDashboardQuickToolsControls = function() {
-    const list = document.getElementById('dashboard-quick-tools-list');
-    if (!list) return;
-
-    const controls = document.querySelectorAll('.dashboard-quick-tools-arrow');
-    const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
-    controls[0]?.toggleAttribute('disabled', list.scrollLeft <= 1);
-    controls[1]?.toggleAttribute('disabled', maxScroll - list.scrollLeft <= 1);
-};
-
-window.scrollDashboardQuickTools = function(direction) {
-    const list = document.getElementById('dashboard-quick-tools-list');
-    if (!list) return;
-
-    const item = list.querySelector('.dashboard-quick-tool');
-    const gap = Number.parseFloat(getComputedStyle(list).columnGap) || 0;
-    const distance = item ? item.getBoundingClientRect().width + gap : list.clientWidth;
-    list.scrollBy({ left: Math.sign(direction) * distance, behavior: 'smooth' });
-};
-
-
 /* -------------------------------------------------------
    CHART
 ------------------------------------------------------- */
@@ -1249,9 +1228,5 @@ window.renderChart = function(
 window.loadDashboardCompanyName?.();
 window.updateGlobalClock?.();
 window.dashboardClockInterval ??= window.setInterval(() => window.updateGlobalClock?.(), 1000);
-const quickToolsList = document.getElementById('dashboard-quick-tools-list');
-quickToolsList?.addEventListener('scroll', window.updateDashboardQuickToolsControls, { passive: true });
-window.addEventListener('resize', window.updateDashboardQuickToolsControls);
-window.updateDashboardQuickToolsControls?.();
 window.applyLucideIcons?.(document.getElementById('view-dashboard'));
 if (window.currentUser) window.fetchDashboardData?.();
