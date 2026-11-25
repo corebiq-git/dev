@@ -654,8 +654,7 @@
 .care-dashboard-hero {
     display: grid;
     min-height: var(--care-hero-min-height);
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 10px 16px;
+    gap: 16px;
     margin-bottom: 22px;
     padding: clamp(18px, 4vw, 34px);
     border-radius: 24px;
@@ -668,20 +667,34 @@
     overflow-wrap: anywhere;
     font-size: clamp(1.65rem, 4vw, 2.5rem) !important;
 }
+.care-hero-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgb(255 255 255 / .15);
+}
 .care-hero-date {
     display: flex;
+    min-width: 0;
     flex-wrap: wrap;
     gap: 4px 12px;
-    color: var(--care-yellow);
-    font-size: 14px;
-    font-weight: 600;
+    color: #dddcd7;
+    font-size: 13px;
 }
-.care-hero-add {
-    position: relative;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: center;
+.care-hero-date-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
 }
+.care-hero-date-item .material-symbols-rounded {
+    flex: 0 0 auto;
+    color: var(--care-gold);
+    font-size: 15px;
+}
+.care-hero-add { position: relative; justify-self: end; }
 .care-hero-add summary {
     display: flex;
     align-items: center;
@@ -698,7 +711,7 @@
     list-style: none;
 }
 .care-hero-add summary::-webkit-details-marker { display: none; }
-.care-hero-add summary:focus-visible { outline: 2px solid var(--care-yellow); outline-offset: 3px; }
+.care-hero-add summary:focus-visible { outline: 2px solid var(--care-gold); outline-offset: 3px; }
 .care-hero-options {
     position: absolute;
     z-index: 10;
@@ -760,15 +773,19 @@
 }
 .dashboard-module .dashboard-record { flex-wrap: wrap; }
 @media (max-width: 480px) {
-    .care-dashboard-hero { padding: 16px; column-gap: 10px; }
-    .care-hero-date { font-size: 13px; }
+    .care-dashboard-hero { padding: 16px; }
 }
 
 .care-hero-copy { min-width: 0; }
 .care-hero-greeting { margin: 0 0 5px; color: #dddcd7; font-size: 13px; font-weight: 400; }
 .care-dashboard-hero .care-hero-copy h1 {
-    color: var(--care-yellow);
+    color: var(--care-gold);
     font-size: clamp(22px, 4vw, 36px) !important;
     font-weight: 750 !important;
 }
 .care-hero-overview { margin: 6px 0 0; color: #fff; font-size: 15px; font-weight: 400; line-height: 1.45; }
+
+.dashboard-module :is(.dashboard-week-title, .dashboard-quick-tools-title, .dashboard-count-heading-title,
+    .dashboard-entry-title-text, .card-title, .cal-month-title, .schedule-table-heading h4) {
+    color: var(--care-gold);
+}

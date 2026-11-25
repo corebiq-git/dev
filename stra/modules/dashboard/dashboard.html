@@ -8,23 +8,31 @@
                 </div>
 
                 <section class="care-dashboard-hero" aria-labelledby="dash-company-name">
-                    <div class="care-hero-date">
-                        <time id="dashboard-as-of-date"></time>
-                        <time id="dashboard-as-of-time"></time>
-                    </div>
                     <div class="care-hero-copy">
                         <p class="care-hero-greeting">Welcome back</p>
                         <h1 id="dash-company-name" data-no-translate>Care</h1>
                         <p class="care-hero-overview">Here is your Service Overview Today.</p>
                     </div>
-                    <details class="care-hero-add">
-                        <summary><span class="material-symbols-rounded" aria-hidden="true">add</span>Add</summary>
-                        <div class="care-hero-options" aria-label="Add a record">
-                            <button type="button" onclick="window.openCareQuickAction('appointment', this)">Appointment</button>
-                            <button type="button" onclick="window.openCareQuickAction('transaction', this)">Transaction</button>
-                            <button type="button" onclick="window.openCareQuickAction('attendance', this)">Attendance</button>
+                    <div class="care-hero-footer">
+                        <div class="care-hero-date" aria-label="Current date and time">
+                            <span class="care-hero-date-item">
+                                <span class="material-symbols-rounded" aria-hidden="true">calendar_today</span>
+                                <time id="dashboard-as-of-date"></time>
+                            </span>
+                            <span class="care-hero-date-item">
+                                <span class="material-symbols-rounded" aria-hidden="true">schedule</span>
+                                <time id="dashboard-as-of-time"></time>
+                            </span>
                         </div>
-                    </details>
+                        <details class="care-hero-add">
+                            <summary><span class="material-symbols-rounded" aria-hidden="true">add</span>Add</summary>
+                            <div class="care-hero-options" aria-label="Add a record">
+                                <button type="button" onclick="window.openCareQuickAction('appointment', this)">Appointment</button>
+                                <button type="button" onclick="window.openCareQuickAction('transaction', this)">Transaction</button>
+                                <button type="button" onclick="window.openCareQuickAction('attendance', this)">Attendance</button>
+                            </div>
+                        </details>
+                    </div>
                 </section>
 
                 <div class="dashboard-calendar-kpi-row">
@@ -313,7 +321,7 @@
 
                 <div class="dash-table-wrapper dashboard-hidden-legacy">
                     <div class="schedule-table-heading">
-                        <h4 style="font-size:14px;font-weight:700;margin:0;color:var(--text-main)">
+                        <h4 style="font-size:14px;font-weight:700;margin:0">
                             Schedule for:
                             <span id="dashListTitle" style="color:var(--primary)">Today</span>
                         </h4>
