@@ -1,4 +1,5 @@
 import './corebiq-locale.js';
+import { modulePageTitle, mountModuleCard, mountModuleList } from './module-page.mjs';
 import { auth, db } from './firebase-config.js';
 import { initializeDocumentIdCounters } from './document-ids.js';
 import { APP_METADATA } from './app-metadata.js';
@@ -1160,12 +1161,14 @@ window.switchView = async function(targetId, navElement) {
 
     if (targetId === 'view-invoice') {
         targetDiv.classList.add('active');
+        mountModuleCard(targetDiv, modulePageTitle(targetId), () => window.switchView('view-dashboard'));
         window.dispatchInvoicePayload();
         return;
     }
 
     if (targetDiv.querySelector('iframe')) {
         targetDiv.classList.add('active');
+        mountModuleCard(targetDiv, modulePageTitle(targetId), () => window.switchView('view-dashboard'));
         return;
     }
 
@@ -1267,6 +1270,8 @@ window.switchView = async function(targetId, navElement) {
                 oldScript.parentNode.replaceChild(newScript, oldScript);
             }
 
+            mountModuleCard(targetDiv, modulePageTitle(targetId), () => window.switchView('view-dashboard'));
+            mountModuleList(targetDiv);
             targetDiv.dataset.loaded = 'true';
             delete targetDiv.dataset.loading;
 

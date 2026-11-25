@@ -612,9 +612,6 @@ function renderTherapistWiseReport(appointments){
     grouped.get(therapist).push(appointment);
   });
   const groups=[...grouped.entries()].sort(([a],[b])=>a.localeCompare(b));
-  groups.forEach(([,items])=>items.sort((a,b)=>
-    String(a.data.date||'').localeCompare(String(b.data.date||''))||String(a.data.time||'').localeCompare(String(b.data.time||''))
-  ));
   const reportGroups=groups.map(([therapist,items])=>`
     <section class="therapist-report-group">
       <h3>${esc(therapist)} <span>${items.length} appointment${items.length===1?'':'s'}</span></h3>

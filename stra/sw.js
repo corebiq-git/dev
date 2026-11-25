@@ -1,4 +1,4 @@
-const CACHE="corebiq-v23";
+const CACHE="corebiq-v24";
 const CORE=[
     "./",
     "./index.html",
@@ -14,6 +14,8 @@ const CORE=[
     "./css/corebiq.css",
     "./css/care-theme.css",
     "./css/sign-in.css",
+    "./css/module-page.css",
+    "./js/module-page.mjs",
     "./components/form-view.css",
     "./js/firebase-config.js",
     "./js/corebiq-locale.js",

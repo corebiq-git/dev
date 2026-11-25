@@ -1,0 +1,83 @@
+.care-module-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: clamp(16px, 3vw, 26px);
+    margin: 0 auto 18px;
+    width: min(100%, 1200px);
+    border-radius: 16px;
+    background: var(--care-charcoal);
+    color: #fff;
+}
+.care-module-card > div { min-width: 0; }
+.care-module-card h1 {
+    margin: 0 0 6px;
+    color: inherit;
+    overflow-wrap: anywhere;
+    font-size: clamp(21px, 3vw, 30px);
+    line-height: 1.15;
+}
+.care-module-path { margin: 0; color: #dddcd7; font-size: 13px; line-height: 1.4; }
+.care-module-path a { color: inherit; text-underline-offset: 3px; }
+.care-module-add {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 9px;
+    background: var(--care-icon-surface);
+    color: var(--care-charcoal);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.care-list-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 14px;
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--care-line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--care-charcoal);
+    font-size: 14px;
+}
+.care-list-footer > div { display: flex; gap: 6px; }
+#main-content .care-list-footer button {
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: var(--care-icon-surface);
+    color: var(--care-charcoal);
+    font-weight: 600;
+    cursor: pointer;
+}
+#main-content .care-list-footer button:disabled { opacity: .55; cursor: default; }
+.care-module-add:focus-visible, .care-list-footer button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.care-list-footer[hidden] { display: none; }
+@media screen {
+    [data-care-page-hidden] { display: none !important; }
+}
+@media print {
+    .care-module-card, .care-list-footer { display: none !important; }
+}
+.care-list-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+#main-content .care-list-tools :is(input, select) {
+    max-width: 100%;
+    min-height: 44px;
+    padding: 0 10px;
+    border: 1px solid var(--care-line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--care-charcoal);
+    font: inherit;
+}
+@media print { .care-list-tools { display: none !important; } }
