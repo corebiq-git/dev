@@ -341,9 +341,18 @@
 #view-dashboard.active .dashboard-week-card > .dashboard-quick-tools{box-shadow:none}
 #view-dashboard.active .dashboard-quick-tool{box-shadow:0 1px 3px rgba(16,24,40,.05)}
 #view-dashboard.active .dashboard-quick-tool:hover{box-shadow:0 4px 12px rgba(16,24,40,.09)}
-.dashboard-quick-tool-icon{display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;color:#80868B}
-
-.dashboard-quick-tool-icon .material-symbols-rounded{font-size:24px}
+.dashboard-quick-tool-icon {
+    display: block;
+    width: clamp(30px, 9vw, 42px);
+    aspect-ratio: 1;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: var(--care-charcoal);
+    stroke-width: 2.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.dashboard-quick-tool-icon .quick-tool-accent { stroke: var(--care-gold); }
 .dashboard-quick-tool-copy{min-width:0;max-width:100%}
 .dashboard-quick-tool-name{font-size:14px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
 .dashboard-period-control{
