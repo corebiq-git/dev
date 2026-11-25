@@ -1,0 +1,27 @@
+#developer-module { width: min(100%, 1200px); margin-inline: auto; }
+#developer-module [hidden] { display: none !important; }
+.developer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.developer-card {
+    min-width: 0;
+    padding: clamp(14px, 3vw, 22px);
+    border: 1px solid var(--care-line);
+    border-radius: 14px;
+    background: #fff;
+    overflow-wrap: anywhere;
+}
+.developer-wide { grid-column: 1 / -1; }
+.developer-card h2, .developer-card h3 { margin-bottom: 8px; }
+.developer-card h3 { margin-top: 14px; }
+.developer-card p, .developer-card ul { margin-bottom: 10px; }
+.developer-card a { color: #17488d; text-underline-offset: 3px; }
+.developer-card ul { padding-inline-start: 20px; }
+.developer-card dl { display: grid; gap: 8px; }
+.developer-card dl > div { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; }
+.developer-card dd { font-weight: 700; }
+.developer-card fieldset { display: flex; flex-wrap: wrap; gap: 10px 18px; border: 0; margin-bottom: 12px; }
+.developer-card legend { margin-bottom: 6px; font-weight: 600; }
+.developer-notice-field { display: grid; gap: 5px; margin-bottom: 10px; }
+.developer-notice-field textarea { width: 100%; }
+.developer-action { min-height: 44px; padding: 7px 12px; border-radius: 9px; background: var(--care-icon-surface); cursor: pointer; }
+.developer-action:disabled { opacity: .6; }
+@media (max-width: 700px) { .developer-grid { grid-template-columns: minmax(0, 1fr); } }

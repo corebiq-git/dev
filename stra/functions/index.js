@@ -39,9 +39,9 @@ function normalizeEmail(value) {
 
 function validateUserFields(data) {
   const role = data.role;
-  const branch = role === 'admin' ? 'ALL' : typeof data.branch === 'string' ? data.branch.trim() : '';
-  if (role !== 'admin' && role !== 'user') {
-    throw new HttpsError('invalid-argument', 'Role must be admin or user.');
+  const branch = role === 'admin' ? 'ALL' : role === 'developer' ? 'DEVELOPER' : typeof data.branch === 'string' ? data.branch.trim() : '';
+  if (!['admin', 'developer', 'user'].includes(role)) {
+    throw new HttpsError('invalid-argument', 'Select a supported role.');
   }
   if (!branch) {
     throw new HttpsError('invalid-argument', 'A branch assignment is required for standard users.');
@@ -292,6 +292,10 @@ exports.getFirestoreUsage = onCall({ region: 'us-central1' }, async request => {
     throw new HttpsError('permission-denied', 'Firestore usage is available to administrators only.');
   }
 
+  return fetchFirestoreUsage();
+});
+
+async function fetchFirestoreUsage() {
   if (!projectId) {
     throw new HttpsError('failed-precondition', 'The Cloud Functions project is not configured.');
   }
@@ -340,4 +344,136 @@ exports.getFirestoreUsage = onCall({ region: 'us-central1' }, async request => {
       : 'Cloud Monitoring usage metrics could not be loaded. Confirm the Monitoring API is enabled and try again.';
     throw new HttpsError('failed-precondition', message);
   }
+}
+
+const workspaceRef = () => getFirestore().doc('settings/developer_workspace');
+const adminDefaults = Object.freeze({ subscription: true, info: true, policies: true, alerts: true, usage: true, billing: false });
+const billingAuth = new GoogleAuth({ scopes: ['https://www.googleapis.com/auth/cloud-platform'] });
+let billingCache;
+let billingRequest;
+
+async function requireDeveloperWorkspaceRole(request) {
+  const email = request.auth?.token.email;
+  if (typeof email !== 'string' || !email.trim()) {
+    throw new HttpsError('unauthenticated', 'Sign in to open the Developer Workspace.');
+  }
+  const profile = await getFirestore().doc(`users/${email.trim().toLowerCase()}`).get();
+  const role = profile.data()?.role;
+  if (role !== 'admin' && role !== 'developer') {
+    throw new HttpsError('permission-denied', 'Developer Workspace requires the Developer or Admin role.');
+  }
+  return role;
+}
+
+function workspaceSections(role, settings) {
+  return Object.fromEntries(Object.entries(adminDefaults).map(([key, fallback]) => [
+    key, role === 'developer' || (typeof settings.adminSections?.[key] === 'boolean'
+      ? settings.adminSections[key]
+      : fallback)
+  ]));
+}
+
+exports.getDeveloperWorkspace = onCall({ region: 'us-central1' }, async request => {
+  const role = await requireDeveloperWorkspaceRole(request);
+  const settings = (await workspaceRef().get()).data() || {};
+  const sections = workspaceSections(role, settings);
+  return {
+    role,
+    sections,
+    projectId: projectId || '',
+    ...(sections.subscription ? {
+      subscription: { plan: 'Base Plan', purchaseDate: '2026-08-01', validUntil: '2027-08-01' }
+    } : {}),
+    ...(sections.alerts ? { notice: typeof settings.notice === 'string' ? settings.notice : '' } : {}),
+    ...(role === 'admin' ? { adminNotice: typeof settings.notice === 'string' ? settings.notice : '' } : {})
+  };
+});
+
+exports.saveDeveloperWorkspaceSettings = onCall({ region: 'us-central1' }, async request => {
+  await requireAdmin(request);
+  const submitted = request.data?.adminSections;
+  if (!submitted || Object.keys(adminDefaults).some(key => typeof submitted[key] !== 'boolean')) {
+    throw new HttpsError('invalid-argument', 'Choose an access setting for each section.');
+  }
+  const adminSections = Object.fromEntries(Object.keys(adminDefaults).map(key => [key, submitted[key]]));
+  const notice = request.data?.notice;
+  if (typeof notice !== 'string' || notice.length > 500) {
+    throw new HttpsError('invalid-argument', 'Workspace notices can contain up to 500 characters.');
+  }
+  await workspaceRef().set({ adminSections, notice: notice.trim() }, { merge: true });
+  return { adminSections };
+});
+
+async function queryWorkspaceBilling() {
+  const table = process.env.CARE_BILLING_EXPORT_TABLE?.trim();
+  if (!table) return { status: 'not-configured' };
+  const validTable = /^([a-z][a-z0-9-]{4,62})\.[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*$/;
+  if (!validTable.test(table) || !projectId) {
+    throw new Error('Invalid billing export configuration');
+  }
+
+  const client = await billingAuth.getClient();
+  const response = await client.request({
+    url: `https://bigquery.googleapis.com/bigquery/v2/projects/${encodeURIComponent(projectId)}/queries`,
+    method: 'POST',
+    data: {
+      query: [
+        'SELECT currency, CAST(SUM(cost) AS STRING) AS gross,',
+        'CAST(SUM(COALESCE((SELECT SUM(credit.amount) FROM UNNEST(credits) AS credit), 0)) AS STRING) AS credits,',
+        'CAST(MAX(export_time) AS STRING) AS latest_export',
+        `FROM \`${table}\``,
+        'WHERE project.id = @careProject',
+        "AND usage_start_time >= TIMESTAMP(DATE_TRUNC(CURRENT_DATE('America/Los_Angeles'), MONTH), 'America/Los_Angeles')",
+        'AND usage_start_time <= CURRENT_TIMESTAMP() GROUP BY currency'
+      ].join(' '),
+      useLegacySql: false,
+      timeoutMs: 10000,
+      maximumBytesBilled: '1073741824',
+      ...(process.env.CARE_BILLING_EXPORT_LOCATION ? { location: process.env.CARE_BILLING_EXPORT_LOCATION } : {}),
+      parameterMode: 'NAMED',
+      queryParameters: [{
+        name: 'careProject',
+        parameterType: { type: 'STRING' },
+        parameterValue: { value: projectId }
+      }]
+    }
+  });
+  if (!response.data.jobComplete || response.data.errors?.length) throw new Error('Billing query incomplete');
+  return {
+    status: 'available',
+    totals: (response.data.rows || []).map(row => {
+      const [currency, gross, credits, latestExport] = row.f.map(cell => cell.v);
+      return { currency, gross: Number(gross), credits: Number(credits), latestExport };
+    })
+  };
+}
+
+async function fetchWorkspaceBilling() {
+  if (billingCache && Date.now() < billingCache.expires) return billingCache.value;
+  if (!billingRequest) {
+    billingRequest = queryWorkspaceBilling().then(value => {
+      if (value.status === 'available') billingCache = { value, expires: Date.now() + 5 * 60 * 1000 };
+      return value;
+    }).finally(() => { billingRequest = null; });
+  }
+  return billingRequest;
+}
+
+exports.getDeveloperWorkspaceMetrics = onCall({ region: 'us-central1' }, async request => {
+  const role = await requireDeveloperWorkspaceRole(request);
+  const settings = (await workspaceRef().get()).data() || {};
+  const sections = workspaceSections(role, settings);
+  const result = {};
+  await Promise.all([
+    sections.usage && request.data?.usage === true ? fetchFirestoreUsage().then(value => {
+      result.usage = value;
+    }).catch(() => { result.usage = { error: 'Cloud Monitoring metrics are unavailable. Check the Monitoring API and service account access.' }; }) : null,
+    sections.billing && request.data?.billing === true ? fetchWorkspaceBilling().then(value => {
+      result.billing = value;
+    }).catch(error => {
+      logger.warn('Care billing export unavailable', { status: error?.response?.status, code: error?.code });
+      result.billing = { status: 'unavailable' };
+    }) : null
+  ]);
+  return result;
 });

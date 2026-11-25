@@ -147,6 +147,7 @@ onAuthStateChanged(auth, async (user) => {
             branch: userData.branch || "Unknown"
         };
         window.updateHeaderProfile();
+        window.applyRoleVisibility();
 
         const app = document.getElementById('app-container');
         if (app) app.style.visibility = 'visible';
@@ -158,7 +159,7 @@ onAuthStateChanged(auth, async (user) => {
                 alert(`Sequential document IDs could not be initialized: ${error.message}\n\nDeploy the updated firebase/firestore.rules file, then reload and sign in as an administrator to initialize the counters.`);
             }
         }
-        await window.switchView('view-dashboard');
+        await window.switchView(window.currentUser.role === 'developer' ? 'view-developer' : 'view-dashboard');
 
         /* Sidebar is loaded separately; hide the Users item after it appears too. */
         window.applyRoleVisibility();
@@ -173,6 +174,8 @@ onAuthStateChanged(auth, async (user) => {
 /* -------------------------------------------------------
    ROLE VISIBILITY
 ------------------------------------------------------- */
+const developerViews = new Set(['view-developer', 'view-privacy', 'view-licenceinfo']);
+
 window.applyRoleVisibility = function() {
     const restrictedSelectors = [
         '#nav-users-btn',
@@ -181,7 +184,17 @@ window.applyRoleVisibility = function() {
         '[onclick*="view-users"]',
         '[onclick*="usage.html"]'
     ];
-    const isAdmin = window.currentUser?.role === 'admin';
+    const role = window.currentUser?.role;
+    const isAdmin = role === 'admin';
+    const isDeveloper = role === 'developer';
+    document.getElementById('app-container')?.classList.toggle('care-developer-role', isDeveloper);
+    document.querySelectorAll('#sidebar-nav .nav-link, #top-module-nav .top-nav-link').forEach(link => {
+        const target = link.dataset.target;
+        if (isDeveloper || target === 'view-developer') {
+            const allowed = isDeveloper ? developerViews.has(target) : isAdmin;
+            link.style.display = allowed ? '' : 'none';
+        }
+    });
     restrictedSelectors.forEach(selector => {
         document.querySelectorAll(selector).forEach(element => {
             element.style.display = isAdmin ? '' : 'none';
@@ -240,6 +253,7 @@ window.buildSidebarNavigation = function() {
         'view-branches': 'Settings',
         'view-company': 'Settings',
         'view-users': 'Settings',
+        'view-developer': 'Settings',
         'view-updates': 'App Info',
         'view-licenceinfo': 'App Info',
         'view-aboutapp': 'App Info',
@@ -355,6 +369,7 @@ window.buildTopNavigation = function() {
         'view-branches': 'Settings',
         'view-company': 'Settings',
         'view-users': 'Settings',
+        'view-developer': 'Settings',
         'view-updates': 'App Info',
         'view-licenceinfo': 'App Info',
         'view-aboutapp': 'App Info',
@@ -795,7 +810,7 @@ window.updateNotificationBell = function() {
 };
 
 window.openAppUpdates = function() {
-    window.switchView('view-updates', null);
+    window.switchView(window.currentUser?.role === 'developer' ? 'view-developer' : 'view-updates', null);
 };
 
 window.addEventListener('storage', event => {
@@ -1081,6 +1096,13 @@ window.openCareQuickAction = async function(action, button) {
 
 window.switchView = async function(targetId, navElement) {
     window.closeTopNavMenus();
+    const role = window.currentUser?.role;
+    if (role === 'developer' && !developerViews.has(targetId)) {
+        targetId = 'view-developer';
+        navElement = null;
+    }
+    if (targetId === 'view-developer' && role !== 'developer' && role !== 'admin') return;
+
 
     if (targetId === 'view-calc') {
         window.toggleCalculator();

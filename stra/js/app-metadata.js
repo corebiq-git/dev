@@ -19,6 +19,7 @@ export const APP_METADATA = Object.freeze({
         'view-staff': 'modules/hr/staff/staff.html',
         'view-attendance': 'modules/hr/attendance/attendance.html',
         'view-users': 'modules/settings/users/users.html',
+        'view-developer': 'modules/settings/developer/developer.html',
         'view-company': 'modules/settings/company/company.html',
         'view-letterhead': 'modules/templates/template-letterhead/template-letterhead.html',
         'view-bank-card': 'modules/templates/template-bank-card/template-bank-card.html',

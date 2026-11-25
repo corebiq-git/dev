@@ -70,6 +70,7 @@ const inlineResets = {
     'view-users': '#clearUserBtn'
 };
 const titleOverrides = {
+    'view-developer': 'Developer Workspace',
     'view-invoice': 'Invoice',
     'view-calender': 'Calendar',
     'view-corebiq-ai': 'COREBIQ AI',

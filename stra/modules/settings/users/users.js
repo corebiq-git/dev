@@ -33,11 +33,12 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
     }
 
     window.toggleBranchInput = function() {
-        const isAdmin = roleInput.value === 'admin';
-        if (isAdmin) branchInput.value = 'ALL';
-        else if (branchInput.value === 'ALL') branchInput.value = '';
-        branchInput.disabled = isAdmin;
-        branchInput.style.background = isAdmin ? '#f0f0f0' : 'white';
+        const isBranchUser = roleInput.value === 'user';
+        const scope = roleInput.value === 'admin' ? 'ALL' : 'DEVELOPER';
+        if (!isBranchUser) branchInput.value = scope;
+        else if (['ALL', 'DEVELOPER'].includes(branchInput.value)) branchInput.value = '';
+        branchInput.disabled = !isBranchUser;
+        branchInput.style.background = isBranchUser ? 'white' : '#f0f0f0';
     };
 
     window.clearUserForm = function() {
@@ -122,7 +123,7 @@ if (!window.currentUser || window.currentUser.role !== 'admin') {
         const email = emailInput.value.trim().toLowerCase();
         const password = passwordInput.value;
         const role = roleInput.value;
-        const branch = role === 'admin' ? 'ALL' : branchInput.value.trim();
+        const branch = role === 'admin' ? 'ALL' : role === 'developer' ? 'DEVELOPER' : branchInput.value.trim();
 
         if (!email || !emailInput.checkValidity()) {
             showMessage('Enter a valid email address.', true);

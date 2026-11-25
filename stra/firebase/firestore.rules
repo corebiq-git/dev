@@ -19,8 +19,12 @@ service cloud.firestore {
       return hasUserProfile() && getUserData().role == 'admin';
     }
 
+    function isBranchUser() {
+      return hasUserProfile() && getUserData().get('role', 'user') == 'user';
+    }
+
     function isUserBranch(docBranch) {
-      return hasUserProfile()
+      return isBranchUser()
         && docBranch is string
         && getUserData().branch is string
         && getUserData().branch == docBranch;
@@ -43,7 +47,7 @@ service cloud.firestore {
     }
 
     match /settings/company_profile {
-      allow get: if signedIn();
+      allow get: if isAdmin() || isBranchUser();
       allow write: if isAdmin();
     }
 
@@ -55,7 +59,7 @@ service cloud.firestore {
         ];
       }
 
-      allow get: if hasUserProfile() && supportedCounter();
+      allow get: if (isAdmin() || isBranchUser()) && supportedCounter();
       allow list: if false;
       allow create: if isAdmin()
         && supportedCounter()
@@ -65,7 +69,7 @@ service cloud.firestore {
         && request.resource.data.lastIssued >= 0
         && request.resource.data.updatedAt == request.time;
       allow update: if isAdmin()
-        || (hasUserProfile()
+        || (isBranchUser()
           && supportedCounter()
           && request.resource.data.keys().hasOnly(['lastIssued', 'updatedAt'])
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastIssued', 'updatedAt'])
@@ -77,16 +81,15 @@ service cloud.firestore {
     }
 
     match /tasks/{taskId} {
-      allow get, list: if signedIn()
-        && (isAdmin() || resource.data.ownerUid == request.auth.uid);
+      allow get, list: if isAdmin() || (isBranchUser() && resource.data.ownerUid == request.auth.uid);
       allow create: if isAdmin()
-        || (signedIn() && request.resource.data.ownerUid == request.auth.uid);
+        || (isBranchUser() && request.resource.data.ownerUid == request.auth.uid);
       allow update: if isAdmin()
-        || (signedIn()
+        || (isBranchUser()
           && resource.data.ownerUid == request.auth.uid
           && request.resource.data.ownerUid == request.auth.uid);
       allow delete: if isAdmin()
-        || (signedIn() && resource.data.ownerUid == request.auth.uid);
+        || (isBranchUser() && resource.data.ownerUid == request.auth.uid);
     }
 
     match /estimates/{document=**} {
@@ -150,7 +153,7 @@ service cloud.firestore {
 
     match /appointments/{document=**} {
       allow get: if isAdmin()
-        || (resource == null && hasUserProfile())
+        || (resource == null && isBranchUser())
         || isUserBranch(resource.data.branch);
       allow list: if isAdmin() || isUserBranch(resource.data.branch);
       allow create: if isAdmin() || isUserBranch(request.resource.data.branch);

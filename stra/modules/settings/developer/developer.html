@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="./developer.css" data-module-style>
+<div class="module-container developer-workspace" id="developer-module">
+    <p id="developer-status" role="status">Checking workspace access…</p>
+    <div class="developer-grid" id="developer-sections" hidden>
+        <section data-section="subscription" class="developer-card" hidden>
+            <h2>Plan &amp; Subscription</h2>
+            <dl>
+                <div><dt>Plan</dt><dd id="developer-plan"></dd></div>
+                <div><dt>Purchase date</dt><dd id="developer-purchase-date"></dd></div>
+                <div><dt>Validity till</dt><dd id="developer-valid-until"></dd></div>
+            </dl>
+        </section>
+        <section data-section="info" class="developer-card" hidden>
+            <h2>App Info</h2>
+            <dl>
+                <div><dt>App</dt><dd>Care</dd></div>
+                <div><dt>Version</dt><dd id="developer-version"></dd></div>
+                <div><dt>Brand</dt><dd>COREBIQ</dd></div>
+            </dl>
+        </section>
+        <section data-section="policies" class="developer-card" hidden>
+            <h2>Privacy, Licence &amp; Legal</h2>
+            <p>Brand name <strong>COREBIQ</strong>. CM Filings is owned by COREBIQ, per the workspace’s brand information.</p>
+            <ul>
+                <li><button type="button" class="developer-action" onclick="window.switchView('view-privacy')">Privacy Policy</button></li>
+                <li><button type="button" class="developer-action" onclick="window.switchView('view-licenceinfo')">Licence Information</button></li>
+                <li><a href="mailto:legal@corebiq.com?subject=Care%20licence%20agreement">Request the Care licence agreement</a></li>
+            </ul>
+            <h3>Refund Policy</h3>
+            <p>Contact support for the refund terms applicable to your purchase.</p>
+            <h3>Contact Support</h3>
+            <a href="mailto:support@corebiq.com">support@corebiq.com</a>
+            <a href="tel:+919946151111">+91 99461 51111</a>
+        </section>
+        <section data-section="alerts" class="developer-card" hidden>
+            <h2>Notifications &amp; Alerts</h2>
+            <p id="developer-notice">No workspace notice has been posted.</p>
+            <p id="developer-metric-alert" hidden></p>
+        </section>
+        <section data-section="usage" class="developer-card" hidden>
+            <h2>Firestore Usage</h2>
+            <p>Operation counts for the default Firestore database. Today is a partial Pacific calendar day.</p>
+            <p id="developer-usage-status" role="status"></p>
+            <div id="developer-usage-data"></div>
+        </section>
+        <section data-section="billing" class="developer-card" hidden>
+            <h2>Google Cloud Billing</h2>
+            <p>Month-to-date project costs from the Cloud Billing export. Exported charges can arrive after usage occurs.</p>
+            <p id="developer-billing-status" role="status"></p>
+            <div id="developer-billing-data"></div>
+            <a id="developer-billing-console" href="https://console.cloud.google.com/billing" target="_blank" rel="noopener noreferrer">Open Cloud Billing</a>
+        </section>
+        <section class="developer-card developer-wide" id="developer-refresh-panel" hidden>
+            <button type="button" class="developer-action" id="developer-refresh">Refresh cloud metrics</button>
+        </section>
+        <section class="developer-card developer-wide" id="developer-admin-panel" hidden>
+            <h2>Admin Visibility</h2>
+            <form id="developer-settings-form">
+                <fieldset>
+                    <legend>Sections visible to Admin accounts in this workspace</legend>
+                    <label><input type="checkbox" name="subscription"> Plan &amp; Subscription</label>
+                    <label><input type="checkbox" name="info"> App Info</label>
+                    <label><input type="checkbox" name="policies"> Privacy, Licence &amp; Legal</label>
+                    <label><input type="checkbox" name="alerts"> Notifications &amp; Alerts</label>
+                    <label><input type="checkbox" name="usage"> Firestore Usage</label>
+                    <label><input type="checkbox" name="billing"> Google Cloud Billing</label>
+                </fieldset>
+                <label class="developer-notice-field">Workspace notice
+                    <textarea name="notice" maxlength="500" rows="3"></textarea>
+                </label>
+                <button type="submit" class="developer-action">Save settings</button>
+            </form>
+        </section>
+    </div>
+    <script type="module" src="./developer.js"></script>
+</div>

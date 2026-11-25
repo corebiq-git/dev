@@ -320,3 +320,6 @@ body{margin:0!important;padding:0!important}
     inset: calc(100% + 52px) 0 auto auto;
     width: min(340px, calc(100vw - 32px));
 }
+
+.care-developer-role #header-container :is(.top-module-nav, .module-search) { display: none !important; }
+.care-developer-role #bottomnav-container .bottom-nav-item:not(.bottom-nav-menu-button) { display: none; }

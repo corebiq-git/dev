@@ -88,3 +88,16 @@ The app shell presents active module pages in a full-height flex column using th
 The Transactions & Vouchers module continues to use Firebase and remains linked to Payments, Receipts, and Ledgers.
 
 The **My Task** module stores personal tasks in browser localStorage under the signed-in Firebase UID. Tasks are local to that browser/device and do not sync between devices. Existing Firestore task records are not automatically copied into local storage.
+
+## Developer Workspace
+
+The Developer role uses the same Firebase sign-in as Care. An admin can assign Developer in Settings → Users after the updated functions and Firestore rules are deployed. Developer accounts open the Developer Workspace and can access the licence and privacy pages. Developer accounts have no internal clinic-record, accounting, task or user-management access. Existing public clinic directory and booking rules apply to all visitors.
+
+The Admin Visibility section controls which Developer Workspace sections admins see. Billing is off for admins by default. The existing admin Firestore Usage page retains its administrator access.
+
+### Connect Google Cloud data
+
+- Deploy the updated Firestore rules and these Cloud Functions to the Care Firebase project: `createManagedUser`, `updateManagedUser`, `getDeveloperWorkspace`, `saveDeveloperWorkspaceSettings`, and `getDeveloperWorkspaceMetrics`. Use the configuration in `stra/firebase/firebase.json`.
+- Enable the Cloud Monitoring API and grant the runtime service account Monitoring Viewer for the Care project. The dashboard reports operation counts, which can differ from billed operations.
+- To display exported costs, enable the standard or detailed Cloud Billing export to BigQuery. Set `CARE_BILLING_EXPORT_TABLE` in the functions environment to the fully qualified `project.dataset.table` identifier. Set `CARE_BILLING_EXPORT_LOCATION` if required for the dataset region. Grant the runtime service account BigQuery Data Viewer on the export dataset and BigQuery Job User in the Care project. The query is capped at 1 GiB per run, cached for five minutes, and returns only the Care project's month-to-date totals.
+- Confirm a Developer can load this page and metrics, that a standard user is denied, and that toggling Admin Billing changes access before relying on the new configuration. The export updates on Google's reporting schedule. The Cloud Billing link uses the viewer's own Google Cloud permissions.
