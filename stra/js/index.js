@@ -1215,8 +1215,17 @@ window.switchView = async function(targetId, navElement) {
                 doc.querySelector('.module-container') || doc.body;
 
             targetDiv.innerHTML = '';
-            doc.head.querySelectorAll('link[data-module-style]').forEach(stylesheet => {
-                targetDiv.appendChild(stylesheet.cloneNode(true));
+            // The shell already loads the shared CSS and fonts. Only mount the
+            // stylesheets explicitly marked as belonging to this module.
+            const moduleStyles = new Set();
+            doc.querySelectorAll('link[rel~="stylesheet"]').forEach(stylesheet => {
+                const href = stylesheet.getAttribute('href');
+                if (href && stylesheet.hasAttribute('data-module-style') && !moduleStyles.has(href)) {
+                    moduleStyles.add(href);
+                    targetDiv.appendChild(stylesheet);
+                } else {
+                    stylesheet.remove();
+                }
             });
 
             /* Move children instead of accidentally losing body content. */
@@ -1239,11 +1248,6 @@ window.switchView = async function(targetId, navElement) {
             const formViewRoot = moduleRoot || targetDiv;
             if (isInteractiveDataModule && formViewRoot.querySelector('form, table, .form-card, input:not([type="hidden"]), select, textarea')) {
                 formViewRoot.classList.add('form-view');
-                const sharedFormStyle = document.createElement('link');
-                sharedFormStyle.rel = 'stylesheet';
-                sharedFormStyle.href = new URL('components/form-view.css', document.baseURI).href;
-                sharedFormStyle.dataset.sharedFormView = '';
-                targetDiv.appendChild(sharedFormStyle);
             }
 
             /* Re-create scripts so dynamically inserted modules execute. */
