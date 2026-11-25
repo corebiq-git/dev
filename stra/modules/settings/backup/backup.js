@@ -1,3 +1,4 @@
+import { normalizePatientName } from '../../../js/patient-search.mjs';
 import { auth, db } from '../../../js/firebase-config.js'; 
         import { advanceDocumentIdCounter, DOCUMENT_ID_CONFIG } from '../../../js/document-ids.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -281,6 +282,7 @@ import { auth, db } from '../../../js/firebase-config.js';
                         data.id = id;
                         if (config.idField !== 'id') data[config.idField] = id;
                     }
+                    if (collectionName === "patients" && typeof data.name === "string") data.nameSearch = normalizePatientName(data.name);
                     records.push({ id, data });
                 });
 
@@ -919,6 +921,7 @@ import { auth, db } from '../../../js/firebase-config.js';
                         if (DOCUMENT_ID_CONFIG.some(config => config.collection === collectionName)) {
                             record.id = id;
                         }
+                        if (collectionName === "patients" && typeof record.name === "string") record.nameSearch = normalizePatientName(record.name);
                         records.push({ id, data: record });
                     }
                     recordsByCollection.set(collectionName, records);

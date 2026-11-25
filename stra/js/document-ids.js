@@ -38,7 +38,7 @@ async function initializeCounter(db, collectionName, prefix) {
     const counterRef = doc(db, 'id_counters', collectionName);
     const { separator, minDigits, sourceField } = getDocumentIdFormat(collectionName);
     const currentCounter = await getDoc(counterRef);
-    if (currentCounter.exists() && !sourceField) return;
+    if (currentCounter.exists()) return;
 
     const existingDocuments = await getDocs(collection(db, collectionName));
     const lastIssued = existingDocuments.docs.reduce((highest, snapshot) => {

@@ -13,33 +13,33 @@
         --secondary: #64748B;
     }
 
-        #transaction-module { font-family: 'Inter', sans-serif; width: 100%; max-width: 1120px; }
-        #transaction-module .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
+        #receipt-module { font-family: 'Inter', sans-serif; width: 100%; max-width: 1120px; }
+        #receipt-module .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
         
-        #transaction-module .form-card { background: var(--surface); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 24px; }
-        #transaction-module .form-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        #receipt-module .form-card { background: var(--surface); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 24px; }
+        #receipt-module .form-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         
-        #transaction-module .input-group { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
-        @media (min-width: 768px) { #transaction-module .input-group { grid-template-columns: 1fr 1fr; } }
-        @media (min-width: 1024px) { #transaction-module .input-group.three-cols { grid-template-columns: 1fr 1fr 1fr; } }
+        #receipt-module .input-group { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+        @media (min-width: 768px) { #receipt-module .input-group { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 1024px) { #receipt-module .input-group.three-cols { grid-template-columns: 1fr 1fr 1fr; } }
 
-        #transaction-module .form-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; color: var(--text-main); background: #FAFAFA; outline: none; transition: border 0.2s; appearance: auto; }
-        #transaction-module .form-input:focus { border-color: var(--primary); background: var(--surface); }
-        #transaction-module .form-input:disabled { background: #F0F0F0; color: #999; cursor: not-allowed; }
+        #receipt-module .form-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; color: var(--text-main); background: #FAFAFA; outline: none; transition: border 0.2s; appearance: auto; }
+        #receipt-module .form-input:focus { border-color: var(--primary); background: var(--surface); }
+        #receipt-module .form-input:disabled { background: #F0F0F0; color: #999; cursor: not-allowed; }
 
-        #transaction-module .readonly-input { background: transparent; border: 1px dashed transparent; padding-left: 0; font-weight: 700; color: var(--text-main); pointer-events: none; }
+        #receipt-module .readonly-input { background: transparent; border: 1px dashed transparent; padding-left: 0; font-weight: 700; color: var(--text-main); pointer-events: none; }
         
-        #transaction-module .btn-primary { background: var(--success); color: white; border: none; padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-        #transaction-module .btn-primary:active { opacity: 0.8; }
-        #transaction-module .btn-outline { background: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-        #transaction-module .btn-verify { background: var(--text-main); color: #fff; border: none; padding: 0 20px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px;}
+        #receipt-module .btn-primary { background: var(--success); color: white; border: none; padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        #receipt-module .btn-primary:active { opacity: 0.8; }
+        #receipt-module .btn-outline { background: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        #receipt-module .btn-verify { background: var(--text-main); color: #fff; border: none; padding: 0 20px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px;}
         
-        #transaction-module .table-container { background: var(--surface); border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
-        #transaction-module .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        #transaction-module .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
-        #transaction-module .saas-table { width: 100%; min-width: 900px; border-collapse: collapse; text-align: left; }
-        #transaction-module .saas-table th { padding: 12px 16px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; background: #FAFAFA; border-bottom: 1px solid var(--border); white-space: nowrap; }
-        #transaction-module .saas-table td { padding: 16px; font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+        #receipt-module .table-container { background: var(--surface); border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+        #receipt-module .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        #receipt-module .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
+        #receipt-module .saas-table { width: 100%; min-width: 900px; border-collapse: collapse; text-align: left; }
+        #receipt-module .saas-table th { padding: 12px 16px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; background: #FAFAFA; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        #receipt-module .saas-table td { padding: 16px; font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
         
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-block; }
         .badge-receipt { background: rgba(16, 185, 129, 0.1); color: var(--success); }
@@ -63,7 +63,7 @@
             #sidebar-container, #header-container, #bottomnav-container, .form-card, .section-title, .no-print { display: none !important; }
             .main-wrapper { flex: 1; display: block; overflow: visible; }
             #main-content { padding: 0; overflow: visible; }
-            #transaction-module .table-container { box-shadow: none; border: none; margin: 0; }
-            #transaction-module .saas-table th { background: white; color: black; border-bottom: 1px solid #000; }
-            #transaction-module .saas-table td { border-bottom: 1px solid #E8E5E1; }
+            #receipt-module .table-container { box-shadow: none; border: none; margin: 0; }
+            #receipt-module .saas-table th { background: white; color: black; border-bottom: 1px solid #000; }
+            #receipt-module .saas-table td { border-bottom: 1px solid #E8E5E1; }
         }

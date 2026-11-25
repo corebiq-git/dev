@@ -1,6 +1,7 @@
+import { patientBranchFilters } from '../../../js/patient-search.mjs';
 import { db } from "../../../js/firebase-config.js";
         import { reserveNextDocumentIds } from "../../../js/document-ids.js";
-        import { collection, query, where, getDocs, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { collection, query, where, limit, getDocs, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const formatReceiptMoney = value => window.formatCorebiqCurrency
             ? window.formatCorebiqCurrency(value)
@@ -55,11 +56,12 @@ import { db } from "../../../js/firebase-config.js";
             
             btn.innerText = "...";
             try {
-                const pSnap = await getDocs(query(collection(db, "patients"), where("mobile", "==", mobile)));
+                const scope = patientBranchFilters(window.currentUser, where);
+                const pSnap = await getDocs(query(collection(db, "patients"), ...scope, where("mobile", "==", mobile), limit(1)));
                 if (!pSnap.empty) document.getElementById('patientName').value = pSnap.docs[0].data().name;
                 else { alert("No patient found. Type name manually."); dash.style.display = 'none'; }
 
-                const tSnap = await getDocs(query(collection(db, "transactions"), where("mobile", "==", mobile)));
+                const tSnap = await getDocs(query(collection(db, "transactions"), ...scope, where("mobile", "==", mobile)));
                 if(!tSnap.empty) {
                     let tBilled = 0; let tPaid = 0;
                     tSnap.forEach(d => {
@@ -254,7 +256,7 @@ import { db } from "../../../js/firebase-config.js";
         window.printPatientStatement = async function(mobile, name) {
             if(!mobile || mobile === "undefined") return alert("Cannot generate statement. Invalid mobile number.");
             try {
-                const q = query(collection(db, "transactions"), where("mobile", "==", mobile));
+                const q = query(collection(db, "transactions"), ...scope, where("mobile", "==", mobile));
                 const snap = await getDocs(q);
                 let txns = [];
                 let totalBilled = 0; let totalPaid = 0;

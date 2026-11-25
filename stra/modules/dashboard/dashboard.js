@@ -1,3 +1,4 @@
+import { normalizePatientName } from '../../js/patient-search.mjs';
 import { db } from '../../js/firebase-config.js';
 import { reserveNextDocumentIds } from '../../js/document-ids.js';
 import { normalizeDateKey } from '../../js/date-utils.js';
@@ -351,6 +352,7 @@ window.saveDashboardAppointment = async function(event) {
                     patientId,
                     mobile,
                     name,
+                    nameSearch: normalizePatientName(name),
                     category: 'Normal',
                     branch,
                     location: '',

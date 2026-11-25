@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>COREBIQ BUSINESS FLOW APP | APPOINTMENTS</title>
+<title>Care | APPOINTMENTS</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 <link rel="stylesheet" href="../../../css/corebiq.css">
@@ -113,7 +113,7 @@
       <input type="hidden" id="aptDocId">
       <div class="section"><h4>1. Patient Details</h4>
         <div class="grid">
-          <div class="field span2"><label>Search Patient</label><input list="patients-datalist" id="aptPatientSearch" class="form-input" placeholder="Search by patient name or mobile" onchange="window.handlePatientSelect()" autocomplete="off"><datalist id="patients-datalist"></datalist></div>
+          <div class="field span2"><label for="aptPatientSearch">Search client name</label><input type="search" id="aptPatientSearch" class="form-input" placeholder="Type a name or 10-digit mobile number" oninput="window.searchAppointmentClients(this)" autocomplete="off"><div id="aptClientResults" class="actions" aria-live="polite"></div></div>
           <div class="field"><label>Patient Mobile *</label><input type="tel" id="aptMobile" class="form-input" maxlength="10" placeholder="10-digit number" required></div>
           <div class="field"><label>Patient Name *</label><input id="aptName" class="form-input" placeholder="Full Name" required></div>
           <div class="field"><label>Age</label><input type="number" id="aptAge" class="form-input" min="1" max="120"></div>

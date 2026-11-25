@@ -266,7 +266,7 @@
         #patient-module .patients-breadcrumb{display:flex;align-items:center;gap:7px;margin-bottom:5px;color:#7B8492;font-size:11px;font-weight:500;letter-spacing:.15px}
         #patient-module .patients-breadcrumb span:last-child{color:#596273}
         #patient-module .patients-hero h1{display:flex;align-items:center;gap:8px;color:#1A73E8!important;font-size:23px;font-weight:650;letter-spacing:-.3px}
-        #patient-module .patients-title-icon{color:#1A73E8!important;font-size:24px}
+        #patient-module .patients-title-icon{color:var(--care-icon)!important;font-size:24px}
         #patient-module .patient-add-button{flex:0 0 auto;width:auto;height:38px;gap:4px;padding:0 12px!important;border-radius:8px!important;box-shadow:none!important}
         #patient-module .patient-add-button .material-symbols-rounded{font-size:19px}
         #patient-module .patients-toolbar{display:grid;grid-template-columns:minmax(190px,1fr) repeat(3,minmax(130px,180px)) 44px 44px 44px;width:100%;gap:10px;margin-bottom:16px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}

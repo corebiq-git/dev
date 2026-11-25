@@ -201,9 +201,7 @@
     color:#188038;
 }
 .dashboard-count-icon .material-symbols-rounded{font-size:23px}
-.dashboard-count-card.attendance .dashboard-count-icon{color:#188038}
-.dashboard-count-card.appointments .dashboard-count-icon{color:#4285F4}
-.dashboard-count-card.finance .dashboard-count-icon{color:#986515}
+.dashboard-count-card .dashboard-count-icon{color:var(--care-icon);background:var(--care-icon-surface)}
 .dashboard-count-heading-copy{display:flex;min-width:0;flex-direction:column;gap:3px}
 .dashboard-count-heading-title{color:#202633;font-size:15px;font-weight:700;line-height:1.2}
 .dashboard-count-date-label{color:var(--text-muted);font-size:11px;font-weight:500;line-height:1.2}
@@ -251,10 +249,8 @@
 .dashboard-entry-heading .material-symbols-rounded{color:#4285F4;font-size:22px}
 .dashboard-entry-card.attendance .dashboard-entry-heading > .dashboard-entry-title > .material-symbols-rounded{color:#188038}
 .dashboard-entry-card.appointments .dashboard-entry-heading > .dashboard-entry-title > .material-symbols-rounded{color:#4285F4}
-.dashboard-appointment-icon{color:#4285F4!important;font-size:22px!important}
-.dashboard-attendance-icon{color:#188038!important}
-.dashboard-public-booking-icon{color:#A142F4!important}
-.dashboard-email-icon{color:#1A73E8!important}
+.dashboard-appointment-icon,.dashboard-attendance-icon,.dashboard-public-booking-icon,.dashboard-email-icon{color:var(--care-icon)!important}
+.dashboard-appointment-icon{font-size:22px!important}
 .dashboard-entry-title-copy{display:flex;min-width:0;flex-direction:column;gap:3px}
 .dashboard-entry-title-text{color:var(--text-main);font-size:15px;font-weight:700;line-height:1.2}
 .dashboard-entry-date{color:var(--text-muted);font-size:11px;font-weight:500;line-height:1.2}
@@ -404,7 +400,7 @@
 #view-dashboard.active .dashboard-quick-tool{box-shadow:0 1px 3px rgba(16,24,40,.05)}
 #view-dashboard.active .dashboard-quick-tool:hover{box-shadow:0 4px 12px rgba(16,24,40,.09)}
 .dashboard-quick-tool-icon{display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;color:#80868B}
-.dashboard-quick-tool-transactions .dashboard-quick-tool-icon{color:#4285F4}
+
 .dashboard-quick-tool-icon .material-symbols-rounded{font-size:20px}
 .dashboard-quick-tool-copy{display:flex;min-width:0;align-items:flex-start}
 .dashboard-quick-tool-name{display:-webkit-box;overflow:hidden;color:var(--text-main);font-size:12px;font-weight:700;line-height:1.15;text-align:left;text-overflow:ellipsis;white-space:normal;-webkit-box-orient:vertical;-webkit-line-clamp:2}

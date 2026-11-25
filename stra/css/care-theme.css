@@ -1,0 +1,33 @@
+/* Shared Care palette and action shape. */
+:root {
+  --care-blue: #175cd3;
+  --care-blue-hover: #124aa9;
+  --care-blue-soft: #eaf2ff;
+  --care-icon: #526174;
+  --care-icon-on-blue: #edf0f4;
+  --care-icon-surface: #f1f4f8;
+  --care-button-radius: 6px;
+}
+
+.care-wordmark {
+  color: var(--text, #182230);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+
+/* Interactive glyphs use a neutral palette across module styles. */
+:is(#app-container, .module-container) :is(button, [role="button"], .btn, .page-title-icon)
+  :is(.material-symbols-rounded, .material-symbols-outlined, .material-icons, .lucide) {
+  color: var(--care-icon) !important;
+}
+
+:is(#app-container, .module-container) .btn-primary
+  :is(.material-symbols-rounded, .material-symbols-outlined, .material-icons, .lucide) {
+  color: var(--care-icon-on-blue) !important;
+}
+
+#app-container .bottom-nav-item .bottom-nav-icon {
+  color: inherit !important;
+}
