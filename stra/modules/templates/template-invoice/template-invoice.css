@@ -987,3 +987,160 @@ input.clean-input:focus {
     .invoice-seal-controls { justify-content: flex-start; }
     .invoice-toolbar { justify-content: flex-end; }
 }
+
+/* ==========================================================
+   STRACARE | Premium Healthcare Invoice · Blue / Slate Grey
+   This layer preserves the existing editable invoice fields.
+   ========================================================== */
+:root {
+    --invoice-brand-blue: #235A9F;
+    --invoice-brand-green: #7894B2;
+    --invoice-border-light: #DCE4EE;
+    --invoice-bg-light: #F4F7FB;
+    --invoice-text-main: #253446;
+    --invoice-text-muted: #69798B;
+    --md-sys-color-primary: #1B477E;
+    --md-sys-color-primary-container: #E8F0F9;
+}
+#invoice-container {
+    background: #fff;
+    color: #263447;
+}
+#invoice-container::before {
+    opacity: .022;
+    background-size: 52%;
+}
+#invoice-container .invoice-letterhead {
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(120deg, #F0F5FA, #FFFFFF 72%);
+    padding: 14px 16px 14px;
+    border: 1px solid #E0E8F1;
+    border-bottom: none;
+}
+#invoice-container .invoice-logo { object-fit: contain; }
+#invoice-container .invoice-company-info { color: #465A72; }
+#invoice-container .invoice-header-accent {
+    height: 3px;
+    flex-basis: 3px;
+    margin-bottom: 17px;
+    background: linear-gradient(90deg, #18467D 0%, #3E78B9 65%, #A9BED5 100%);
+}
+#invoice-container .patient-report-title {
+    border-bottom: none;
+    text-align: left;
+    color: #1A467A;
+    letter-spacing: -.03em;
+    font-weight: 800;
+    font-size: 19pt;
+    padding: 0 0 9px;
+    margin: 0 0 12px;
+}
+#invoice-container .patient-report-title::after {
+    content: "HEALTHCARE SERVICES  /  PATIENT BILLING";
+    display: block;
+    margin-top: 5px;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: .16em;
+    color: #7F91A6;
+}
+#invoice-container .patient-report-section {
+    padding: 12px 13px;
+    border: 1px solid #DFE7F0;
+    border-radius: 10px;
+    background: #FBFCFE;
+}
+#invoice-container .patient-report-field {
+    padding: 7px 2px;
+    border-bottom-color: #E7EDF5;
+}
+#invoice-container .patient-report-label {
+    color: #667B92;
+    font-weight: 750;
+    font-size: 7pt;
+}
+#invoice-container .patient-report-value { color: #273A51; }
+#invoice-container #invoice-meta {
+    background: #EDF3FA;
+    border: 1px solid #D7E3F0;
+    border-left: 3px solid #2A619E;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+#invoice-container #invoice-meta > span:nth-child(odd) { color: #697C91; }
+#invoice-container #invoice-meta > span:nth-child(even) { color: #204A7B; }
+#invoice-container #invoice-table {
+    border: 1px solid #DFE7EF;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 7px;
+    overflow: hidden;
+}
+#invoice-container #invoice-table thead {
+    background: #214E81;
+    color: #FFFFFF;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+#invoice-container #invoice-table thead th {
+    color: #FFFFFF !important;
+    font-weight: 700;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    border: none;
+}
+#invoice-container #invoice-table tbody tr:nth-child(even) { background: #F6F9FC; }
+#invoice-container #invoice-table tbody td { border-bottom: 1px solid #E8EDF4; }
+#invoice-container .invoice-panel > section.w-full.max-w-sm {
+    border: 1px solid #DCE6F0;
+    border-radius: 9px;
+    padding: 12px 13px;
+    background: #F5F8FC;
+}
+#invoice-container #total-amount { color: #174B85 !important; font-weight: 800; }
+#invoice-container .invoice-signature-grid { margin-top: 12px; }
+#bank-details-container {
+    padding: 10px 12px;
+    border: 1px solid #DFE7F0;
+    border-radius: 9px;
+    background: #FBFCFF;
+}
+#bank-details-container #upi-id { color: #245D96; }
+#invoice-container .invoice-branch-footer::before {
+    height: 2px;
+    background: linear-gradient(90deg, #1B4B83, #91ADC8);
+}
+#invoice-container .invoice-branches-label { color: #315F90; }
+#invoice-container .invoice-branches { color: #53677E; font-size: 11px; }
+.invoice-actions-card {
+    border: 1px solid #DEE6F0;
+    border-radius: 12px;
+    background: #F8FAFD;
+}
+.invoice-toolbar > button {
+    border-radius: 8px;
+}
+#download-invoice-btn {
+    background: #235A9F;
+    border-color: #235A9F;
+    color: #fff;
+}
+#download-invoice-btn:hover { background: #17477F; color: #fff; }
+@media screen and (max-width: 640px) {
+    #invoice-container:not(.pdf-export-mode) .invoice-letterhead {
+        padding: 12px;
+        border-radius: 9px 9px 0 0;
+    }
+    #invoice-container:not(.pdf-export-mode) .patient-report-title { font-size: 16pt; }
+    #invoice-container:not(.pdf-export-mode) .patient-report-section { padding: 10px; }
+}
+@media print {
+    #invoice-container .invoice-letterhead {
+        border-radius: 0 !important;
+        padding: 3mm 4mm !important;
+    }
+    #invoice-container #invoice-table thead {
+        background: #214E81 !important;
+        color: #fff !important;
+    }
+}
