@@ -45,8 +45,8 @@
     background: #f8fafc;
 }
 .care-startup .care-loading-icon {
-    width: clamp(64px, 14vw, 84px);
-    height: clamp(64px, 14vw, 84px);
+    width: clamp(128px, 29vw, 172px);
+    height: clamp(128px, 29vw, 172px);
 }
 .care-startup-retry { max-width: 290px; color: #334155; text-align: center; }
 .care-startup-retry a {
