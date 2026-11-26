@@ -11,7 +11,7 @@
 
     /* Invoice Specific Branding Tokens */
     --invoice-brand-blue: #164683;
-    --invoice-brand-green: #61913C;
+    --invoice-brand-green: #159B78;
     --invoice-seal-color: #007B5E;
     --invoice-border-light: #DCE5F0;
     --invoice-bg-light: #F8FAFD;
@@ -994,7 +994,7 @@ input.clean-input:focus {
    ========================================================== */
 :root {
     --invoice-brand-blue: #235A9F;
-    --invoice-brand-green: #7894B2;
+    --invoice-brand-green: #159B78;
     --invoice-border-light: #DCE4EE;
     --invoice-bg-light: #F4F7FB;
     --invoice-text-main: #253446;
