@@ -1,9 +1,9 @@
 // COREBIQ STRACARE offline shell - network-first for live application code.
-const CACHE = "corebiq-v52";
+const CACHE = "corebiq-v53";
 const CORE = [
     "./", "./index.html", "./login.html",
     "./components/splash-screen.html", "./manifest.webmanifest",
-    "./assets/app-icon.png", "./assets/logo-client.png",
+    "./assets/app-icon.png", "./assets/header-square-logo.svg", "./assets/logo-client.png",
     "./assets/logo-client-display.png", "./assets/document-logo.webp",
     "./assets/name-client-display.png", "./assets/logo.png",
     "./assets/card-bg1.webp", "./assets/card-bg2.webp",
