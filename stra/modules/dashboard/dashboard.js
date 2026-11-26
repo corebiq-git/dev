@@ -1229,4 +1229,4 @@ window.loadDashboardCompanyName?.();
 window.updateGlobalClock?.();
 window.dashboardClockInterval ??= window.setInterval(() => window.updateGlobalClock?.(), 1000);
 window.applyLucideIcons?.(document.getElementById('view-dashboard'));
-if (window.currentUser) window.fetchDashboardData?.();
+// Dashboard fetch is initiated by switchView(); avoid a duplicate startup query.
