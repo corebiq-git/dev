@@ -92,3 +92,216 @@
             #monthTable th, #monthTable td { border: 1px solid #000; font-size: 9px; padding: 3px; }
             #monthTable th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
+
+
+/* Attendance layout: the same compact controls and mobile rhythm as appointments. */
+#attendance-module {
+    max-width: 1440px;
+    min-width: 0;
+}
+#attendance-module .attendance-view-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border: 1px solid #DFE7F1;
+    border-radius: 12px;
+    background: #fff;
+}
+#attendance-module .attendance-view-caption {
+    color: #52647D;
+    font-size: 12px;
+    font-weight: 750;
+}
+#attendance-module .attendance-view-toggle {
+    display: inline-flex;
+    padding: 3px;
+    gap: 3px;
+    border-radius: 9px;
+    background: #EDF3FA;
+}
+#attendance-module .attendance-view-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 7px 13px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #566B84;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 750;
+    cursor: pointer;
+}
+#attendance-module .attendance-view-button .material-symbols-rounded {font-size: 18px;}
+#attendance-module .attendance-view-button.active {
+    background: #204E85;
+    color: #fff;
+    box-shadow: 0 1px 4px rgb(17 40 71 / .14);
+}
+#attendance-module .attendance-view-button:focus-visible {
+    outline: 2px solid #159B78;
+    outline-offset: 2px;
+}
+#attendance-module .attendance-view-hint {
+    color: #7A8798;
+    font-size: 12px;
+}
+#attendance-module .table-container {
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+#attendance-module .table-header { gap: 12px; }
+#attendance-module .table-header > div {
+    min-width: 0;
+}
+#attendance-module .summary-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+#attendance-module .summary-card {min-width: 0;}
+#attendance-module .table-responsive {
+    max-width: 100%;
+    overscroll-behavior-inline: contain;
+}
+#attendance-module #monthTable {
+    min-width: max-content;
+    font-variant-numeric: tabular-nums;
+}
+#attendance-module #monthTable th,
+#attendance-module #monthTable td {
+    min-width: 25px;
+    padding: 8px 5px;
+}
+#attendance-module #monthTable th:nth-child(-n+3),
+#attendance-module #monthTable td:nth-child(-n+3) {
+    min-width: 110px;
+    position: sticky;
+    background: #fff;
+    z-index: 1;
+}
+#attendance-module #monthTable th:nth-child(1),
+#attendance-module #monthTable td:nth-child(1) {left: 0;}
+#attendance-module #monthTable th:nth-child(2),
+#attendance-module #monthTable td:nth-child(2) {left: 110px; min-width: 150px;}
+#attendance-module #monthTable th:nth-child(3),
+#attendance-module #monthTable td:nth-child(3) {left: 260px; min-width: 92px;}
+#attendance-module #monthTable thead th:nth-child(-n+3) {
+    background: #EDF3FA;
+    z-index: 2;
+}
+#attendance-module [hidden] {display: none !important;}
+@media (max-width: 768px) {
+    #attendance-module .section-title {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    #attendance-module .section-title > div {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px !important;
+    }
+    #attendance-module .section-title > div button:last-child {
+        grid-column: 1 / -1;
+    }
+    #attendance-module .section-title button {
+        justify-content: center;
+        min-height: 42px;
+        padding: 9px 8px;
+        font-size: 12px;
+    }
+    #attendance-module .attendance-view-toolbar {padding: 10px; gap: 8px;}
+    #attendance-module .attendance-view-hint {flex-basis: 100%;}
+    #attendance-module .attendance-view-toggle {flex: 1;}
+    #attendance-module .attendance-view-button {flex: 1;}
+    #attendance-module .table-header {padding: 12px;}
+    #attendance-module .table-header > div:first-child {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    #attendance-module .table-header > div:first-child > div {
+        flex-wrap: wrap;
+    }
+    #attendance-module .table-header select,
+    #attendance-module .table-header input[type="month"] {
+        min-height: 40px;
+        max-width: 100%;
+    }
+    #attendance-module .summary-dashboard {gap: 7px; padding: 8px;}
+    #attendance-module .summary-card {padding: 9px 5px;}
+    #attendance-module .summary-card span {font-size: 9px; text-align: center;}
+    #attendance-module .summary-card strong {font-size: 17px;}
+    #attendance-module #monthTable th:nth-child(1),
+    #attendance-module #monthTable td:nth-child(1) {min-width: 86px;}
+    #attendance-module #monthTable th:nth-child(2),
+    #attendance-module #monthTable td:nth-child(2) {left: 86px; min-width: 116px;}
+    #attendance-module #monthTable th:nth-child(3),
+    #attendance-module #monthTable td:nth-child(3) {left: 202px; min-width: 65px;}
+    #attendance-module #daily-log-container .saas-table,
+    #attendance-module #leave-requests-container .saas-table {
+        min-width: 0;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 9px;
+    }
+    #attendance-module #daily-log-container .saas-table thead,
+    #attendance-module #leave-requests-container .saas-table thead {display: none;}
+    #attendance-module #daily-log-container .saas-table tbody tr,
+    #attendance-module #leave-requests-container .saas-table tbody tr {
+        display: block;
+        margin: 0 10px;
+        padding: 8px 12px;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        background: #fff;
+    }
+    #attendance-module #daily-log-container .saas-table tbody tr[style*="display: none"] {
+        display: none !important;
+    }
+    #attendance-module #daily-log-container .saas-table td,
+    #attendance-module #leave-requests-container .saas-table td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        padding: 8px 2px;
+        border-bottom: 1px solid #EFF2F6;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: right;
+        font-size: 12px;
+    }
+    #attendance-module #daily-log-container .saas-table td::before {
+        content: attr(data-label);
+        flex: 0 0 34%;
+        font-size: 10px;
+        font-weight: 750;
+        text-align: left;
+        text-transform: uppercase;
+        color: #728196;
+    }
+    #attendance-module #daily-log-container .saas-table tbody tr td:last-child,
+    #attendance-module #leave-requests-container .saas-table tbody tr td:last-child {
+        border-bottom: 0;
+    }
+    #attendance-module .modal-overlay {padding: 8px;}
+    #attendance-module .modal-container {max-height: calc(100dvh - 16px); border-radius: 12px;}
+    #attendance-module .modal-header {padding: 14px;}
+    #attendance-module .modal-body {padding: 14px;}
+}
+@media print {
+    #attendance-module .attendance-view-toolbar {display:none!important;}
+    #attendance-module [hidden] {display: block!important;}
+    #attendance-module #monthTable th:nth-child(-n+3),
+    #attendance-module #monthTable td:nth-child(-n+3) {position: static;}
+}
