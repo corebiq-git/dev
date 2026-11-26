@@ -579,6 +579,23 @@ import { db } from "../../../js/firebase-config.js";
             }
         }
 
+        // Persist the selected view while keeping both monthly and daily reports available.
+        window.setAttendanceView = function(view = 'monthly') {
+            const monthly = view !== 'daily';
+            const matrix = document.getElementById('monthlyReportContainer');
+            const dailyLog = document.getElementById('daily-log-container');
+            if (!matrix || !dailyLog) return;
+            matrix.hidden = !monthly;
+            dailyLog.hidden = monthly;
+            document.getElementById('attMonthlyViewBtn')?.classList.toggle('active', monthly);
+            document.getElementById('attDailyViewBtn')?.classList.toggle('active', !monthly);
+            document.getElementById('attMonthlyViewBtn')?.setAttribute('aria-pressed', String(monthly));
+            document.getElementById('attDailyViewBtn')?.setAttribute('aria-pressed', String(!monthly));
+            const hint = document.getElementById('attendanceViewHint');
+            if (hint) hint.textContent = monthly ? 'Full month attendance overview' : 'Daily attendance records for this month';
+        };
+        window.setAttendanceView('monthly');
+
         // --- 3. MONTHLY REPORT LOGIC (DEFAULT ON LOAD) ---
         window.initializeMonthlyMatrix = function() {
             const d = new Date();
@@ -843,7 +860,7 @@ import { db } from "../../../js/firebase-config.js";
         }
 
         window.clearAttFilters = function() {
-            document.getElementById("filterAttPeriod").value = "today";
+            document.getElementById("filterAttPeriod").value = "this-month";
             document.getElementById("filterAttMonth").value = todayString.slice(0, 7);
             document.getElementById("filterAttMonth").style.display = "none";
             if (isAdmin) document.getElementById("filterAttBranch").value = "";
@@ -980,7 +997,9 @@ import { db } from "../../../js/firebase-config.js";
             document.body.removeChild(link);
         }
 
-        document.getElementById("filterAttMonth").addEventListener("change", () => {
+        document.getElementById('reportMonth').addEventListener('change', window.generateMonthlyReport);
+        document.getElementById('reportBranch').addEventListener('change', window.generateMonthlyReport);
+                document.getElementById("filterAttMonth").addEventListener("change", () => {
             if (document.getElementById("filterAttPeriod").value === 'selected-month') {
                 window.loadAttendanceLog();
             }
