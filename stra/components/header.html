@@ -12,6 +12,36 @@
         z-index: 60;
     }
 
+    .care-header-home {
+        display: inline-flex;
+        width: 50px;
+        height: 50px;
+        flex: 0 0 50px;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        border: 0;
+        border-radius: 11px;
+        background: transparent;
+        cursor: pointer;
+        transition: background .2s ease;
+    }
+    .care-header-home:hover, .care-header-home:focus-visible {
+        background: #EDF3FA;
+        outline-offset: 2px;
+    }
+    .care-header-home img {
+        width: 46px;
+        height: 46px;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        display: block;
+    }
+    @media (max-width: 768px) {
+        .care-header-home { width: 44px; height: 44px; flex-basis: 44px; }
+        .care-header-home img { width: 42px; height: 42px; }
+    }
+
     .sidebar-toggle-button {
         width: 42px;
         height: 42px;
@@ -785,6 +815,9 @@
 </style>
 
 <header class="dashboard-header">
+    <button class="care-header-home" type="button" aria-label="Go to dashboard" title="Dashboard" onclick="window.switchView('view-dashboard', null)">
+        <img src="assets/header-square-logo.svg" width="46" height="46" alt="" aria-hidden="true">
+    </button>
     <nav class="top-module-nav" id="top-module-nav" aria-label="Main navigation">
         <div class="top-nav-group" data-category="Dashboard">
             <button class="top-nav-trigger top-nav-dashboard top-nav-link active" type="button" data-target="view-dashboard" aria-current="page" onclick="window.switchView('view-dashboard', this)">
