@@ -370,7 +370,8 @@
         };
 
         const getInvoiceCanvasOptions = () => ({
-            scale: 2,
+            // Reduce peak canvas memory on small Android devices.
+            scale: window.innerWidth <= 640 ? 1.5 : 2,
             useCORS: true,
             logging: false,
             backgroundColor: '#ffffff',
@@ -381,6 +382,19 @@
             scrollX: 0,
             scrollY: 0
         });
+
+        const waitForInvoiceAssets = async () => {
+            if (document.fonts?.ready) await document.fonts.ready;
+            const images = Array.from(document.querySelectorAll('#invoice-container img'))
+                .filter(image => !image.hidden && getComputedStyle(image).display !== 'none');
+            await Promise.all(images.map(image => {
+                if (image.complete) return Promise.resolve();
+                return Promise.race([
+                    new Promise(resolve => { image.addEventListener('load', resolve, { once: true }); image.addEventListener('error', resolve, { once: true }); }),
+                    new Promise(resolve => setTimeout(resolve, 3500))
+                ]);
+            }));
+        };
 
         const ensureInvoiceFitsA4 = element => {
             if (element.scrollHeight > element.clientHeight + 2) {
@@ -430,6 +444,7 @@
             prepareInvoiceOutput();
             element.classList.add('pdf-export-mode');
             try {
+                await waitForInvoiceAssets();
                 ensureInvoiceFitsA4(element);
                 const worker = html2pdf()
                     .set({ margin: 0, html2canvas: getInvoiceCanvasOptions() })
@@ -515,6 +530,7 @@
             try {
                 prepareInvoiceOutput();
                 element.classList.add('pdf-export-mode');
+                await waitForInvoiceAssets();
                 ensureInvoiceFitsA4(element);
                 await html2pdf().set(opt).from(element).save();
                 showToast("PDF downloaded successfully!");
