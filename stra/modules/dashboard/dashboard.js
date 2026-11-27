@@ -943,9 +943,7 @@ window.fetchDashboardData = async function() {
     const errorText = document.getElementById('dash-error-text');
     const selectedDate = window.selectedDashboardDate || window.getLocalDateString();
     const requestSequence = ++dashboardRequestSequence;
-    const selectedLabel = dashboardDateFromKey(selectedDate).toLocaleDateString('en-IN', {
-        day: 'numeric', month: 'short', year: 'numeric'
-    });
+    const selectedLabel = selectedDate.split('-').reverse().join('-');
     const branch = window.currentUser.role === 'admin' ? '' : window.currentUser.branch;
     const date = dashboardDateFromKey(selectedDate);
     const legacyDates = [
@@ -964,7 +962,8 @@ window.fetchDashboardData = async function() {
     if (!request) {
         request = Promise.all([
             getDocs(query(collection(db, 'appointments'), ...appointmentConstraints)),
-            getDocs(query(collection(db, 'daily_attendance'), ...attendanceConstraints))
+            getDocs(query(collection(db, 'daily_attendance'), ...attendanceConstraints)),
+            getDocs(query(collection(db, 'transactions'), ...appointmentConstraints)).catch(error => { console.warn('Activity transactions unavailable', error); return null; })
         ]);
         dashboardInFlightRequests.set(requestKey, request);
         request.then(
@@ -979,9 +978,9 @@ window.fetchDashboardData = async function() {
         document.getElementById('dashboardAppointmentCountHeading').textContent = selectedLabel;
         document.getElementById('dashboardAppointmentCountCaption').textContent = `Scheduled for ${selectedLabel}`;
         document.getElementById('dashboardFeeSummaryHeading').textContent = selectedLabel;
-        document.getElementById('dashboardAttendanceHeading').textContent = selectedLabel;
-        document.getElementById('dashboardAppointmentHeading').textContent = selectedLabel;
-        const [appointmentsSnapshot, attendanceSnapshot] = await request;
+        
+        
+        const [appointmentsSnapshot, attendanceSnapshot, transactionsSnapshot] = await request;
         if (requestSequence !== dashboardRequestSequence) return;
 
         const appointmentRecords = appointmentsSnapshot.docs.map(item => {
@@ -1090,67 +1089,33 @@ window.fetchDashboardData = async function() {
         const pendingEndX = feeChartEndX(totalDue);
         document.getElementById('dashboardFeeChartReceivedLine').setAttribute('d', `M4 3 V18 H${receivedEndX}`);
         document.getElementById('dashboardFeeChartPendingLine').setAttribute('d', `M4 3 V18 H${pendingEndX}`);
-        const attendanceList = document.getElementById('dashboardAttendanceRecords');
-        attendanceList.replaceChildren();
-        const attendanceRecords = [...attendanceByEmployee.values()]
-            .sort((a, b) => String(a.empName || '').localeCompare(String(b.empName || '')));
-        if (!attendanceRecords.length) {
-            attendanceList.innerHTML = '<div class="dashboard-record-empty">No attendance has been saved today.</div>';
-        } else {
-            attendanceRecords.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'dashboard-record';
-                const main = document.createElement('div');
-                main.className = 'dashboard-record-main';
-                const name = document.createElement('div');
-                name.className = 'dashboard-record-name';
-                name.textContent = item.empName || 'Unnamed employee';
-                const meta = document.createElement('div');
-                meta.className = 'dashboard-record-meta';
-                meta.textContent = `${item.empType || 'Employee'} · ${item.branch || 'No branch'}${item.notes ? ` · ${item.notes}` : ''}`;
-                const status = document.createElement('span');
-                status.className = `dashboard-record-status ${String(item.status || '').toLowerCase()}`;
-                status.textContent = item.status || 'Unknown';
-                main.append(name, meta);
-                row.append(main, status);
-                attendanceList.appendChild(row);
-            });
+        const activity = [
+            ...appointments.map(x=>({title:'Appointment · '+(x.status||'Pending'), branch:x.branch, time:x.updatedAt||x.createdAt, target:'view-appointments', icon:'calendar-check'})),
+            ...[...attendanceByEmployee.values()].map(x=>({title:'Attendance · '+(x.status||'Recorded'), branch:x.branch, time:x.updatedAt||x.createdAt, target:'view-attendance', icon:'user-check'})),
+            ...(transactionsSnapshot?.docs||[]).map(d=>{const x=d.data();return {title:'Transaction · '+(x.type||'Recorded'),branch:x.branch,time:x.updatedAt||x.createdAt,target:'view-transaction',icon:'wallet'};})
+        ];
+        const millis=v=>v?.toMillis?.() || (Date.parse(v||'')||0);
+        activity.sort((a,b)=>millis(b.time)-millis(a.time));
+        const list=document.getElementById('dashboardActivityList');
+        document.getElementById('dashboardActivityDate').textContent=selectedDate.split('-').reverse().join('-');
+        list.replaceChildren();
+        for(const item of activity.slice(0,30)){
+            const row=document.createElement('button');row.type='button';row.className='dashboard-activity-bar';
+            const icon=document.createElement('i');icon.setAttribute('data-lucide',item.icon);
+            const copy=document.createElement('span');const title=document.createElement('strong');title.textContent=item.title;
+            const meta=document.createElement('small');meta.textContent=[item.branch,millis(item.time)?new Date(millis(item.time)).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):''].filter(Boolean).join(' · ');
+            copy.append(title,meta);row.append(icon,copy);row.onclick=()=>window.switchView(item.target,null);list.append(row);
         }
-
-        const appointmentList = document.getElementById('dashboardAppointmentRecords');
-        appointmentList.replaceChildren();
-        appointments.sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')));
-        if (!appointments.length) {
-            appointmentList.innerHTML = '<div class="dashboard-record-empty">No appointments are scheduled today.</div>';
-        } else {
-            appointments.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'dashboard-record';
-                const main = document.createElement('div');
-                main.className = 'dashboard-record-main';
-                const name = document.createElement('div');
-                name.className = 'dashboard-record-name';
-                name.textContent = item.name || 'Unnamed patient';
-                const meta = document.createElement('div');
-                meta.className = 'dashboard-record-meta';
-                meta.textContent = `${window.formatTime12Hour(item.time)} · ${item.branch || 'No branch'} · ${item.therapist || 'Unassigned therapist'}${item.mobile ? ` · ${item.mobile}` : ''}`;
-                const status = document.createElement('span');
-                status.className = `dashboard-record-status ${String(item.status || '').toLowerCase()}`;
-                status.textContent = item.status || 'Pending';
-                main.append(name, meta);
-                row.append(main, status);
-                appointmentList.appendChild(row);
-            });
-        }
+        if(!activity.length)list.textContent='No activity for the selected date.';
+        if(!transactionsSnapshot){const note=document.createElement('p');note.textContent='Transaction activity unavailable.';list.append(note);}
+        window.applyLucideIcons?.(list);
+        if(selectedDate===window.getLocalDateString()){window.careActivityCount=activity.length;window.updateNotificationBell?.();}
     } catch (error) {
         if (requestSequence !== dashboardRequestSequence) return;
         console.error('Dashboard Load Error:', error);
         if (errorBanner) errorBanner.style.display = 'flex';
         if (errorText) errorText.textContent = `Data Sync Error: ${error.message || 'Unknown error'}`;
-        document.getElementById('dashboardAttendanceRecords').innerHTML =
-            '<div class="dashboard-record-empty">Unable to load attendance records.</div>';
-        document.getElementById('dashboardAppointmentRecords').innerHTML =
-            '<div class="dashboard-record-empty">Unable to load appointments.</div>';
+        document.getElementById('dashboardActivityList').textContent = 'Unable to load activity.';
     }
 };
 
