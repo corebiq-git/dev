@@ -29,17 +29,18 @@
         </div>
     </div>
 
-    <div class="attendance-view-toolbar no-print" role="group" aria-label="View attendance by">
+    <div class="attendance-view-toolbar no-print" role="group" aria-label="View attendance by period">
         <span class="attendance-view-caption">View by</span>
         <div class="attendance-view-toggle">
-            <button type="button" class="attendance-view-button active" id="attMonthlyViewBtn" aria-pressed="true" onclick="window.setAttendanceView('monthly')"><span class="material-symbols-rounded" aria-hidden="true">calendar_month</span> Monthly</button>
-            <button type="button" class="attendance-view-button" id="attDailyViewBtn" aria-pressed="false" onclick="window.setAttendanceView('daily')"><span class="material-symbols-rounded" aria-hidden="true">view_list</span> Daily</button>
+            <button type="button" class="attendance-view-button active" id="attTodayViewBtn" aria-pressed="true" onclick="window.setAttendanceView('today')"><span class="material-symbols-rounded" aria-hidden="true">today</span> Today</button>
+            <button type="button" class="attendance-view-button" id="attWeekViewBtn" aria-pressed="false" onclick="window.setAttendanceView('week')"><span class="material-symbols-rounded" aria-hidden="true">date_range</span> This Week</button>
+            <button type="button" class="attendance-view-button" id="attMonthViewBtn" aria-pressed="false" onclick="window.setAttendanceView('month')"><span class="material-symbols-rounded" aria-hidden="true">calendar_month</span> This Month</button>
         </div>
-        <span class="attendance-view-hint" id="attendanceViewHint">Full month attendance overview</span>
+        <span class="attendance-view-hint" id="attendanceViewHint">Today's attendance records</span>
     </div>
 
     <!-- 1. MONTHLY REPORT CONTAINER (DEFAULT TOP VIEW) -->
-    <div class="table-container" id="monthlyReportContainer">
+    <div class="table-container" id="monthlyReportContainer" hidden>
         <div class="table-header no-print" style="flex-direction: row; flex-wrap: wrap;">
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <h4 style="margin: 0;">Monthly Attendance Matrix</h4>
@@ -132,8 +133,8 @@
 
             <div class="no-print" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #fff; width: 100%;">
                 <select id="filterAttPeriod" class="form-input" onchange="window.handleAttPeriodChange()" style="padding: 8px; font-size: 12px; width: auto;" aria-label="Attendance date range">
-                    <option value="today">Today</option>
-                    <option value="this-month" selected>This month</option>
+                    <option value="today" selected>Today</option>
+                    <option value="this-month">This month</option>
                     <option value="selected-month">Select month and year</option>
                 </select>
                 <input type="month" id="filterAttMonth" class="form-input" style="display: none; padding: 8px; font-size: 12px; width: auto;" title="Select month and year" aria-label="Select month and year">
