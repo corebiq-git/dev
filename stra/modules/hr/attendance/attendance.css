@@ -305,3 +305,115 @@
     #attendance-module #monthTable th:nth-child(-n+3),
     #attendance-module #monthTable td:nth-child(-n+3) {position: static;}
 }
+
+
+/* 2026 mobile first pass: compact filters, actions, and accessible page spacing */
+#attendance-module {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+#attendance-module .attendance-view-toggle { flex-wrap: nowrap; min-width: 0; }
+#attendance-module .attendance-view-button { white-space: nowrap; min-width: 0; }
+#attendance-module .table-header > div {max-width: 100%;}
+#attendance-module .table-header .form-input {min-width: 0; max-width: 100%;}
+#attendance-module .section-title > div button {min-width: 0;}
+@media screen and (max-width: 768px) {
+    #attendance-module {padding: 0 0 18px; margin: 0; }
+    #attendance-module .section-title {margin: 0 0 10px;}
+    #attendance-module .section-title > h2 {display: none;}
+    #attendance-module .section-title > div {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 8px !important;
+    }
+    #attendance-module .section-title > div button {
+        min-height: 40px;
+        width: 100%;
+        padding: 8px;
+        font-size: 12px;
+        line-height: 1.25;
+        border-radius: 10px;
+        white-space: normal;
+    }
+    #attendance-module .section-title > div button:last-child {grid-column: auto;}
+    #attendance-module .attendance-view-toolbar {
+        margin-bottom: 12px;
+        padding: 10px;
+        gap: 8px;
+        border-radius: 12px;
+    }
+    #attendance-module .attendance-view-caption { flex-basis: 100%; }
+    #attendance-module .attendance-view-toggle { width: 100%; }
+    #attendance-module .attendance-view-button {
+        flex: 1 1 0;
+        padding: 9px 4px;
+        font-size: 11px;
+        min-height: 42px;
+        gap: 4px;
+    }
+    #attendance-module .attendance-view-button .material-symbols-rounded {font-size: 17px;}
+    #attendance-module .attendance-view-hint {font-size: 11px;}
+    #attendance-module .table-container {margin: 0 0 12px; border-radius: 12px;}
+    #attendance-module .table-header {padding: 12px; gap: 12px;}
+    #attendance-module .table-header > div:first-child {align-items: flex-start !important;}
+    #attendance-module .table-header > div:first-child > div {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px !important;
+    }
+    #attendance-module .table-header > div:first-child > div > button {
+        min-width: 0;
+        width: 100%;
+        justify-content: center;
+        padding: 8px 5px !important;
+        min-height: 38px;
+        font-size: 11px !important;
+        line-height: 1.2;
+        text-align: center;
+    }
+    #attendance-module #monthlyReportContainer .table-header > div:nth-child(2) {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px !important;
+        padding: 10px !important;
+    }
+    #attendance-module #monthlyReportContainer .table-header > div:nth-child(2) #reportMonth,
+    #attendance-module #monthlyReportContainer .table-header > div:nth-child(2) #reportBranch {
+        width: 100% !important;
+        font-size: 12px !important;
+        min-height: 40px;
+        padding: 8px !important;
+    }
+    #attendance-module #monthlyReportContainer .table-header > div:nth-child(2) > button {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 40px;
+        justify-content: center;
+    }
+    #attendance-module #daily-log-container .table-header > .no-print {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px !important;
+    }
+    #attendance-module #daily-log-container .table-header > .no-print > select,
+    #attendance-module #daily-log-container .table-header > .no-print > input,
+    #attendance-module #daily-log-container .table-header > .no-print > div {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+    #attendance-module #daily-log-container .table-header > .no-print > div:has(#attSearchInput) {
+        grid-column: 1 / -1;
+        min-height: 42px;
+    }
+    #attendance-module #daily-log-container .table-header > .no-print > button {
+        min-height: 40px;
+        justify-content: center;
+    }
+    #attendance-module .table-responsive {padding-inline: 8px !important;}
+    #attendance-module .modal-overlay {padding: 8px; }
+    #attendance-module .modal-body, #attendance-module .modal-header {padding: 14px;}
+    #attendance-module .modal-body .input-group {gap: 10px;}
+}
