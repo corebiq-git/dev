@@ -4,6 +4,22 @@ import { reserveNextDocumentIds } from '../../js/document-ids.js';
 import { normalizeDateKey } from '../../js/date-utils.js';
 import { doc, getDoc, collection, getDocs, query, where, runTransaction, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 
+
+// Share concurrent reads only; never retain stale financial or patient snapshots.
+const dashboardSharedReads = new Map();
+function sharedDashboardRead(key, loader) {
+    const user = window.currentUser;
+    const uid = window.firebaseAuth?.currentUser?.uid || user?.uid || user?.id;
+    if (!uid) return loader();
+    const scopedKey = JSON.stringify([uid, user.role, user.branch, key]);
+    if (dashboardSharedReads.has(scopedKey)) return dashboardSharedReads.get(scopedKey);
+    const pending = Promise.resolve().then(loader);
+    dashboardSharedReads.set(scopedKey, pending);
+    const release = () => { if (dashboardSharedReads.get(scopedKey) === pending) dashboardSharedReads.delete(scopedKey); };
+    pending.then(release, release);
+    return pending;
+}
+
 window.selectedDashboardDate = window.getLocalDateString();
 
 function dashboardDateFromKey(dateKey) {
@@ -159,7 +175,7 @@ window.loadDashboardEntryOptions = async function() {
         document.getElementById('dashboardAppointmentBranch')
     ];
     const branchesRequest = isAdmin
-        ? getDocs(collection(db, 'branches'))
+        ? sharedDashboardRead('branches', () => getDocs(collection(db, 'branches')))
         : Promise.resolve(null);
     const staffQuery = isAdmin
         ? collection(db, 'staff')
@@ -169,8 +185,8 @@ window.loadDashboardEntryOptions = async function() {
         : query(collection(db, 'therapists'), where('branch', '==', branch));
     const [branchesSnapshot, staffSnapshot, therapistsSnapshot] = await Promise.all([
         branchesRequest,
-        getDocs(staffQuery),
-        getDocs(therapistsQuery)
+        sharedDashboardRead('staff', () => getDocs(staffQuery)),
+        sharedDashboardRead('therapists', () => getDocs(therapistsQuery))
     ]);
     const branches = isAdmin
         ? [...new Set(branchesSnapshot.docs.map(item => item.data().name).filter(Boolean))].sort()
@@ -957,7 +973,7 @@ window.fetchDashboardData = async function() {
         attendanceConstraints.push(where('branch', '==', branch));
     }
 
-    const requestKey = `${selectedDate}:${branch}`;
+    const requestKey = JSON.stringify([window.currentUser.uid || window.currentUser.id || window.currentUser.email || '', window.currentUser.role, selectedDate, branch]);
     let request = dashboardInFlightRequests.get(requestKey);
     if (!request) {
         request = Promise.all([
