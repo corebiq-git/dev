@@ -1,3 +1,10 @@
+function independentAppointmentDue(item) {
+  if (['cancelled','canceled'].includes(String(item.status || '').trim().toLowerCase())) return 0;
+  const fee = Number(item.fee ?? item.totalFee ?? 0);
+  const advance = Number(item.advance ?? 0);
+  if (!Number.isFinite(fee) || !Number.isFinite(advance)) throw new Error('Invalid appointment financial data');
+  return fee - advance;
+}
 import { indianMobileDigits } from '../../../js/indian-phone.mjs';
 import { normalizePatientName, patientBranchFilters } from '../../../js/patient-search.mjs';
 import { auth, db } from '../../../js/firebase-config.js';
@@ -291,7 +298,7 @@ async function applyAppointmentClient(item){
     const snapshot=await getDocs(query(collection(db,'appointments'),where('mobile','==',p.mobile),where('branch','==',p.branch)));
     if(version!==clientDueVersion||!previousDues.isConnected)return;
     let due=0;
-    snapshot.forEach(record=>{if(record.id!==current)due+=parseFloat(record.data().balance)||0});
+    snapshot.forEach(record=>{if(record.id!==current)due+=independentAppointmentDue(record.data())});
     previousDues.value=due.toFixed(2);
     window.calcBalance();
   }catch(error){console.error('Unable to load client dues:',error)}
@@ -796,7 +803,7 @@ window.editAppointmentData=async(d,id=null,isNew=false)=>{
   const fields={aptDocId:id||'',aptMobile:d.mobile||'',aptName:d.name||'',aptAge:d.age||'',aptGender:d.gender||'',aptCategory:d.category||'Normal',aptLocation:d.location||'',aptPatientNotes:d.patientNotes||'',aptBranch:d.branch||'',aptDate:isNew?todayISO():(d.date||''),aptTime:isNew?'':(d.time||''),aptPreviousDate:d.previousDate||'',aptPreviousTime:d.previousTime||'',aptDuration:d.duration||'',aptSessionsPerDay:d.sessionsPerDay||'',aptTherapist:d.therapist||'',aptStatus:isNew?'Pending':(d.status||'Pending'),aptFee:d.fee??'',aptAdvance:isNew?'':(d.advance??''),aptNotes:d.notes||'',aptPaymentMode:d.paymentMode||'Cash',aptPaymentReference:isNew?'':(d.paymentReference||''),aptPaymentRemarks:isNew?'':(d.paymentRemarks||'')};
   Object.entries(fields).forEach(([k,v])=>document.getElementById(k).value=v);
   document.getElementById('aptPatientSearch').value=d.name||'';document.getElementById('saveAptBtn').textContent=isNew?'Save Appointment':'Update Appointment';document.getElementById('formTitle').textContent=isNew?'New Appointment from Selected':'Edit Appointment';
-  let due=0;try{let q=query(collection(db,'appointments'),where('mobile','==',d.mobile));if(window.currentUser&&window.currentUser.role!=='admin')q=query(collection(db,'appointments'),where('mobile','==',d.mobile),where('branch','==',window.currentUser.branch));(await getDocs(q)).forEach(x=>{if(x.id!==id)due+=parseFloat(x.data().balance)||0});document.getElementById('aptPrevDues').value=due.toFixed(2)}catch(e){document.getElementById('aptPrevDues').value='0.00'}window.calcBalance();window.toggleReschedule(document.getElementById('aptStatus'));document.getElementById('aptModal').classList.add('show');
+  let due=0;try{let q=query(collection(db,'appointments'),where('mobile','==',d.mobile));if(window.currentUser&&window.currentUser.role!=='admin')q=query(collection(db,'appointments'),where('mobile','==',d.mobile),where('branch','==',window.currentUser.branch));(await getDocs(q)).forEach(x=>{if(x.id!==id)due+=independentAppointmentDue(x.data())});document.getElementById('aptPrevDues').value=due.toFixed(2)}catch(e){document.getElementById('aptPrevDues').value='0.00'}window.calcBalance();window.toggleReschedule(document.getElementById('aptStatus'));document.getElementById('aptModal').classList.add('show');
 };
 window.editAppointment=id=>{const d=window.appointmentsDataCache[id];if(d)window.editAppointmentData(d,id,false)};
 window.saveAppointment=async()=>{
