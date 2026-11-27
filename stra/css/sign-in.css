@@ -376,3 +376,6 @@ body.sign-in-page {
 .sign-in-page .remember-option input {margin:0;}
 .sign-in-page .auth-options {gap:9px 12px;}
 @media(max-width:360px){.sign-in-page .auth-methods button {gap:4px;font-size:12px;}.sign-in-page .auth-methods .auth-icon {width:14px;height:14px;}.sign-in-page .auth-options{gap:8px;}.sign-in-page .auth-action{font-size:11px;}}
+
+.sign-in-page .sign-in-footer .corebiq-footer-blue {width:min(45%, 152px)!important;max-width:152px!important;max-height:none;height:auto!important;border-radius:0;opacity:1;}
+@media(max-width:480px){.sign-in-page .sign-in-footer .corebiq-footer-blue {width:min(40%, 140px)!important;}}

@@ -1,5 +1,5 @@
 // COREBIQ STRACARE offline shell - network-first for live application code.
-const CACHE = "corebiq-v59";
+const CACHE = "corebiq-v60";
 const CORE = [
     "./", "./index.html", "./login.html",
     "./components/splash-screen.html", "./components/header.html", "./js/index.js", "./manifest.webmanifest",
@@ -9,7 +9,7 @@ const CORE = [
     "./assets/card-bg1.webp", "./assets/card-bg2.webp",
     "./assets/card-bg3.webp", "./assets/card-bg4.webp",
     "./assets/card-bg5.webp", "./assets/header-brand.png",
-    "./assets/sidebar-brand.webp", "./assets/poweredby.png",
+    "./assets/sidebar-brand.webp", "./assets/poweredby.png", "./assets/corebiq-footer-blue.webp", "./components/sidebar.html",
     "./assets/name.png", "./css/index.css", "./css/corebiq.css",
     "./css/care-theme.css", "./css/week-calendar.css",
     "./css/sign-in.css", "./css/care-loader.css",

@@ -121,6 +121,54 @@ function styleModuleButtons(view) {
     });
 }
 
+const moduleHeroIcons = {
+    "appointments": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M16 3v4M8 3v4M3 11h18m5 4 2 2 4-4\"/>",
+    "patients": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M19 8v6m-3-3h6\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/>",
+    "contacts": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/><path d=\"M7 18a5 5 0 0 1 10 0M2 8h2M2 12h2M2 16h2\"/>",
+    "my-tasks": "<path d=\"m3 6 2 2 4-4M13 6h8M3 13l2 2 4-4M13 13h8M3 20l2 2 4-4M13 20h8\"/>",
+    "public-booking": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4\"/>",
+    "email": "<rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"/><path d=\"m22 7-10 6L2 7\"/>",
+    "invoice": "<path d=\"M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1zM8 8h8M8 12h8M8 16h5\"/>",
+    "transaction": "<path d=\"M3 7h18m-4-4 4 4-4 4M21 17H3m4-4-4 4 4 4\"/>",
+    "razorpay": "<rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M2 10h20M6 15h4\"/>",
+    "cash-ledger": "<rect x=\"2\" y=\"6\" width=\"20\" height=\"12\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M6 12h.01M18 12h.01\"/>",
+    "bank-ledger": "<path d=\"m3 10 9-7 9 7M4 10h16M6 10v9M10 10v9M14 10v9M18 10v9M3 21h18\"/>",
+    "ledgers": "<path d=\"M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z\"/><path d=\"M8 7h8M8 11h6\"/>",
+    "branches": "<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M9 21V9h6v12M7 7h.01M17 7h.01M7 13h.01M17 13h.01\"/>",
+    "therapist": "<path d=\"M6 2v4a4 4 0 0 0 8 0V2M4 2h4M12 2h4M10 10v4a5 5 0 0 0 10 0v-2\"/><circle cx=\"20\" cy=\"10\" r=\"2\"/>",
+    "calender": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M16 3v4M8 3v4M3 11h18\"/>",
+    "staff": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75\"/><circle cx=\"10\" cy=\"7\" r=\"4\"/>",
+    "attendance": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/>",
+    "users": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m15-10 2 2 4-4\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/>",
+    "developer": "<path d=\"m8 6-6 6 6 6m8-12 6 6-6 6M14 4l-4 16\"/>",
+    "clinic-details": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M9 5V3h6v2M12 9v6m-3-3h6\"/>",
+    "company": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><path d=\"M9 21v-5h6v5M8 7h.01M16 7h.01M8 11h.01M16 11h.01\"/>",
+    "letterhead": "<path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8\"/>",
+    "bank-card": "<rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M2 10h20M6 15h4\"/>",
+    "report": "<path d=\"M3 3v18h18M8 16v-4m4 4V8m4 8V5\"/>",
+    "seal": "<circle cx=\"12\" cy=\"8\" r=\"6\"/><path d=\"m8 13-2 9 6-3 6 3-2-9\"/>",
+    "qr": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><path d=\"M14 14h3v3h4v4h-4m-3-4v4\"/>",
+    "updates": "<path d=\"M20 7v5h-5M4 17v-5h5M6 8a7 7 0 0 1 12-2l2 6M18 16a7 7 0 0 1-12 2l-2-6\"/>",
+    "licenceinfo": "<path d=\"M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z\"/><path d=\"m9 12 2 2 4-4\"/>",
+    "aboutapp": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 11v5M12 8h.01\"/>",
+    "privacy": "<rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/>",
+    "backup": "<path d=\"M20 16a4.5 4.5 0 0 0-2-8.5 6 6 0 0 0-11.5 1.5 4 4 0 0 0 0 8H9m3-8v12m-4-4 4 4 4-4\"/>",
+    "corebiq-ai": "<path d=\"m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3zM19 14l1.2 2.8L23 18l-2.8 1.2L19 22l-1.2-2.8L15 18l2.8-1.2L19 14z\"/>",
+    "calc": "<rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"/><path d=\"M8 6h8v4H8zM8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01\"/>"
+};
+function heroIcon(viewId) {
+    const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    icon.setAttribute('class','care-module-title-icon lucide');
+    icon.setAttribute('viewBox','0 0 24 24');
+    icon.setAttribute('fill','none');
+    icon.setAttribute('stroke','currentColor');
+    icon.setAttribute('stroke-width','1.8');
+    icon.setAttribute('stroke-linecap','round');
+    icon.setAttribute('stroke-linejoin','round');
+    icon.setAttribute('aria-hidden','true');
+    icon.innerHTML=moduleHeroIcons[viewId.replace(/^view-/,'')] || '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>';
+    return icon;
+}
 export function mountModuleCard(view, title, home) {
     if (view.id === 'view-dashboard' || view.querySelector('[data-care-page-heading]')) {
         styleModuleButtons(view);
@@ -142,7 +190,9 @@ export function mountModuleCard(view, title, home) {
     });
     breadcrumb.append(link, document.createTextNode(' / ' + title));
     const heading = document.createElement('h1');
-    heading.textContent = title;
+    const titleText = document.createElement('span');
+    titleText.textContent = title;
+    heading.append(heroIcon(view.id), titleText);
     text.append(heading, breadcrumb);
     header.append(text);
 

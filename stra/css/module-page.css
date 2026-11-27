@@ -283,3 +283,15 @@
     #main-content .care-mobile-popup .care-mobile-extra select {appearance:auto;}
     #main-content .care-mobile-popup .care-mobile-extra[hidden] {display:none!important;}
 }
+
+/* Shared hero: compact Lucide title and quiet breadcrumb, neutral grey add control. */
+#main-content .care-module-card h1 {display:flex;align-items:center;gap:10px;color:#fff;min-width:0;}
+#main-content .care-module-card h1 > span {min-width:0;overflow-wrap:anywhere;}
+#main-content .care-module-card .care-module-title-icon {width:1.03em;height:1.03em;flex:0 0 1.03em;color:#edf0f4;}
+#main-content .care-module-card .care-module-path {color:rgba(235,240,246,.58);font-weight:400;margin-top:5px;}
+#main-content .care-module-card .care-module-path a {color:inherit;text-decoration:none;}
+#main-content .care-module-card .care-module-path a:hover,#main-content .care-module-card .care-module-path a:focus-visible {color:#edf0f4;text-decoration:underline;}
+#main-content .care-module-card :is(.care-module-add,.care-module-secondary) {background:#D1D5DB!important;border-color:#C5CAD1!important;color:#27313d!important;}
+#main-content .care-module-card :is(.care-module-add,.care-module-secondary):not(:disabled):hover {background:#E2E5E9!important;}
+@media(max-width:768px){#main-content .care-module-card h1{gap:8px;}#main-content .care-module-card .care-module-title-icon{width:22px;height:22px;flex-basis:22px;}#main-content .care-module-card .care-module-path{margin-top:3px;}}
+@media(max-width:360px){#main-content .care-module-card h1{gap:6px;}#main-content .care-module-card .care-module-title-icon{width:19px;height:19px;flex-basis:19px;}}
