@@ -682,7 +682,7 @@ function renderTherapistWiseReport(appointments){
               <td>${esc(item.branch||'—')}</td>
               <td>₹${money(item.fee)}</td>
               <td><span class="${previousDue.cls}">${esc(previousDue.text)}</span></td>
-              <td><span class="badge payment-status ${payment.cls}">${esc(payment.text)}</span></td>
+              <td><span class="badge payment-status ${payment.cls}">${esc(payment.text)}${payment.detail ? ` · ${esc(payment.detail)}` : ""}</span></td>
               <td><span class="badge ${statusClass}">${esc(status)}</span></td>
               <td class="no-print">${actionHTML(id)}</td>
             </tr>`;
@@ -733,7 +733,9 @@ function renderMobileAppointmentList(appointments) {
                 ${iconValue('location_on', item.branch || '—')}
                 ${item.mobile ? iconValue('call', item.mobile) : ''}
                 ${iconValue('currency_rupee', money(item.fee))}
-                ${iconValue('payments', payment.text, 'apt-mobile-payment')}
+                ${iconValue('payments', payment.text + (payment.detail ? ' · ' + payment.detail : ''), 'apt-mobile-payment ' + payment.cls)}
+                ${iconValue('history', 'Previous: ' + (item.prevDues == null ? '—' : balanceDisplay(item.prevDues).text), 'apt-mobile-finance ' + (item.prevDues == null ? '' : balanceDisplay(item.prevDues).cls))}
+                ${iconValue('account_balance_wallet', 'Balance: ' + (item.balance == null ? '—' : balanceDisplay(item.balance).text), 'apt-mobile-finance ' + (item.balance == null ? '' : balanceDisplay(item.balance).cls))}
               </div>
               <div class="apt-mobile-row-status"><span class="badge ${statusClass}">${esc(status)}</span></div>
             </div>
