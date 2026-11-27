@@ -462,6 +462,19 @@
         font-size: 23px;
     }
 
+    .profile-button { padding: 0; flex-shrink: 0; }
+    .profile-button .profile-avatar {
+        display: block;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .profile-button [hidden] { display: none !important; }
+    @media (max-width: 768px) {
+        .profile-button .profile-avatar { width: 32px; height: 32px; }
+    }
+
     .profile-menu {
         position: absolute;
         top: calc(100% + 9px);
@@ -929,7 +942,7 @@
             aria-expanded="false"
             aria-controls="profile-menu"
             onclick="window.toggleProfileMenu()">
-            <span class="material-symbols-rounded" aria-hidden="true">account_circle</span>
+            <span class="material-symbols-rounded" id="profile-avatar-fallback" aria-hidden="true">account_circle</span>
         </button>
         <section class="profile-menu" id="profile-menu" aria-label="User profile">
             <h2 class="profile-name" id="profile-name">Signed-in user</h2>

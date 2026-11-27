@@ -122,12 +122,15 @@ window.updateInstallButton();
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
+        window.currentUser = null;
+        window.updateHeaderProfile?.();
         window.location.replace('./login.html');
         return;
     }
 
     try {
         const access = await resolveCareAccess(user);
+        if (auth.currentUser?.uid !== user.uid) return;
         if (access.status !== 'approved') {
             window.location.replace('./login.html');
             return;
@@ -138,7 +141,8 @@ onAuthStateChanged(auth, async (user) => {
             email: identity,
             name: userData.name || userData.fullName || user.displayName || identity,
             role: userData.role || "user",
-            branch: userData.branch || "Unknown"
+            branch: userData.branch || "Unknown",
+            googlePhotoURL: user.providerData.find(provider => provider.providerId === 'google.com')?.photoURL || ''
         };
         window.updateHeaderProfile();
         window.applyRoleVisibility();
@@ -823,6 +827,39 @@ window.addEventListener('storage', event => {
 
 window.updateHeaderProfile = function() {
     const user = window.currentUser;
+    const button = document.getElementById('profile-button');
+    const fallback = document.getElementById('profile-avatar-fallback');
+    if (button && fallback) {
+        const previous = button.querySelector('.profile-avatar');
+        let photoURL = '';
+        try {
+            const url = new URL(user?.googlePhotoURL || '');
+            if (url.protocol === 'https:') photoURL = url.href;
+        } catch { /* No usable Google profile photo. */ }
+        if (!photoURL || previous?.src !== photoURL) {
+            previous?.remove();
+            fallback.hidden = false;
+            if (photoURL) {
+                const photo = document.createElement('img');
+                photo.className = 'profile-avatar';
+                photo.alt = '';
+                photo.hidden = true;
+                photo.referrerPolicy = 'no-referrer';
+                photo.addEventListener('load', () => {
+                    if (!photo.isConnected) return;
+                    photo.hidden = false;
+                    fallback.hidden = true;
+                }, { once: true });
+                photo.addEventListener('error', () => {
+                    if (!photo.isConnected) return;
+                    photo.remove();
+                    fallback.hidden = false;
+                }, { once: true });
+                button.append(photo);
+                photo.src = photoURL;
+            }
+        }
+    }
     if (!user) return;
 
     const values = {
