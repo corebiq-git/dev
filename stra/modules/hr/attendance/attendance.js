@@ -605,7 +605,6 @@ import { db } from "../../../js/firebase-config.js";
             if (!isMonth) window.loadAttendanceLog?.();
             else window.generateMonthlyReport?.();
         };
-        window.setAttendanceView('today');
 
         // --- 3. MONTHLY REPORT LOGIC (DEFAULT ON LOAD) ---
         window.initializeMonthlyMatrix = function() {
@@ -1042,11 +1041,14 @@ import { db } from "../../../js/firebase-config.js";
 
         Promise.resolve()
             .then(() => window.loadDropdowns())
-            .then(() => Promise.all([
+            .then(() => {
+                window.setAttendanceView('today');
+                return Promise.all([
                 window.initializeMonthlyMatrix(),
                 window.loadLeaveRequests(),
                 window.loadAttendanceLog()
-            ]))
+                ]);
+            })
             .catch(error => {
                 console.error("Unable to initialize attendance module:", error);
                 document.getElementById('attTableBody').innerHTML =
