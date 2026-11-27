@@ -166,42 +166,7 @@
                 </section>
                 </div>
 
-                <section class="dashboard-entry-row" aria-label="Attendance and appointments for selected date">
-                    <article class="dashboard-entry-card attendance">
-                        <h2 class="dashboard-entry-heading">
-                            <span class="dashboard-entry-title">
-                                <span class="material-symbols-rounded dashboard-attendance-icon" aria-hidden="true">how_to_reg</span>
-                                <span class="dashboard-entry-title-copy">
-                                    <span class="dashboard-entry-title-text">Attendance</span>
-                                    <span class="dashboard-entry-date" id="dashboardAttendanceHeading">Today</span>
-                                </span>
-                            </span>
-                            <button class="dashboard-module-link" type="button" onclick="window.switchView('view-attendance', null)" aria-label="Open full attendance module" title="Open full attendance module">
-                                <span class="material-symbols-rounded" aria-hidden="true">open_in_new</span>
-                            </button>
-                        </h2>
-                        <div class="dashboard-record-list" id="dashboardAttendanceRecords" aria-live="polite">
-                            <div class="dashboard-record-empty">Loading today's attendance...</div>
-                        </div>
-                    </article>
-                    <article class="dashboard-entry-card appointments">
-                        <h2 class="dashboard-entry-heading">
-                            <span class="dashboard-entry-title">
-                                <span class="material-symbols-rounded dashboard-appointment-icon" aria-hidden="true">event_available</span>
-                                <span class="dashboard-entry-title-copy">
-                                    <span class="dashboard-entry-title-text">Appointment</span>
-                                    <span class="dashboard-entry-date" id="dashboardAppointmentHeading">Today</span>
-                                </span>
-                            </span>
-                            <button class="dashboard-module-link" type="button" onclick="window.switchView('view-appointments', null)" aria-label="Open full appointments module" title="Open full appointments module">
-                                <span class="material-symbols-rounded" aria-hidden="true">open_in_new</span>
-                            </button>
-                        </h2>
-                        <div class="dashboard-record-list" id="dashboardAppointmentRecords" aria-live="polite">
-                            <div class="dashboard-record-empty">Loading today's appointments...</div>
-                        </div>
-                    </article>
-                </section>
+                <section class="dashboard-activity" aria-label="Daily activity"><h2>Recent activity</h2><p id="dashboardActivityDate"></p><div id="dashboardActivityList" aria-live="polite">Loading activity…</div></section>
 
                 <div class="dash-top-row dashboard-hidden-legacy">
 
