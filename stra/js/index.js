@@ -1096,6 +1096,42 @@ window.openCareQuickAction = async function(action, button) {
     }
 };
 
+// Mobile/PWA browser back follows app navigation rather than leaving abruptly.
+// A duplicate home state is the exit guard. Web browsers may not permit closing
+// a tab programmatically; confirmed exit therefore returns to browser history.
+let careHistoryInitialized = false;
+let careRestoringHistory = false;
+function ensureCareHistory() {
+    if (careHistoryInitialized || typeof history.pushState !== 'function') return;
+    careHistoryInitialized = true;
+    history.replaceState({ ...(history.state || {}), corebiqCareView: 'view-dashboard' }, '', location.href);
+    history.pushState({ corebiqCareView: 'view-dashboard', corebiqGuard: true }, '', location.href);
+}
+window.addEventListener('popstate', async event => {
+    if (!careHistoryInitialized || !window.currentUser) return;
+    const active = document.querySelector('.view-section.active')?.id || 'view-dashboard';
+    const target = event.state?.corebiqCareView || 'view-dashboard';
+    if (active === 'view-dashboard' && target === 'view-dashboard') {
+        const confirmed = await (window.careConfirm
+            ? window.careConfirm('Do you want to exit COREBIQ Care?', { title: 'Exit application?' })
+            : Promise.resolve(window.confirm('Do you want to exit COREBIQ Care?')));
+        if (confirmed) {
+            careRestoringHistory = true;
+            history.back();
+            // A normal browser tab cannot always be closed by a website.
+        } else {
+            history.pushState({ corebiqCareView: 'view-dashboard', corebiqGuard: true }, '', location.href);
+        }
+        return;
+    }
+    careRestoringHistory = true;
+    try {
+        await window.switchView(document.getElementById(target) ? target : 'view-dashboard');
+    } finally {
+        careRestoringHistory = false;
+    }
+});
+
 window.switchView = async function(targetId, navElement) {
     window.closeTopNavMenus();
     const role = window.currentUser?.role;
@@ -1111,6 +1147,14 @@ window.switchView = async function(targetId, navElement) {
         window.toggleCalculator();
         return;
     }
+    const previouslyActiveView = document.querySelector('.view-section.active')?.id;
+    if (window.currentUser) {
+        ensureCareHistory();
+        if (!careRestoringHistory && previouslyActiveView && previouslyActiveView !== targetId) {
+            history.pushState({ corebiqCareView: targetId }, '', location.href);
+        }
+    }
+
 
     document
         .querySelectorAll('.nav-link, .top-nav-link, .nav-item, .bottom-nav-item')
