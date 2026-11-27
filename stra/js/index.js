@@ -1,6 +1,6 @@
 import { careProfileKey, resolveCareAccess } from './care-access.js';
 import './corebiq-locale.js';
-import { modulePageTitle, mountModuleCard, mountModuleList } from './module-page.mjs';
+import { modulePageTitle, mountModuleCard, mountModuleList, closeMobileListPopup } from './module-page.mjs';
 import { auth, db } from './firebase-config.js';
 import { initializeDocumentIdCounters } from './document-ids.js';
 import { APP_METADATA } from './app-metadata.js';
@@ -1152,6 +1152,7 @@ function ensureCareHistory() {
     history.pushState({ corebiqCareView: home, corebiqGuard: true }, '', location.href);
 }
 window.addEventListener('popstate', async event => {
+    closeMobileListPopup();
     window.closeAppointmentActions?.();
     if (!careHistoryInitialized || !window.currentUser || careExiting) return;
     const home = careHomeView();
@@ -1183,6 +1184,7 @@ window.addEventListener('popstate', async event => {
 });
 
 window.switchView = async function(targetId, navElement) {
+    closeMobileListPopup();
     window.closeAppointmentActions?.();
     window.closeTopNavMenus();
     const role = window.currentUser?.role;
