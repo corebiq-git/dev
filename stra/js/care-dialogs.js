@@ -83,12 +83,12 @@
     window.careNotice = (message, tone) => {
         const text = String(message ?? '');
         const failure = /\b(error|fail(?:ed|ure)?|unable|could not|cannot|denied|unsuccessful|not (?:saved|updated|submitted|added|deleted))\b/i.test(text);
-        const warning = /\b(must|required|invalid)\b/i.test(text);
-        const success = /\b(saved|updated|submitted|added|successfully|deleted)\b/i.test(text);
+        const warning = /\b(must|required|invalid|not allowed|please select)\b/i.test(text);
+        const success = /\b(saved|updated|submitted|added|successfully|deleted|copied|moved|rescheduled|completed|created)\b/i.test(text);
         const kind = tone || (failure ? 'error' : warning ? 'warning' : success ? 'success' : 'info');
         return enqueue({
             message: text,
-            tone: kind,
+            tone: kind === 'danger' ? 'error' : kind,
             title: { error: 'Action failed', warning: 'Warning', success: 'Success' }[kind] || 'Notice',
             action: 'OK'
         });
