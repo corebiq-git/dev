@@ -1042,12 +1042,10 @@ import { db } from "../../../js/firebase-config.js";
         Promise.resolve()
             .then(() => window.loadDropdowns())
             .then(() => {
+                document.getElementById('reportMonth').value = todayString.slice(0, 7);
                 window.setAttendanceView('today');
-                return Promise.all([
-                window.initializeMonthlyMatrix(),
-                window.loadLeaveRequests(),
-                window.loadAttendanceLog()
-                ]);
+                // Only query today's attendance on startup. Month matrix loads on demand.
+                return window.loadLeaveRequests();
             })
             .catch(error => {
                 console.error("Unable to initialize attendance module:", error);
