@@ -490,3 +490,10 @@
 #appointment-module .appointment-filter-select > svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:17px;height:17px;pointer-events:none;}
 #appointment-module .appointment-toolbar .searchbox > svg,#appointment-module .appointment-toolbar .icon-btn svg{width:19px;height:19px;flex:0 0 19px;}
 @media(max-width:700px){#appointment-module .appointment-filter-select > svg{right:7px;width:15px;height:15px;}}
+
+#appointment-module .apt-mobile-detail.payment-paid > span:last-child,
+#appointment-module .apt-mobile-finance.no-due > span:last-child {color:#187647;font-weight:700;}
+#appointment-module .apt-mobile-detail.payment-not-paid > span:last-child,
+#appointment-module .apt-mobile-finance.due > span:last-child {color:#B42332;font-weight:700;}
+#appointment-module .apt-mobile-detail.payment-excess > span:last-child,
+#appointment-module .apt-mobile-finance.excess > span:last-child {color:#245DA8;font-weight:700;}
