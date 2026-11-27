@@ -1184,3 +1184,53 @@ input.clean-input:focus {
  #invoice-container .invoice-letterhead {padding-inline:0 !important;}
  #invoice-container .invoice-header-accent {height:1px !important;}
 }
+
+
+/* A4 footer alignment and subtle healthcare letterhead accents. */
+#invoice-container > .flex-grow {
+ flex: 1 0 auto;
+ min-height: 0;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+}
+#invoice-container .invoice-signature-grid {
+ margin-top: auto;
+ padding-top: 8mm;
+ flex-shrink: 0;
+ break-inside: avoid;
+ page-break-inside: avoid;
+}
+#invoice-container .invoice-branch-footer {
+ flex-shrink: 0;
+ margin-top: 4mm !important;
+ background: linear-gradient(105deg,#edf5fc 0%,#f7fbfc 48%,#edf8f1 100%);
+ padding: 3mm 4mm 2mm !important;
+}
+#invoice-container .invoice-letterhead {
+ background: linear-gradient(105deg,#edf5fc 0%,#fafcfd 48%,#edf8f1 100%);
+ padding: 3mm 4mm !important;
+}
+#invoice-container .invoice-header-accent,
+#invoice-container .invoice-branch-footer::before {
+ background: linear-gradient(90deg,#4079ad,#69ad98);
+}
+#invoice-container::before {
+ width: min(70%, 110mm);
+ background-size: contain;
+ opacity: .045;
+ mix-blend-mode: normal;
+}
+#invoice-container.pdf-export-mode,
+#invoice-container .invoice-letterhead,
+#invoice-container .invoice-branch-footer {
+ print-color-adjust: exact;
+ -webkit-print-color-adjust: exact;
+}
+@media print {
+ #invoice-container {height:auto !important;min-height:281mm !important;max-height:none !important;justify-content:flex-start !important;}
+ #invoice-container .invoice-signature-grid {break-inside:avoid;}
+}
+@media screen and (max-width:640px) {
+ #invoice-container:not(.pdf-export-mode) .invoice-signature-grid {padding-top:20px;}
+}
