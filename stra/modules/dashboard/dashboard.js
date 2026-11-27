@@ -1071,11 +1071,11 @@ window.fetchDashboardData = async function() {
         const totalReceived = billableAppointments.reduce((sum, item) =>
             sum + (Number(item.advance) || 0), 0
         );
+        // Selected-date unpaid charges only; historical cumulative balances are not additive.
         const totalDue = billableAppointments.reduce((sum, item) => {
-            const balance = Number(item.balance);
-            return sum + (item.balance != null && Number.isFinite(balance)
-                ? balance
-                : (Number(item.fee ?? item.totalFee) || 0) + (Number(item.prevDues) || 0) - (Number(item.advance) || 0));
+            const fee = Number(item.fee ?? item.totalFee ?? 0);
+            const advance = Number(item.advance ?? 0);
+            return sum + (Number.isFinite(fee) && Number.isFinite(advance) ? Math.max(0, fee - advance) : 0);
         }, 0);
         const formatDashboardMoney = amount => window.formatCorebiqCurrency
             ? window.formatCorebiqCurrency(amount)
@@ -1099,7 +1099,7 @@ window.fetchDashboardData = async function() {
         const list=document.getElementById('dashboardActivityList');
         document.getElementById('dashboardActivityDate').textContent=selectedDate.split('-').reverse().join('-');
         list.replaceChildren();
-        for(const item of activity.slice(0,30)){
+        for(const item of activity.slice(0,10)){
             const row=document.createElement('button');row.type='button';row.className='dashboard-activity-bar';
             const icon=document.createElement('i');icon.setAttribute('data-lucide',item.icon);
             const copy=document.createElement('span');const title=document.createElement('strong');title.textContent=item.title;
