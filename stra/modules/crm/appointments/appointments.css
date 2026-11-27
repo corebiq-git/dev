@@ -486,3 +486,7 @@
 #appointment-module #appointmentActionsPopup .drop-item svg,#appointment-module #appointmentActionsPopup .drop-item .material-symbols-rounded{flex:0 0 18px;}
 #appointment-module #appointmentActionsPopup .bulk-date-menu{flex-wrap:wrap;}
 @media screen and (max-width:700px){#appointment-module .therapist-report{padding:10px 0;border:0;border-radius:0;box-shadow:none;background:transparent;}#appointment-module .therapist-report-header{padding:0 6px;}#appointment-module .apt-mobile-group{border:0;border-radius:0;box-shadow:none;margin:0 0 8px;}#appointment-module .apt-mobile-row{border-bottom:1px solid #e2e8f0;border-top:0;padding:10px 8px;gap:4px;}#appointment-module .apt-mobile-row-actions{padding:0;border-top:0;}#appointment-module .apt-mobile-row-details .apt-mobile-detail{font-size:12px;}#appointment-module .apt-mobile-detail svg{width:16px;height:16px;flex:0 0 16px;}#appointment-module .apt-mobile-patient .apt-mobile-detail{font-size:14px;font-weight:700;color:#172b42;}}
+
+#appointment-module .appointment-filter-select > svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:17px;height:17px;pointer-events:none;}
+#appointment-module .appointment-toolbar .searchbox > svg,#appointment-module .appointment-toolbar .icon-btn svg{width:19px;height:19px;flex:0 0 19px;}
+@media(max-width:700px){#appointment-module .appointment-filter-select > svg{right:7px;width:15px;height:15px;}}

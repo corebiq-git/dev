@@ -61,7 +61,8 @@ const directoryControls = {
     'view-users': { search: true, filterColumn: 1, filterLabel: 'Role' },
     'view-staff': { filterColumn: 2, filterLabel: 'Branch' },
     'view-therapist': { filterColumn: 2, filterLabel: 'Branch' },
-    'view-branches': {}
+    'view-branches': {},
+    'view-ledgers': { filterColumn: 2, filterLabel: 'Category', sort: false }
 };
 const inlineResets = {
     'view-staff': 'button[onclick*="clearStaffForm"]',
@@ -196,7 +197,7 @@ const mobileToolConfigs = {
     'view-therapist': {container:'.care-list-tools',search:'#therapistSearchInput',filters:['.care-list-tools select:first-of-type','.care-list-tools select:last-of-type']},
     'view-branches': {container:'.care-list-tools',search:'#branchSearchInput',filters:['.care-list-tools select']},
     'view-users': {container:'.care-list-tools',search:'.care-list-tools input',filters:['.care-list-tools select:first-of-type','.care-list-tools select:last-of-type']},
-    'view-ledgers': {container:'#searchLedger',search:'#searchLedger'},
+    'view-ledgers': {container:'.care-list-tools',search:'#searchLedger',filters:['.care-list-tools select']},
     'view-contacts': {container:'.contacts-search',search:'#contacts-search-input',extra:['.contacts-tabs']},
     'view-my-tasks': {container:'.task-filters',search:'#task-search',filters:['#task-filter-status']}
 };
@@ -300,6 +301,11 @@ function mountMobileListTools(view, listEnd) {
         seen.add(item); seen.add(node);
         const marker = document.createComment('care-mobile-control');
         item.before(marker);
+        if (className === 'care-mobile-action') {
+            const control=item.matches('details')?item.querySelector('summary'):item;
+            const label=control && (control.getAttribute('aria-label')||control.title||'');
+            if (label && !buttonLabel(control)) { const text=document.createElement('span');text.className='care-mobile-action-label';text.textContent=label;control.append(text); }
+        }
         placements.push({item,marker,target,className});
     }
     // Move the search input itself; the shared search wrapper supplies its own icon.
@@ -307,6 +313,15 @@ function mountMobileListTools(view, listEnd) {
     search.before(searchMarker);
     placements.push({item:search,marker:searchMarker,target:searchBox,className:'care-mobile-search-input'});
     const primary = (config.filters || []).map(selector => view.querySelector(selector)).filter(Boolean);
+    let contactFilter;
+    if (view.id === 'view-contacts') {
+        contactFilter=document.createElement('select');contactFilter.className='care-mobile-filter';contactFilter.setAttribute('aria-label','Contact category');
+        const tabs=[...view.querySelectorAll('[data-contact-type]')];
+        tabs.forEach(tab=>contactFilter.add(new Option(buttonLabel(tab),tab.dataset.contactType)));
+        contactFilter.value=tabs.find(tab=>tab.getAttribute('aria-selected')==='true')?.dataset.contactType||'patients';
+        contactFilter.addEventListener('change',()=>tabs.find(tab=>tab.dataset.contactType===contactFilter.value)?.click());
+        tabs.forEach(tab=>tab.addEventListener('click',()=>{contactFilter.value=tab.dataset.contactType;}));
+    }
     primary.forEach(node=>relocate(node,filterRow,'care-mobile-filter'));
     for (const selector of config.extra || []) relocate(view.querySelector(selector),popup,'care-mobile-extra');
     for (const selector of config.actions || []) relocate(view.querySelector(selector),popup,'care-mobile-action');
@@ -341,18 +356,20 @@ function mountMobileListTools(view, listEnd) {
     });
     document.addEventListener('click',event=>{if(!toolbar.contains(event.target)&&!popup.hidden)close();});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!popup.hidden){close();action.focus();}});
+    document.addEventListener('scroll',event=>{if(!popup.hidden&&!popup.contains(event.target))close();},true);
     const oldSearchWrapper=wrapperFor(search);
     function update() {
         close();
         if(mobileListQuery.matches) {
             for(const {item,target,className} of placements){item.classList.add(className);target.append(item);}
-            searchBox.append(clear);filterRow.append(action);
+            searchBox.append(clear);if(contactFilter)filterRow.append(contactFilter);filterRow.append(action);
             toolbar.hidden=false;
             if(container && container!==search && !container.contains(toolbar) && !container.querySelector('input,select,button,details'))container.classList.add('care-mobile-empty-origin');
             if(oldSearchWrapper!==search && !oldSearchWrapper.contains(toolbar) && !oldSearchWrapper.querySelector('input,select,button,details'))oldSearchWrapper.classList.add('care-mobile-empty-origin');
-            filterRow.dataset.columns=String(primary.length);
+            filterRow.dataset.columns=String(primary.length+(contactFilter?1:0));
         } else {
             toolbar.hidden=true;
+            contactFilter?.remove();
             for(const {item,marker,className} of placements){item.classList.remove(className);marker.after(item);}
             container?.classList.remove('care-mobile-empty-origin');
             oldSearchWrapper.classList.remove('care-mobile-empty-origin');
@@ -402,12 +419,14 @@ export function mountModuleList(view) {
             filter.setAttribute('aria-label', 'Filter by ' + controls.filterLabel.toLowerCase());
             toolbar.append(filter);
         }
-        sort = document.createElement('select');
-        sort.setAttribute('aria-label', 'Sort records');
-        sort.add(new Option('Default order', ''));
-        sort.add(new Option('A to Z', 'asc'));
-        sort.add(new Option('Z to A', 'desc'));
-        toolbar.append(sort);
+        if (controls.sort !== false) {
+            sort = document.createElement('select');
+            sort.setAttribute('aria-label', 'Sort records');
+            sort.add(new Option('Default order', ''));
+            sort.add(new Option('A to Z', 'asc'));
+            sort.add(new Option('Z to A', 'desc'));
+            toolbar.append(sort);
+        }
         listEnd.before(toolbar);
     }
 
@@ -444,7 +463,7 @@ export function mountModuleList(view) {
             const selected = filter.value;
             const values = [...new Set(allRows.filter(row => row.cells.length > 1).map(filterValue))]
                 .filter(Boolean).sort((a, b) => a.localeCompare(b));
-            filter.replaceChildren(new Option('All ' + controls.filterLabel.toLowerCase() + 's', ''),
+            filter.replaceChildren(new Option('All ' + (controls.filterLabel === 'Category' ? 'categories' : controls.filterLabel === 'Branch' ? 'branches' : controls.filterLabel.toLowerCase() + 's'), ''),
                 ...values.map(value => new Option(value, value)));
             filter.value = values.includes(selected) ? selected : '';
         }

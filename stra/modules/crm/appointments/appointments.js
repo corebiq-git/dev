@@ -184,7 +184,7 @@ appointmentPopup.addEventListener('click',event=>{
 document.addEventListener('click',event=>{if(!appointmentTool.contains(event.target))closeTools();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&appointmentTool.classList.contains('open')){closeTools();appointmentTrigger.focus();}});
 document.addEventListener('scroll',event=>{if(appointmentTool.classList.contains('open')&&!appointmentPopup.contains(event.target))closeTools();},true);
-window.addEventListener('resize',closeTools);
+window.addEventListener('resize',()=>{closeTools();window.updateSelectionBar?.();});
 window.visualViewport?.addEventListener('resize',closeTools);
 window.closeModal=id=>document.getElementById(id)?.classList.remove('show');
 

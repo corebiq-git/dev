@@ -270,3 +270,16 @@
     #main-content .view-section #contacts-module .contacts-list {border-radius:0!important;box-shadow:none!important;}
 }
 @media print {.care-mobile-tools,.care-mobile-popup{display:none!important;}}
+
+.care-mobile-action-label{display:none;}
+@media screen and (max-width:768px){
+    #main-content .care-mobile-popup .care-mobile-action-label{display:inline;}
+    #main-content #attendance-module #daily-log-container .table-header > .no-print > .care-mobile-tools {grid-column:1/-1;width:100%!important;}
+    #main-content #attendance-module #daily-log-container .table-header > .no-print:has(>.care-mobile-tools) {display:block!important;}
+    #main-content #attendance-module #daily-log-container .table-header > div:first-child > div:empty {display:none!important;}
+    #main-content #attendance-module .care-flat-report .admin-only-col[style*="display: none"],#main-content #attendance-module .care-flat-report .admin-only-col[style*="display:none"]{display:none!important;}
+    #main-content .care-mobile-popup .care-mobile-extra:has(input[type="date"]) {display:grid;gap:4px;}
+    #main-content .care-mobile-popup .care-mobile-extra > :is(svg,.material-symbols-rounded):not(:only-child) {display:none;}
+    #main-content .care-mobile-popup .care-mobile-extra select {appearance:auto;}
+    #main-content .care-mobile-popup .care-mobile-extra[hidden] {display:none!important;}
+}
