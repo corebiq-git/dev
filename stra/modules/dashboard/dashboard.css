@@ -819,3 +819,22 @@
         line-height: 1.1;
     }
 }
+
+.dashboard-module .dashboard-activity{background:#fff;border:1px solid #e2e8ec;border-radius:14px;padding:16px;margin-top:16px}
+.dashboard-activity h2{font-size:16px;color:#08765c;margin:0}.dashboard-activity p{font-size:12px;color:#64748b;margin:6px 0}
+.dashboard-activity-bar{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid #e5e7eb;padding:12px 4px;color:#334155;cursor:pointer}
+.dashboard-activity-bar>span{display:grid;gap:4px;min-width:0}.dashboard-activity-bar small{color:#64748b;overflow-wrap:anywhere}.dashboard-activity-bar svg{width:20px;height:20px;flex-shrink:0;color:#159b78}
+@media(max-width:768px){
+.dashboard-module .dashboard-count-row{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}
+.dashboard-module .dashboard-count-card{min-width:0!important;width:auto!important;padding:10px!important;box-sizing:border-box}
+.dashboard-module .dashboard-count-card:not(.finance){aspect-ratio:1;display:flex!important;flex-direction:column;justify-content:space-between;gap:4px}
+.dashboard-module .dashboard-count-card.finance{grid-column:1/-1}
+.dashboard-module .dashboard-count-heading{gap:4px;min-width:0}.dashboard-module .dashboard-count-heading-title{font-size:clamp(11px,3.4vw,15px)}
+.dashboard-module .dashboard-count-date-label{font-size:10px}
+.dashboard-module .dashboard-count-card:not(.finance) .dashboard-count-caption,.dashboard-module .dashboard-appointment-donut,.dashboard-module .dashboard-attendance-bar{display:none!important}
+.dashboard-module .dashboard-count-card:not(.finance) .dashboard-count-total{position:static!important;font-size:26px;text-align:center}
+.dashboard-module .dashboard-count-chart-area,.dashboard-module .dashboard-attendance-chart{display:block!important;width:100%;min-width:0}
+.dashboard-module .dashboard-chart-legend,.dashboard-module .dashboard-appointment-legend{display:flex!important;justify-content:space-between;gap:3px;width:100%}
+.dashboard-module .dashboard-chart-legend-item{display:flex!important;flex-wrap:wrap;justify-content:center;align-items:center;gap:3px;font-size:10px;min-width:0}
+.dashboard-module .dashboard-chart-legend-item strong{margin:0!important;font-size:12px}
+}
