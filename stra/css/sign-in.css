@@ -70,3 +70,292 @@ body.sign-in-page {
 .auth-feedback { color: var(--care-charcoal); }
 .auth-feedback.is-error { color: var(--danger); }
 .auth-hint { margin: 4px 0 10px; font-size: 13px; color: var(--care-icon); }
+
+
+/* STRACARE premium, mobile-first authentication design — Nov 2026 */
+body.sign-in-page {
+    --auth-blue: #235A9F;
+    --auth-blue-dark: #184B86;
+    --auth-green: #159B78;
+    --auth-ink: #202C39;
+    --auth-muted: #697789;
+    --auth-border: #DAE2EB;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: clamp(20px, 5vw, 56px) 16px;
+    background:
+        radial-gradient(ellipse at 90% 8%, rgba(35,90,159,.075), transparent 42%),
+        radial-gradient(ellipse at 5% 95%, rgba(21,155,120,.06), transparent 36%),
+        #F7F9FC;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--auth-ink);
+}
+.sign-in-page *, .sign-in-page *::before, .sign-in-page *::after {
+    box-sizing: border-box;
+}
+.sign-in-page .sign-in-shell {
+    width: min(100%, 456px);
+    min-width: 0;
+    margin-inline: auto;
+}
+.sign-in-page .sign-in-welcome {
+    padding: 0 3px;
+    margin: 0 0 22px;
+    color: var(--auth-ink);
+}
+.sign-in-page .sign-in-welcome h1 {
+    max-width: 16ch;
+    margin: 0;
+    color: #172A40;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: clamp(24px, 5vw, 33px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -.036em;
+    text-wrap: balance;
+}
+.sign-in-page .sign-in-welcome p {
+    margin: 10px 0 0;
+    font-size: clamp(13px, 3vw, 15px);
+    font-weight: 450;
+    line-height: 1.5;
+    color: var(--auth-muted);
+}
+.sign-in-page .auth-card {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    padding: clamp(22px, 5.3vw, 34px);
+    border: 1px solid #DCE5EE;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 16px 45px rgba(24, 52, 82, .07), 0 2px 8px rgba(24,52,82,.035);
+}
+.sign-in-page .auth-card::before {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--auth-blue), #62A6C9 65%, var(--auth-green));
+}
+.sign-in-page .auth-heading h2 {
+    margin: 0 0 21px;
+    color: #192B40;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: clamp(24px, 5vw, 29px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -.035em;
+}
+.sign-in-page .auth-heading p {
+    margin: -10px 0 22px;
+    color: var(--auth-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.sign-in-page .auth-methods {
+    gap: 7px;
+    margin: 0 0 18px;
+    padding: 4px;
+    background: #F1F5FA;
+    border: 1px solid #E4EBF3;
+    border-radius: 11px;
+}
+.sign-in-page .auth-methods button {
+    min-width: 0;
+    min-height: 42px;
+    padding: 9px 4px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: #5D6C7E;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .16s, color .16s, box-shadow .16s;
+}
+.sign-in-page .auth-methods button[aria-pressed="true"] {
+    border-color: #D6E4F2;
+    background: #fff;
+    color: var(--auth-blue-dark);
+    box-shadow: 0 1px 4px rgba(27,65,110,.09);
+}
+.sign-in-page .auth-methods button:hover { color: var(--auth-blue-dark); }
+.sign-in-page .remember-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 28px;
+    margin-bottom: 20px !important;
+    color: #516176;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.45;
+    cursor: pointer;
+}
+.sign-in-page .remember-option input {
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--auth-blue);
+    cursor: pointer;
+}
+.sign-in-page .auth-field {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+    margin: 0 0 17px;
+    color: #34475D;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.4;
+}
+.sign-in-page .auth-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    margin: 0;
+    padding: 11px 14px;
+    border: 1px solid var(--auth-border);
+    border-radius: 9px;
+    outline: none;
+    background: #FBFCFE;
+    color: #18293D;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+}
+.sign-in-page .auth-input:hover {border-color: #A9BDD4;}
+.sign-in-page .auth-input:focus {
+    border-color: var(--auth-blue);
+    box-shadow: 0 0 0 3px rgba(35, 90, 159, .11);
+    background: #fff;
+}
+.sign-in-page .auth-input-wrap { position: relative; width: 100%; }
+.sign-in-page .auth-input.has-trailing {padding-right: 51px;}
+.sign-in-page .password-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    border: 0;
+    border-radius: 0 9px 9px 0;
+    background: transparent;
+    color: #6B798A;
+    cursor: pointer;
+}
+.sign-in-page .password-toggle:hover {color: var(--auth-blue);}
+.sign-in-page .password-toggle .material-symbols-rounded {font-size: 21px;}
+.sign-in-page .auth-submit {
+    width: 100%;
+    min-height: 49px;
+    margin-top: 6px;
+    padding: 11px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--auth-blue);
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .005em;
+    box-shadow: 0 5px 12px rgba(35,90,159,.14);
+    transition: background .18s, transform .15s, box-shadow .18s;
+}
+.sign-in-page .auth-submit:not(:disabled):hover {
+    background: var(--auth-blue-dark);
+    box-shadow: 0 7px 16px rgba(35,90,159,.19);
+}
+.sign-in-page .auth-submit:not(:disabled):active {transform: translateY(1px);}
+.sign-in-page .auth-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin: 19px 0 0;
+}
+.sign-in-page .auth-action, .sign-in-page .back-to-login {
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    color: var(--auth-blue-dark);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    text-decoration: none;
+    cursor: pointer;
+}
+.sign-in-page .auth-action:hover, .sign-in-page .back-to-login:hover {
+    color: var(--auth-green);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.sign-in-page :is(button,input):focus-visible {
+    outline: 2px solid var(--auth-blue);
+    outline-offset: 3px;
+}
+.sign-in-page .auth-phone {display:flex;align-items:center;gap:10px;}
+.sign-in-page .auth-phone > span {
+    font-size: 14px;
+    color: var(--auth-blue-dark);
+}
+.sign-in-page .auth-feedback {
+    padding: 10px 12px;
+    border: 1px solid #BBDCCD;
+    border-radius: 9px;
+    background: #F1FAF6;
+    color: #11765C;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.sign-in-page .auth-feedback.is-error {
+    border-color: #F0C8C8;
+    background: #FFF5F5;
+    color: #A32929;
+}
+.sign-in-page .sign-in-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 19px 0 0;
+    padding: 0;
+}
+.sign-in-page .sign-in-footer img,
+.sign-in-page .sign-in-footer .care-powered-brand {
+    display: block;
+    width: min(38%, 138px) !important;
+    max-width: 138px !important;
+    height: auto !important;
+    max-height: 42px;
+    object-fit: contain;
+    opacity: .88;
+}
+@media (max-width: 480px) {
+    body.sign-in-page {place-items: start center; padding: 30px 16px 24px;}
+    .sign-in-page .sign-in-shell {max-width: 410px;}
+    .sign-in-page .sign-in-welcome {margin-bottom: 19px;}
+    .sign-in-page .sign-in-welcome h1 {font-size: clamp(23px, 6.4vw, 29px);}
+    .sign-in-page .auth-card {padding: 22px 20px 24px; border-radius: 17px;}
+    .sign-in-page .auth-heading h2 {margin-bottom: 18px; font-size: 25px;}
+    .sign-in-page .auth-methods {margin-bottom: 15px;}
+    .sign-in-page .auth-options {margin-top: 17px;}
+    .sign-in-page .sign-in-footer img,
+    .sign-in-page .sign-in-footer .care-powered-brand {width: min(34%, 122px) !important;}
+}
+@media (prefers-reduced-motion: reduce) {
+    .sign-in-page .auth-submit,
+    .sign-in-page .auth-input,
+    .sign-in-page .auth-methods button {transition: none;}
+}
