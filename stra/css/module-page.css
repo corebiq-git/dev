@@ -146,3 +146,75 @@
 #main-content button[data-care-button="cancel"] { background: #fff !important; }
 #main-content button[data-care-button]:disabled,
 #main-content .care-module-card button:disabled { opacity: .6; cursor: default; }
+
+
+/* Shared responsive safeguards for all dynamically mounted Care modules. */
+@media screen and (max-width: 768px) {
+    #main-content .care-module-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 112px;
+        margin-bottom: 12px;
+        padding: 16px;
+        gap: 10px;
+        border-radius: 14px;
+    }
+    #main-content .care-module-card h1 {
+        font-size: clamp(20px, 5.3vw, 26px);
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+    #main-content .care-module-path {font-size: 12px;}
+    #main-content .care-module-actions {flex: 0 0 auto;}
+    #main-content .care-module-card :is(.care-module-add, .care-module-secondary) {
+        min-height: 42px;
+        min-width: 42px;
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+    }
+    #main-content .view-section,
+    #main-content .view-section > .module-container {
+        min-width: 0;
+        max-width: 100%;
+    }
+    #main-content .module-container :is(.form-view, .table-container, .table-header, .form-card) {
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    #main-content .module-container :is(input, select, textarea) {
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    #main-content .module-container .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+    }
+    #main-content .care-list-tools {
+        gap: 8px;
+        flex-wrap: wrap;
+        min-width: 0;
+    }
+    #main-content .care-list-tools :is(input, select) {
+        flex: 1 1 140px;
+        width: auto;
+        min-width: 0;
+    }
+    #main-content .care-list-footer {
+        padding: 10px;
+        gap: 10px;
+        font-size: 12px;
+    }
+    #main-content .care-list-footer button {
+        min-height: 40px;
+        padding-inline: 10px;
+    }
+}
+@media screen and (max-width: 390px) {
+    #main-content .care-module-card {padding: 14px 12px;}
+    #main-content .care-module-card h1 {font-size: 19px;}
+    #main-content .care-module-card :is(.care-module-add, .care-module-secondary) {font-size: 12px !important;}
+}
