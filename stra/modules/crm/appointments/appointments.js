@@ -643,11 +643,65 @@ function renderTherapistWiseReport(appointments){
   content.innerHTML=
     `<p class="therapist-report-meta">${appointments.length} appointments · ${groups.length} therapists</p>${reportGroups}`;
 }
+// Mobile-specific flat list: no wide table, horizontal swiping, or card-form layout.
+function renderMobileAppointmentList(appointments) {
+  const root = document.getElementById('appointmentMobileList');
+  if (!root) return;
+  if (!appointments.length) {
+    root.innerHTML = '<p class="appointment-mobile-empty">No appointments match the selected filters.</p>';
+    return;
+  }
+  const grouped = new Map();
+  appointments.forEach(entry => {
+    const doctor = String(entry.data.therapist || 'Unassigned').trim() || 'Unassigned';
+    if (!grouped.has(doctor)) grouped.set(doctor, []);
+    grouped.get(doctor).push(entry);
+  });
+  const iconValue = (icon, value, extra = '') =>
+    `<span class="apt-mobile-detail ${extra}"><span class="material-symbols-rounded" aria-hidden="true">${icon}</span><span>${esc(value ?? '—')}</span></span>`;
+  root.innerHTML = [...grouped].map(([therapist, entries]) => `
+    <section class="apt-mobile-group" aria-label="Appointments for ${esc(therapist)}">
+      <div class="apt-mobile-group-heading">
+        ${iconValue('medical_services', therapist)}
+        <span class="apt-mobile-group-count">${entries.length}</span>
+      </div>
+      <div class="apt-mobile-group-rows">
+      ${entries.map(({id, data:item}) => {
+        const status = String(item.status || 'Pending');
+        const payment = paymentStatusDisplay(item.balance);
+        const statusClass = {Completed:'completed',Reported:'reported',Rescheduled:'rescheduled',Cancelled:'cancelled',Pending:'pending'}[status] || 'pending';
+        const ageGender = [item.age ? `${item.age} yrs` : '', item.gender || ''].filter(Boolean).join(' · ');
+        return `<div class="apt-mobile-row">
+          <div class="apt-mobile-row-main">
+            <label class="apt-mobile-select"><input type="checkbox" class="apt-checkbox" value="${esc(id)}" aria-label="Select appointment for ${esc(item.name || 'Unnamed patient')}" onchange="window.updateSelectionBar()"></label>
+            <div class="apt-mobile-row-details">
+              <div class="apt-mobile-patient">${iconValue('person', item.name || 'Unnamed patient')}</div>
+              <div class="apt-mobile-detail-grid">
+                ${iconValue('event', [window.formatIndianDate(item.date), formatTime12Hour(item.time)].filter(Boolean).join(' · '))}
+                ${ageGender ? iconValue('wc', ageGender) : ''}
+                ${iconValue('location_on', item.branch || '—')}
+                ${item.mobile ? iconValue('call', item.mobile) : ''}
+                ${iconValue('currency_rupee', money(item.fee))}
+                ${iconValue('payments', payment.text, 'apt-mobile-payment')}
+              </div>
+              <div class="apt-mobile-row-status"><span class="badge ${statusClass}">${esc(status)}</span></div>
+            </div>
+          </div>
+          <div class="apt-mobile-row-actions">${actionHTML(id)}</div>
+        </div>`;
+      }).join('')}
+      </div>
+    </section>
+  `).join('');
+}
+
 function actionHTML(id){
   return `<div class="actions"><button class="act edit" title="Edit Appointment" aria-label="Edit Appointment" onclick="window.editAppointment('${id}')"><span class="material-symbols-rounded">edit</span></button><button class="act inv" title="View Invoice" aria-label="View Invoice" onclick="window.printInvoice('${id}')"><span class="material-symbols-rounded">visibility</span></button></div>`;
 }
 function renderAppointments(){
-  renderTherapistWiseReport(filteredAppointments());
+  const appointments = filteredAppointments();
+  renderTherapistWiseReport(appointments);
+  renderMobileAppointmentList(appointments);
   updateSelectionBar();
 }
 window.filterTable=renderAppointments;
