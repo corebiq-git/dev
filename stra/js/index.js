@@ -840,7 +840,7 @@ window.updateHeaderProfile = function() {
         } catch { /* No usable Google profile photo. */ }
         if (!photoURL || previous?.src !== photoURL) {
             previous?.remove();
-            fallback.hidden = false;
+            fallback.removeAttribute('hidden');
             if (photoURL) {
                 const photo = document.createElement('img');
                 photo.className = 'profile-avatar';
@@ -850,12 +850,12 @@ window.updateHeaderProfile = function() {
                 photo.addEventListener('load', () => {
                     if (!photo.isConnected) return;
                     photo.hidden = false;
-                    fallback.hidden = true;
+                    fallback.setAttribute('hidden', '');
                 }, { once: true });
                 photo.addEventListener('error', () => {
                     if (!photo.isConnected) return;
                     photo.remove();
-                    fallback.hidden = false;
+                    fallback.removeAttribute('hidden');
                 }, { once: true });
                 button.append(photo);
                 photo.src = photoURL;
@@ -1147,6 +1147,7 @@ function ensureCareHistory() {
     if (careHistoryInitialized || typeof history.pushState !== 'function') return;
     careHistoryInitialized = true;
     const home = careHomeView();
+    if (history.state?.corebiqGuard && history.state.corebiqCareView === home) return;
     history.replaceState({ ...(history.state || {}), corebiqCareView: home, corebiqCareRoot: true }, '', location.href);
     history.pushState({ corebiqCareView: home, corebiqGuard: true }, '', location.href);
 }

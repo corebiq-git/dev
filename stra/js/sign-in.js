@@ -17,6 +17,7 @@ let confirmation;
 let acting = false;
 let stateVersion = 0;
 let activePanel = "login";
+let approvedRedirect = false;
 let activeMethod = "email";
 const rememberOption = byId("remember-option");
 
@@ -79,7 +80,11 @@ async function displayAccess(user, reloadIdentity = false) {
     const { status } = await resolveCareAccess(user);
     if (version !== stateVersion || auth.currentUser?.uid !== user.uid) return;
     if (status === 'approved') {
-        window.location.replace('./index.html');
+        if (approvedRedirect) return;
+        approvedRedirect = true;
+        // Remove the duplicate login history entry before opening the workspace.
+        if (history.state?.careLoginGuard) history.back();
+        else window.location.replace('./index.html');
         return;
     }
 
@@ -242,6 +247,7 @@ function armLoginBackGuard() {
 }
 armLoginBackGuard();
 window.addEventListener('popstate', async event => {
+    if (approvedRedirect) { window.location.replace('./index.html'); return; }
     if (loginLeaving || event.state?.careLoginGuard) return;
     armLoginBackGuard();
     if (loginExitPrompt || acting) return;
