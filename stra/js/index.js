@@ -713,6 +713,8 @@ window.applyLucideIcons = function(root = document) {
         svg.setAttribute('aria-hidden', 'true');
         svg.dataset.lucideIcon = 'true';
         svg.setAttribute('class', icon.getAttribute('class') || '');
+        if (icon.id) svg.id = icon.id;
+        if (icon.hidden) svg.setAttribute('hidden', '');
         svg.style.setProperty('color', color, 'important');
         svg.innerHTML = paths;
         icon.replaceWith(svg);
@@ -1139,36 +1141,43 @@ window.openCareQuickAction = async function(action, button) {
 let careHistoryInitialized = false;
 let careRestoringHistory = false;
 let careExiting = false;
+let careExitPrompt = false;
+function careHomeView() { return window.currentUser?.role === 'developer' ? 'view-developer' : 'view-dashboard'; }
 function ensureCareHistory() {
     if (careHistoryInitialized || typeof history.pushState !== 'function') return;
     careHistoryInitialized = true;
-    history.replaceState({ ...(history.state || {}), corebiqCareView: 'view-dashboard' }, '', location.href);
-    history.pushState({ corebiqCareView: 'view-dashboard', corebiqGuard: true }, '', location.href);
+    const home = careHomeView();
+    history.replaceState({ ...(history.state || {}), corebiqCareView: home, corebiqCareRoot: true }, '', location.href);
+    history.pushState({ corebiqCareView: home, corebiqGuard: true }, '', location.href);
 }
 window.addEventListener('popstate', async event => {
     if (!careHistoryInitialized || !window.currentUser || careExiting) return;
-    const active = document.querySelector('.view-section.active')?.id || 'view-dashboard';
-    const target = event.state?.corebiqCareView || 'view-dashboard';
-    if (active === 'view-dashboard' && target === 'view-dashboard') {
-        const confirmed = await (window.careConfirm
-            ? window.careConfirm('Do you want to exit COREBIQ Care?', { title: 'Exit application?' })
-            : Promise.resolve(window.confirm('Do you want to exit COREBIQ Care?')));
-        if (confirmed) {
-            careExiting = true;
-            careRestoringHistory = true;
-            history.back();
-            // A normal browser tab cannot always be closed by a website.
-        } else {
-            history.pushState({ corebiqCareView: 'view-dashboard', corebiqGuard: true }, '', location.href);
-        }
+    const home = careHomeView();
+    const target = event.state?.corebiqCareView || home;
+    if (event.state?.corebiqCareRoot || !event.state?.corebiqCareView) {
+        history.pushState({ corebiqCareView: home, corebiqGuard: true }, '', location.href);
+        if (careExitPrompt) return;
+        careRestoringHistory = true;
+        try {
+            if (document.querySelector('.view-section.active')?.id !== home) await window.switchView(home);
+        } finally { careRestoringHistory = false; }
+        careExitPrompt = true;
+        try {
+            const confirmed = await (window.careConfirm
+                ? window.careConfirm('Do you want to exit COREBIQ Care?', { title: 'Exit application?', action: 'Exit' })
+                : Promise.resolve(window.confirm('Do you want to exit COREBIQ Care?')));
+            if (confirmed && history.length > 2) {
+                careExiting = true;
+                history.go(-2);
+            }
+        } finally { careExitPrompt = false; }
         return;
     }
+    if (careExitPrompt) return;
     careRestoringHistory = true;
     try {
-        await window.switchView(document.getElementById(target) ? target : 'view-dashboard');
-    } finally {
-        careRestoringHistory = false;
-    }
+        await window.switchView(document.getElementById(target) ? target : home);
+    } finally { careRestoringHistory = false; }
 });
 
 window.switchView = async function(targetId, navElement) {
@@ -1189,7 +1198,7 @@ window.switchView = async function(targetId, navElement) {
     const previouslyActiveView = document.querySelector('.view-section.active')?.id;
     if (window.currentUser) {
         ensureCareHistory();
-        if (!careRestoringHistory && previouslyActiveView && previouslyActiveView !== targetId) {
+        if (!careRestoringHistory && previouslyActiveView && previouslyActiveView !== targetId && history.state?.corebiqCareView !== targetId) {
             history.pushState({ corebiqCareView: targetId }, '', location.href);
         }
     }

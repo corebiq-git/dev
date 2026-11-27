@@ -359,3 +359,20 @@ body.sign-in-page {
     .sign-in-page .auth-input,
     .sign-in-page .auth-methods button {transition: none;}
 }
+
+/* Compact workspace heading and local Lucide outline icons. */
+.sign-in-page .sign-in-welcome h1 {max-width:none;letter-spacing:normal;text-wrap:initial;}
+.sign-in-page .welcome-eyebrow {display:block;margin-bottom:3px;color:#78889b;font-family:Inter,system-ui,sans-serif;font-size:clamp(14px,3.6vw,17px);font-weight:500;line-height:1.45;}
+.sign-in-page .welcome-title {display:block;color:#235a9f;font-size:clamp(25px,6.8vw,36px);font-weight:700;line-height:1.2;letter-spacing:-.045em;}
+@supports ((background-clip:text) or (-webkit-background-clip:text)) {.sign-in-page .welcome-title {background:linear-gradient(105deg,#17447e 0%,#2872c9 65%,#4e9be4 100%);background-clip:text;-webkit-background-clip:text;color:transparent;}}
+.sign-in-page .auth-icon {flex:0 0 auto;width:17px;height:17px;vertical-align:middle;}
+.sign-in-page .auth-methods button,.sign-in-page .auth-field-label,.sign-in-page .auth-action,.sign-in-page .back-to-login {display:inline-flex;align-items:center;gap:6px;}
+.sign-in-page .auth-methods button {justify-content:center;}
+.sign-in-page .auth-field-label {font-size:inherit;font-weight:inherit;}
+.sign-in-page .auth-field-label .auth-icon {color:var(--auth-muted);width:16px;height:16px;}
+.sign-in-page .auth-action .auth-icon,.sign-in-page .back-to-login .auth-icon {width:14px;height:14px;}
+.sign-in-page .password-toggle .auth-icon {width:20px;height:20px;}
+.sign-in-page .remember-option {display:flex;margin:0 0 8px !important;min-height:26px;}
+.sign-in-page .remember-option input {margin:0;}
+.sign-in-page .auth-options {gap:9px 12px;}
+@media(max-width:360px){.sign-in-page .auth-methods button {gap:4px;font-size:12px;}.sign-in-page .auth-methods .auth-icon {width:14px;height:14px;}.sign-in-page .auth-options{gap:8px;}.sign-in-page .auth-action{font-size:11px;}}

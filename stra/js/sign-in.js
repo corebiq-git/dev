@@ -16,6 +16,9 @@ let verifier;
 let confirmation;
 let acting = false;
 let stateVersion = 0;
+let activePanel = "login";
+let activeMethod = "email";
+const rememberOption = byId("remember-option");
 
 function notice(text, error = false) {
     feedback.hidden = !text;
@@ -23,13 +26,27 @@ function notice(text, error = false) {
     feedback.classList.toggle('is-error', error);
 }
 
+function placeRememberOption() {
+    const submit = activePanel === 'signup'
+        ? byId('signup-form').querySelector('button[type="submit"]')
+        : activeMethod === 'google' ? byId('google-login')
+        : activeMethod === 'mobile'
+            ? byId(byId('otp-form').hidden ? 'mobile-form' : 'otp-form').querySelector('button[type="submit"]')
+            : byId('login-form').querySelector('button[type="submit"]');
+    submit.before(rememberOption);
+}
 function showPanel(panel) {
+    activePanel = panel;
     for (const [key, id] of Object.entries(panels)) byId(id).hidden = key !== panel;
+    if (panel === 'login' || panel === 'signup') placeRememberOption();
 }
 
 function setMethod(method) {
+    activeMethod = method;
     byId('login-form').hidden = method !== 'email';
     byId('mobile-form-box').hidden = method !== 'mobile';
+    byId('google-form-box').hidden = method !== 'google';
+    placeRememberOption();
     document.querySelectorAll('[data-method]').forEach(button => {
         button.setAttribute('aria-pressed', String(button.dataset.method === method));
     });
@@ -91,6 +108,7 @@ function resetPhoneFlow() {
     byId('mobile-form').hidden = false;
     byId('otp-form').hidden = true;
     byId('mobile-otp').value = '';
+    if (activePanel === 'login' && activeMethod === 'mobile') placeRememberOption();
 }
 
 async function run(control, action) {
@@ -126,7 +144,8 @@ byId('toggle-login-password').addEventListener('click', event => {
     const reveal = password.type === 'password';
     password.type = reveal ? 'text' : 'password';
     event.currentTarget.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
-    event.currentTarget.querySelector('.material-symbols-rounded').textContent = reveal ? 'visibility' : 'visibility_off';
+    event.currentTarget.querySelector('[data-password-icon="hidden"]').toggleAttribute('hidden', reveal);
+    event.currentTarget.querySelector('[data-password-icon="shown"]').toggleAttribute('hidden', !reveal);
 });
 
 document.querySelectorAll('[data-method]').forEach(button => button.addEventListener('click', () => setMethod(button.dataset.method)));
@@ -156,6 +175,7 @@ onSubmit('mobile-form', async () => {
         confirmation = await signInWithPhoneNumber(auth, number, verifier);
         byId('mobile-form').hidden = true;
         byId('otp-form').hidden = false;
+        placeRememberOption();
         byId('mobile-otp').focus();
         notice('OTP sent to ' + number);
     } catch (error) {
@@ -166,6 +186,7 @@ onSubmit('mobile-form', async () => {
 byId('change-mobile').addEventListener('click', resetPhoneFlow);
 onSubmit('otp-form', async () => {
     if (!confirmation) return;
+    await persistence();
     const { user } = await confirmation.confirm(byId('mobile-otp').value.trim());
     await displayAccess(user);
 });
@@ -209,4 +230,32 @@ onAuthStateChanged(auth, user => {
         if (user) showPanel('access');
         notice(friendlyError(error), true);
     });
+});
+
+// Keep mobile Back within sign-in until the user explicitly confirms exit.
+let loginExitPrompt = false;
+let loginLeaving = false;
+function armLoginBackGuard() {
+    if (history.state?.careLoginGuard) return;
+    history.replaceState({ ...(history.state || {}), careLoginRoot: true }, '', location.href);
+    history.pushState({ careLoginGuard: true }, '', location.href);
+}
+armLoginBackGuard();
+window.addEventListener('popstate', async event => {
+    if (loginLeaving || event.state?.careLoginGuard) return;
+    armLoginBackGuard();
+    if (loginExitPrompt || acting) return;
+    if (activePanel === 'signup' || activePanel === 'reset') { showPanel('login'); notice(''); return; }
+    if (activePanel === 'login' && activeMethod === 'mobile' && !byId('otp-form').hidden) { resetPhoneFlow(); notice(''); return; }
+    if (activePanel === 'login' && activeMethod !== 'email') { setMethod('email'); return; }
+    loginExitPrompt = true;
+    try {
+        const confirmed = await (window.careConfirm
+            ? window.careConfirm('Do you want to exit COREBIQ Care?', { title: 'Exit application?', action: 'Exit' })
+            : Promise.resolve(window.confirm('Do you want to exit COREBIQ Care?')));
+        if (confirmed && history.length > 2) {
+            loginLeaving = true;
+            history.go(-2);
+        }
+    } finally { loginExitPrompt = false; }
 });
