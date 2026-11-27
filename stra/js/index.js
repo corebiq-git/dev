@@ -1101,6 +1101,7 @@ window.openCareQuickAction = async function(action, button) {
 // a tab programmatically; confirmed exit therefore returns to browser history.
 let careHistoryInitialized = false;
 let careRestoringHistory = false;
+let careExiting = false;
 function ensureCareHistory() {
     if (careHistoryInitialized || typeof history.pushState !== 'function') return;
     careHistoryInitialized = true;
@@ -1108,7 +1109,7 @@ function ensureCareHistory() {
     history.pushState({ corebiqCareView: 'view-dashboard', corebiqGuard: true }, '', location.href);
 }
 window.addEventListener('popstate', async event => {
-    if (!careHistoryInitialized || !window.currentUser) return;
+    if (!careHistoryInitialized || !window.currentUser || careExiting) return;
     const active = document.querySelector('.view-section.active')?.id || 'view-dashboard';
     const target = event.state?.corebiqCareView || 'view-dashboard';
     if (active === 'view-dashboard' && target === 'view-dashboard') {
@@ -1116,6 +1117,7 @@ window.addEventListener('popstate', async event => {
             ? window.careConfirm('Do you want to exit COREBIQ Care?', { title: 'Exit application?' })
             : Promise.resolve(window.confirm('Do you want to exit COREBIQ Care?')));
         if (confirmed) {
+            careExiting = true;
             careRestoringHistory = true;
             history.back();
             // A normal browser tab cannot always be closed by a website.
