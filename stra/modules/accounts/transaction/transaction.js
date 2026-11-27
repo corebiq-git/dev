@@ -68,6 +68,84 @@ import { db } from "../../../js/firebase-config.js";
         document.getElementById("txnDate").value = today;
         document.getElementById("filterTxnDateFrom").value = today;
         document.getElementById("filterTxnDateTo").value = today;
+function txnTodayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+let selectedTransactionDate=today;
+function transactionDateFromKey(key){return new Date(key+'T12:00:00');}
+function renderTransactionWeek(){
+  const selectedDate=transactionDateFromKey(selectedTransactionDate);
+  const weekStart=new Date(selectedDate);
+  weekStart.setDate(weekStart.getDate()-((weekStart.getDay()+6)%7));
+  const weekEnd=new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate()+6);
+  const label=document.getElementById('transactionWeekLabel');
+  const days=document.getElementById('transactionWeekDays');
+  if(!label||!days)return;
+  const dateLabel=date=>`${date.getDate()} ${date.toLocaleDateString('en-IN',{month:'short'})}`;
+  const endYear=String(weekEnd.getFullYear()).slice(-2);
+  if(weekStart.getFullYear()===weekEnd.getFullYear()){
+    label.textContent=weekStart.getMonth()===weekEnd.getMonth()
+      ? `${weekStart.getDate()}–${weekEnd.getDate()} ${weekEnd.toLocaleDateString('en-IN',{month:'short'})} '${endYear}`
+      : `${dateLabel(weekStart)}–${dateLabel(weekEnd)} '${endYear}`;
+  }else{
+    label.textContent=`${dateLabel(weekStart)} '${String(weekStart.getFullYear()).slice(-2)}–${dateLabel(weekEnd)} '${endYear}`;
+  }
+  days.replaceChildren();
+  for(let index=0;index<7;index++){
+    const date=new Date(weekStart);
+    date.setDate(weekStart.getDate()+index);
+    const dateKey=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='dashboard-week-day';
+    if(dateKey===txnTodayISO())button.classList.add('dashboard-week-day-today');
+    button.setAttribute('aria-pressed',String(dateKey===selectedTransactionDate));
+    button.setAttribute('aria-label',date.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
+    const dayName=document.createElement('span');
+    dayName.className='dashboard-week-day-name';
+    dayName.textContent=date.toLocaleDateString('en-IN',{weekday:'short'});
+    const dayNumber=document.createElement('span');
+    dayNumber.className='dashboard-week-day-number';
+    dayNumber.textContent=String(date.getDate());
+    const year=document.createElement('span');
+    year.className='dashboard-week-day-year';
+    year.textContent=`'${String(date.getFullYear()).slice(-2)}`;
+    button.append(dayName,dayNumber,year);
+    button.addEventListener('click',()=>{
+      selectedTransactionDate=dateKey;
+      document.getElementById('filterTxnDateFrom').value=dateKey;
+      document.getElementById('filterTxnDateTo').value=dateKey;
+      renderTransactionWeek();
+      window.loadTransactions();
+    });
+    days.appendChild(button);
+  }
+}
+function shiftTransactionWeek(days){
+  const date=transactionDateFromKey(selectedTransactionDate);
+  date.setDate(date.getDate()+days);
+  selectedTransactionDate=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  document.getElementById('filterTxnDateFrom').value=selectedTransactionDate;
+  document.getElementById('filterTxnDateTo').value=selectedTransactionDate;
+  renderTransactionWeek();
+  window.loadTransactions();
+}
+document.getElementById('transactionPreviousWeek').addEventListener('click',()=>shiftTransactionWeek(-7));
+document.getElementById('transactionNextWeek').addEventListener('click',()=>shiftTransactionWeek(7));
+document.getElementById('transactionCurrentWeek').addEventListener('click',()=>{
+  selectedTransactionDate=txnTodayISO();
+  document.getElementById('filterTxnDateFrom').value=selectedTransactionDate;
+  document.getElementById('filterTxnDateTo').value=selectedTransactionDate;
+  renderTransactionWeek();
+  window.loadTransactions();
+});
+renderTransactionWeek();
+window.transactionDateFilterChanged=()=>{
+  const from=document.getElementById('filterTxnDateFrom').value;
+  if(from)selectedTransactionDate=from;
+  renderTransactionWeek();
+  return window.loadTransactions();
+};
+
 
         window.openTxnForm = function() {
             window.resetTxnForm();
@@ -384,6 +462,10 @@ import { db } from "../../../js/firebase-config.js";
         window.clearTxnFilters = function() {
             document.getElementById("filterTxnDateFrom").value = today;
             document.getElementById("filterTxnDateTo").value = today;
+            selectedTransactionDate=txnTodayISO();
+            document.getElementById("filterTxnDateFrom").value=selectedTransactionDate;
+            document.getElementById("filterTxnDateTo").value=selectedTransactionDate;
+            renderTransactionWeek();
             document.getElementById("filterTxnType").value = "";
             document.getElementById("filterTxnBranch").value = "";
             document.getElementById("filterTxnMode").value = "";
