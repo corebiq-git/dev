@@ -579,22 +579,33 @@ import { db } from "../../../js/firebase-config.js";
             }
         }
 
-        // Persist the selected view while keeping both monthly and daily reports available.
-        window.setAttendanceView = function(view = 'monthly') {
-            const monthly = view !== 'daily';
+        // Period selector: Today's log is the first view; monthly matrix remains available.
+        window.setAttendanceView = function(view = 'today') {
+            const period = ['today', 'week', 'month'].includes(view) ? view : 'today';
+            const isMonth = period === 'month';
             const matrix = document.getElementById('monthlyReportContainer');
             const dailyLog = document.getElementById('daily-log-container');
             if (!matrix || !dailyLog) return;
-            matrix.hidden = !monthly;
-            dailyLog.hidden = monthly;
-            document.getElementById('attMonthlyViewBtn')?.classList.toggle('active', monthly);
-            document.getElementById('attDailyViewBtn')?.classList.toggle('active', !monthly);
-            document.getElementById('attMonthlyViewBtn')?.setAttribute('aria-pressed', String(monthly));
-            document.getElementById('attDailyViewBtn')?.setAttribute('aria-pressed', String(!monthly));
+            matrix.hidden = !isMonth;
+            dailyLog.hidden = isMonth;
+            const choices = {today:'attTodayViewBtn',week:'attWeekViewBtn',month:'attMonthViewBtn'};
+            Object.entries(choices).forEach(([key,id]) => {
+                const button = document.getElementById(id);
+                button?.classList.toggle('active',key===period);
+                button?.setAttribute('aria-pressed',String(key===period));
+            });
             const hint = document.getElementById('attendanceViewHint');
-            if (hint) hint.textContent = monthly ? 'Full month attendance overview' : 'Daily attendance records for this month';
+            if (hint) hint.textContent = {
+                today:"Today's attendance records",
+                week:"Monday to Sunday attendance records",
+                month:"Full month attendance matrix"
+            }[period];
+            const filter = document.getElementById('filterAttPeriod');
+            if(filter) filter.value = period === 'week' ? 'this-week' : period === 'today' ? 'today' : 'this-month';
+            if (!isMonth) window.loadAttendanceLog?.();
+            else window.generateMonthlyReport?.();
         };
-        window.setAttendanceView('monthly');
+        window.setAttendanceView('today');
 
         // --- 3. MONTHLY REPORT LOGIC (DEFAULT ON LOAD) ---
         window.initializeMonthlyMatrix = function() {
@@ -739,7 +750,17 @@ import { db } from "../../../js/firebase-config.js";
                 const monthValue = period === 'selected-month'
                     ? document.getElementById("filterAttMonth").value
                     : todayString.slice(0, 7);
-                const attList = monthValue ? await getAttendanceMonth(monthValue) : [];
+                const firstOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                firstOfWeek.setDate(firstOfWeek.getDate() - ((firstOfWeek.getDay() + 6) % 7));
+                const lastOfWeek = new Date(firstOfWeek);
+                lastOfWeek.setDate(firstOfWeek.getDate() + 6);
+                const weekMonths = [...new Set([
+                    window.getLocalDateString(firstOfWeek).slice(0,7),
+                    window.getLocalDateString(lastOfWeek).slice(0,7)
+                ])];
+                const attList = period === 'this-week'
+                    ? (await Promise.all(weekMonths.map(getAttendanceMonth))).flat()
+                    : monthValue ? await getAttendanceMonth(monthValue) : [];
                 if (requestVersion !== attendanceLogLoadVersion) return;
                 tableBody.innerHTML = ''; 
                 window.attDataCache = {};
@@ -823,6 +844,14 @@ import { db } from "../../../js/firebase-config.js";
                 let show = true;
                 const normalizedDate = normalizeDateKey(rowDate);
                 if (period === 'today' && normalizedDate !== dateQuery) show = false;
+                if (period === 'this-week') {
+                    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
+                    const start = window.getLocalDateString(date);
+                    date.setDate(date.getDate() + 6);
+                    const end = window.getLocalDateString(date);
+                    if (!normalizedDate || normalizedDate < start || normalizedDate > end) show = false;
+                }
                 if (period === 'this-month' && !normalizedDate.startsWith(todayString.slice(0, 7))) show = false;
                 if (period === 'selected-month' && (!monthQuery || !normalizedDate.startsWith(monthQuery))) show = false;
                 if (branchQuery && rowBranch !== branchQuery) show = false;
@@ -856,11 +885,15 @@ import { db } from "../../../js/firebase-config.js";
         window.handleAttPeriodChange = function() {
             const period = document.getElementById("filterAttPeriod").value;
             document.getElementById("filterAttMonth").style.display = period === 'selected-month' ? '' : 'none';
+            if (period === 'today' || period === 'this-week' || period === 'this-month') {
+                window.setAttendanceView(period === 'this-week' ? 'week' : period === 'this-month' ? 'month' : 'today');
+                return;
+            }
             window.loadAttendanceLog();
         }
 
         window.clearAttFilters = function() {
-            document.getElementById("filterAttPeriod").value = "this-month";
+            document.getElementById("filterAttPeriod").value = "today";
             document.getElementById("filterAttMonth").value = todayString.slice(0, 7);
             document.getElementById("filterAttMonth").style.display = "none";
             if (isAdmin) document.getElementById("filterAttBranch").value = "";
