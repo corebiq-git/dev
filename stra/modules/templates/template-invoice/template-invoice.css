@@ -1144,3 +1144,43 @@ input.clean-input:focus {
         color: #fff !important;
     }
 }
+
+
+/* Premium paper-first invoice: white sections, fine neutral rules, no coloured panels. */
+#invoice-container .invoice-letterhead {
+ background:#fff; border:0; border-radius:0; box-shadow:none;
+ padding-inline:0;
+}
+#invoice-container .invoice-header-accent {background:#254F79;height:1px;flex-basis:1px;}
+#invoice-container .patient-report-title {
+ color:#173C63;font-weight:700;letter-spacing:-.025em;font-size:18pt;
+ margin-bottom:12px;padding-bottom:8px;
+}
+#invoice-container .patient-report-title::after {content:none;}
+#invoice-container .patient-report-section,
+#invoice-container #invoice-meta,
+#invoice-container .invoice-panel > section.w-full.max-w-sm,
+#invoice-container #bank-details-container {
+ background:#fff; border:1px solid #DDE2E7; border-radius:4px;box-shadow:none;
+}
+#invoice-container #appointment-details > div {background:#fff;border:1px solid #DDE2E7;border-radius:3px;box-shadow:none;}
+#invoice-container #invoice-table {border:1px solid #DDE2E7;border-radius:3px;}
+#invoice-container #invoice-table thead {background:#fff !important;color:#254F79 !important;}
+#invoice-container #invoice-table thead th {background:#fff !important;color:#254F79 !important;border-bottom:1px solid #DDE2E7;}
+#invoice-container #invoice-table tbody tr:nth-child(even),
+#invoice-container #invoice-table tbody tr {background:#fff;}
+#invoice-container #invoice-table tbody td {border-bottom:1px solid #E5E8EC;}
+#invoice-container .invoice-panel > section.w-full.max-w-sm > .h-px {background:#DDE2E7;}
+#invoice-container .fee-summary-title {color:#254F79;}
+#invoice-container #total-amount {color:#173C63 !important;}
+#invoice-container #upi-qr-container {box-shadow:none;border:1px solid #E1E5E9;}
+#invoice-container .invoice-branch-footer::before {background:#254F79;height:1px;}
+#invoice-container::before {opacity:.012;}
+@media screen and (max-width:640px) {
+ #invoice-container:not(.pdf-export-mode) .invoice-letterhead {border-radius:0;padding-inline:0;}
+ #invoice-container:not(.pdf-export-mode) .patient-report-title {font-size:15pt;}
+}
+@media print {
+ #invoice-container .invoice-letterhead {padding-inline:0 !important;}
+ #invoice-container .invoice-header-accent {height:1px !important;}
+}
