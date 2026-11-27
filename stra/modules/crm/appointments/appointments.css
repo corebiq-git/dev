@@ -477,3 +477,12 @@
   #appointment-module .appointment-mobile-list {display:none!important;}
   #appointment-module #therapistWiseReportContent {display:block!important;}
 }
+
+/* Viewport-bounded action popup: top-layer on modern Android Chrome/PWA. */
+#appointment-module #appointmentActionsPopup {position:fixed!important;inset:auto;margin:0;box-sizing:border-box;min-width:0;max-width:calc(100vw - 24px);padding:7px;border-radius:12px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;z-index:15000;background:#fff;color:#334155;box-shadow:0 12px 32px rgba(15,23,42,.18);}
+#appointment-module #appointmentActionsPopup[popover]:not(:popover-open){display:none!important;}
+#appointment-module #appointmentActionsPopup:popover-open{display:block!important;}
+#appointment-module #appointmentActionsPopup .drop-item{min-height:40px;white-space:normal;line-height:1.35;flex-wrap:nowrap;text-align:left;}
+#appointment-module #appointmentActionsPopup .drop-item svg,#appointment-module #appointmentActionsPopup .drop-item .material-symbols-rounded{flex:0 0 18px;}
+#appointment-module #appointmentActionsPopup .bulk-date-menu{flex-wrap:wrap;}
+@media screen and (max-width:700px){#appointment-module .therapist-report{padding:10px 0;border:0;border-radius:0;box-shadow:none;background:transparent;}#appointment-module .therapist-report-header{padding:0 6px;}#appointment-module .apt-mobile-group{border:0;border-radius:0;box-shadow:none;margin:0 0 8px;}#appointment-module .apt-mobile-row{border-bottom:1px solid #e2e8f0;border-top:0;padding:10px 8px;gap:4px;}#appointment-module .apt-mobile-row-actions{padding:0;border-top:0;}#appointment-module .apt-mobile-row-details .apt-mobile-detail{font-size:12px;}#appointment-module .apt-mobile-detail svg{width:16px;height:16px;flex:0 0 16px;}#appointment-module .apt-mobile-patient .apt-mobile-detail{font-size:14px;font-weight:700;color:#172b42;}}

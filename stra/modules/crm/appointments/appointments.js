@@ -132,9 +132,60 @@ const attendanceDayInitial=dateStr=>{
   if(date.getFullYear()!==Number(year)||date.getMonth()!==Number(month)-1||date.getDate()!==Number(day))return'';
   return['S','M','T','W','T','F','S'][date.getDay()];
 };
-function closeTools(){document.querySelectorAll('.tool.open').forEach(x=>x.classList.remove('open'))}
-window.toggleTool=id=>{const e=document.getElementById(id);if(!e)return;const was=e.classList.contains('open');closeTools();if(!was)e.classList.add('open')};
-document.addEventListener('click',e=>{if(!e.target.closest('.tool'))closeTools()});
+const appointmentTool = document.getElementById('moreTool');
+const appointmentPopup = document.getElementById('appointmentActionsPopup');
+const appointmentTrigger = appointmentTool.querySelector('.more-actions-btn');
+const nativePopup = typeof appointmentPopup.showPopover === 'function';
+if (nativePopup) appointmentPopup.setAttribute('popover','auto');
+function syncAppointmentMenu(open) {
+  appointmentTool.classList.toggle('open',open);
+  appointmentTrigger.setAttribute('aria-expanded',String(open));
+  if(!open) document.getElementById('bulkDateArea').style.display='none';
+}
+function closeTools() {
+  if(nativePopup && appointmentPopup.matches(':popover-open')) appointmentPopup.hidePopover();
+  syncAppointmentMenu(false);
+}
+window.closeAppointmentActions = closeTools;
+function positionAppointmentMenu() {
+  const rect=appointmentTrigger.getBoundingClientRect(), vv=window.visualViewport;
+  const left=vv?.offsetLeft||0, top=vv?.offsetTop||0, width=vv?.width||innerWidth, height=vv?.height||innerHeight;
+  const footer=document.querySelector('#bottomnav-container .bottom-nav');
+  const footerRect=footer?.getBoundingClientRect();
+  const header=document.querySelector('.dashboard-header')?.getBoundingClientRect();
+  const minTop=Math.max(top+8,header?.bottom||0)+4;
+  const maxBottom=Math.min(top+height-8,footerRect?.height?footerRect.top-8:top+height-8);
+  const menuWidth=Math.min(290,width-24), gap=6;
+  const roomBelow=maxBottom-rect.bottom-gap,roomAbove=rect.top-minTop-gap;
+  const useBelow=roomBelow>=Math.min(320,appointmentPopup.scrollHeight)||roomBelow>=roomAbove;
+  const available=Math.max(120,useBelow?roomBelow:roomAbove);
+  const menuHeight=Math.min(appointmentPopup.scrollHeight,available,480,Math.max(120,maxBottom-minTop));
+  Object.assign(appointmentPopup.style,{
+    width:menuWidth+'px',maxHeight:menuHeight+'px',
+    left:Math.max(left+12,Math.min(rect.right-menuWidth,left+width-menuWidth-12))+'px',
+    top:Math.max(minTop,Math.min(useBelow?rect.bottom+gap:rect.top-gap-menuHeight,maxBottom-menuHeight))+'px',
+    right:'auto',bottom:'auto',margin:'0'
+  });
+}
+window.toggleAppointmentActions=()=>{
+  if(appointmentTool.classList.contains('open')){closeTools();return;}
+  syncAppointmentMenu(true);
+  if(nativePopup) appointmentPopup.showPopover();
+  appointmentPopup.scrollTop=0;
+  positionAppointmentMenu();
+};
+appointmentPopup.addEventListener('toggle',()=>{
+  if(nativePopup&&!appointmentPopup.matches(':popover-open'))syncAppointmentMenu(false);
+});
+appointmentPopup.addEventListener('click',event=>{
+  const button=event.target.closest('button');
+  if(button&&!button.hasAttribute('data-keep-open'))closeTools();
+});
+document.addEventListener('click',event=>{if(!appointmentTool.contains(event.target))closeTools();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&appointmentTool.classList.contains('open')){closeTools();appointmentTrigger.focus();}});
+document.addEventListener('scroll',event=>{if(appointmentTool.classList.contains('open')&&!appointmentPopup.contains(event.target))closeTools();},true);
+window.addEventListener('resize',closeTools);
+window.visualViewport?.addEventListener('resize',closeTools);
 window.closeModal=id=>document.getElementById(id)?.classList.remove('show');
 
 onAuthStateChanged(auth,user=>{
@@ -702,6 +753,7 @@ function renderAppointments(){
   const appointments = filteredAppointments();
   renderTherapistWiseReport(appointments);
   renderMobileAppointmentList(appointments);
+  window.applyLucideIcons?.(document.getElementById('appointmentMobileList'));
   updateSelectionBar();
 }
 window.filterTable=renderAppointments;
@@ -721,10 +773,10 @@ window.showPendingDues=async()=>{
 };
 window.setSort=m=>{sortMode=m;const select=document.getElementById('aptSortSelect');if(select)select.value=m;renderAppointments();closeTools()};
 window.updateSelectionBar=()=>{
-  const ids=[...document.querySelectorAll('.apt-checkbox:checked')].map(x=>x.value);document.getElementById('selectedCount').textContent=new Set(ids).size;document.getElementById('bulkBar').classList.toggle('show',ids.length>0);
+  const ids=selectedIds();document.getElementById('selectedCount').textContent=ids.length;document.getElementById('bulkBar').classList.toggle('show',ids.length>0);
 };
 window.clearSelection=()=>{document.querySelectorAll('.apt-checkbox').forEach(x=>x.checked=false);window.updateSelectionBar()};
-function selectedIds(){return [...new Set([...document.querySelectorAll('.apt-checkbox:checked')].map(x=>x.value))]}
+function selectedIds(){const root=matchMedia('(max-width:700px)').matches?document.getElementById('appointmentMobileList'):document.getElementById('therapistWiseReportContent');return [...new Set([...root.querySelectorAll('.apt-checkbox:checked')].map(x=>x.value))]}
 window.editSelectedAppointment=()=>{
   const ids=selectedIds();closeTools();
   if(ids.length!==1)return alert('Please select exactly one appointment to edit.');
@@ -1000,9 +1052,10 @@ window.executeBulkDelete=async()=>{
   const ids=selectedIds();if(!ids.length)return alert('Please select appointments to delete.');for(const id of ids){const d=window.appointmentsDataCache[id];if(d&&d.status!=='Pending'&&d.status!=='Cancelled')return alert('You can only bulk delete Pending or Cancelled appointments.')}
   showConfirm('Delete Appointments',`Permanently delete ${ids.length} selected appointment${ids.length>1?'s':''}?`,'Delete',async()=>{try{for(const id of ids)await deleteDoc(doc(db,'appointments',id));alert('Selected appointments deleted.');invalidateAppointmentsRequestCache();await window.setFilterToday()}catch(e){console.error(e);alert('Error deleting appointments.')}})
 };
-window.showBulkDate=()=>{if(!selectedIds().length)return alert('Please select appointments first.');document.getElementById('bulkDateArea').style.display='inline-flex'};
+window.showBulkDate=()=>{if(!selectedIds().length){closeTools();return alert('Please select appointments first.')}const area=document.getElementById('bulkDateArea');area.style.display='flex';positionAppointmentMenu();area.scrollIntoView({block:'nearest'});};
 window.confirmBulkCopy=async()=>{
   const nd=document.getElementById('bulkDateInput').value,ids=selectedIds();if(!nd)return alert('Please select a date.');
+  closeTools();
   if(!ids.length)return alert('Please select appointments first.');
   showConfirm('Copy Selected Appointments',`Create ${ids.length} new Pending appointment${ids.length>1?'s':''} on ${window.formatIndianDate(nd)}? The original records will remain unchanged.`,'Copy',async()=>{
     const failures=[];let copied=0;

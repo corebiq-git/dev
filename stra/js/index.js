@@ -1152,6 +1152,7 @@ function ensureCareHistory() {
     history.pushState({ corebiqCareView: home, corebiqGuard: true }, '', location.href);
 }
 window.addEventListener('popstate', async event => {
+    window.closeAppointmentActions?.();
     if (!careHistoryInitialized || !window.currentUser || careExiting) return;
     const home = careHomeView();
     const target = event.state?.corebiqCareView || home;
@@ -1182,6 +1183,7 @@ window.addEventListener('popstate', async event => {
 });
 
 window.switchView = async function(targetId, navElement) {
+    window.closeAppointmentActions?.();
     window.closeTopNavMenus();
     const role = window.currentUser?.role;
     if (role === 'developer' && !developerViews.has(targetId)) {

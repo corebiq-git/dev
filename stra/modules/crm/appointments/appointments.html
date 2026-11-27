@@ -51,25 +51,25 @@
     <span class="material-symbols-rounded">sort</span>
   </label>
   <div class="tool" id="moreTool">
-    <button class="icon-btn more-actions-btn" title="More Actions" aria-label="More Actions" onclick="window.toggleTool('moreTool')"><span class="material-symbols-rounded">more_vert</span></button>
-    <div class="dropdown">
+    <button type="button" class="icon-btn more-actions-btn" title="More Actions" aria-label="More Actions" aria-expanded="false" aria-controls="appointmentActionsPopup" onclick="window.toggleAppointmentActions()"><span class="material-symbols-rounded">more_vert</span></button>
+    <div class="dropdown" id="appointmentActionsPopup" aria-label="Appointment actions">
       <div class="drop-title">View &amp; Actions</div>
       <button class="drop-item" onclick="window.showFilters()"><span class="material-symbols-rounded">tune</span>More Filters</button>
       <button class="drop-item" onclick="window.setFilterToday()"><span class="material-symbols-rounded">today</span>Today</button>
-      <button class="drop-item" onclick="window.clearFilters();window.toggleTool('moreTool')"><span class="material-symbols-rounded">close</span>Clear All</button>
+      <button class="drop-item" onclick="window.clearFilters()"><span class="material-symbols-rounded">close</span>Clear All</button>
       <button class="drop-item" onclick="document.getElementById('aptCsvInput').click()"><span class="material-symbols-rounded">upload</span>Import CSV</button>
       <button class="drop-item" onclick="window.downloadAppointmentSampleCSV()"><span class="material-symbols-rounded">download</span>Sample Format CSV</button>
       <button class="drop-item" onclick="window.exportAppointmentsCSV()"><span class="material-symbols-rounded">file_download</span>Export CSV</button>
       <div class="drop-title">Selected Appointments</div>
       <button class="drop-item" onclick="window.editSelectedAppointment()"><span class="material-symbols-rounded">edit</span>Edit Selected Appointment</button>
       <button class="drop-item" onclick="window.openSelectedNew()"><span class="material-symbols-rounded">content_copy</span>New from Selected</button>
-      <button class="drop-item" onclick="window.executeBulkCopy()"><span class="material-symbols-rounded">content_copy</span>Copy Selected to Date</button>
+      <button class="drop-item" data-keep-open onclick="window.executeBulkCopy()"><span class="material-symbols-rounded">content_copy</span>Copy Selected to Date</button>
       <button class="drop-item" onclick="window.executeBulkDelete()"><span class="material-symbols-rounded">delete</span>Bulk Delete</button>
       <div id="bulkDateArea" class="bulk-date-menu">
         <input type="date" id="bulkDateInput" class="form-input" aria-label="New date for copied appointments">
-        <button class="btn small primary" onclick="window.confirmBulkCopy()">Copy Appointment</button>
+        <button class="btn small primary" data-keep-open onclick="window.confirmBulkCopy()">Copy Appointment</button>
       </div>
-      <button class="drop-item" onclick="window.clearSelection();window.toggleTool('moreTool')"><span class="material-symbols-rounded">deselect</span>Clear Selection</button>
+      <button class="drop-item" onclick="window.clearSelection()"><span class="material-symbols-rounded">deselect</span>Clear Selection</button>
       <div class="drop-title">Other</div>
       <button class="drop-item" onclick="window.exportAptPDF()"><span class="material-symbols-rounded">picture_as_pdf</span>Print / PDF</button>
     </div>

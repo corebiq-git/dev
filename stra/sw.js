@@ -1,5 +1,5 @@
 // COREBIQ STRACARE offline shell - network-first for live application code.
-const CACHE = "corebiq-v57";
+const CACHE = "corebiq-v58";
 const CORE = [
     "./", "./index.html", "./login.html",
     "./components/splash-screen.html", "./components/header.html", "./js/index.js", "./manifest.webmanifest",
@@ -21,6 +21,7 @@ const CORE = [
     "./components/form-view.css", "./js/firebase-config.js",
     "./js/corebiq-locale.js", "./js/app-metadata.js",
     "./js/patient-search.mjs",
+    "./modules/crm/appointments/appointments.html", "./modules/crm/appointments/appointments.css", "./modules/crm/appointments/appointments.js",
     "./modules/templates/template-invoice/template-invoice.html",
     "./modules/templates/template-invoice/template-invoice.css",
     "./modules/templates/template-invoice/template-invoice.js",
