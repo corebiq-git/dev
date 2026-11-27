@@ -830,27 +830,18 @@ window.loadComponent = async function(elementId, filename) {
 window.COREBIQ_APP_VERSION = 'v1.2';
 window.COREBIQ_UPDATES_READ_KEY = 'corebiq-updates-viewed-version';
 window.updateNotificationBell = function() {
-    const button = document.getElementById('notification-button');
-    const badge = document.getElementById('notif-badge');
-    if (!button || !badge) return;
-
-    let isUnread = true;
-    try {
-        isUnread = localStorage.getItem(window.COREBIQ_UPDATES_READ_KEY) !== window.COREBIQ_APP_VERSION;
-    } catch (error) {
-        console.error('Could not read app update notification state:', error);
-    }
-
-    button.classList.toggle('has-unread', isUnread);
-    button.setAttribute('aria-label', isUnread ? 'App updates: new update' : 'App updates');
-    button.title = isUnread ? 'New app update' : 'App updates';
-    badge.hidden = !isUnread;
+ const button=document.getElementById('notification-button'), badge=document.getElementById('notif-badge');
+ if(!button||!badge)return;
+ const count=Number(window.careActivityCount)||0;
+ badge.textContent=String(count);badge.hidden=!count;
+ button.classList.toggle('has-unread',count>0);
+ button.setAttribute('aria-label',count+' daily activity records');button.title='Daily activity';
 };
-
-window.openAppUpdates = function() {
-    window.switchView(window.currentUser?.role === 'developer' ? 'view-developer' : 'view-updates', null);
+window.openAppUpdates = async function(){
+ if(window.currentUser?.role==='developer')return window.switchView('view-developer',null);
+ await window.switchView('view-dashboard',null);
+ document.getElementById('dashboardActivityList')?.scrollIntoView({behavior:'smooth',block:'center'});
 };
-
 window.addEventListener('storage', event => {
     if (event.key === window.COREBIQ_UPDATES_READ_KEY) {
         window.updateNotificationBell();
