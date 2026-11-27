@@ -45,10 +45,10 @@
             <input type="search" id="txnSearchInput" oninput="window.filterTxnTable()" placeholder="Search name, mobile, ID, reference…">
         </label>
         <label class="txn-toolbar-control txn-date-control" aria-label="From date">
-            <input type="date" id="filterTxnDateFrom" onchange="window.loadTransactions()" title="From Date">
+            <input type="date" id="filterTxnDateFrom" onchange="window.transactionDateFilterChanged()" title="From Date">
         </label>
         <label class="txn-toolbar-control txn-date-control" aria-label="To date">
-            <input type="date" id="filterTxnDateTo" onchange="window.loadTransactions()" title="To Date">
+            <input type="date" id="filterTxnDateTo" onchange="window.transactionDateFilterChanged()" title="To Date">
         </label>
         <label class="txn-toolbar-control" aria-label="Filter by voucher type">
             <select id="filterTxnType" onchange="window.filterTxnTable()" title="Filter by voucher type">
