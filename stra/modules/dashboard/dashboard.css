@@ -838,3 +838,30 @@
 .dashboard-module .dashboard-chart-legend-item{display:flex!important;flex-wrap:wrap;justify-content:center;align-items:center;gap:3px;font-size:10px;min-width:0}
 .dashboard-module .dashboard-chart-legend-item strong{margin:0!important;font-size:12px}
 }
+
+/* Compact mobile dashboard: scoped to content below Quick Tools. */
+@media(max-width:768px){
+#view-dashboard .dashboard-calendar-kpi-row > .dashboard-count-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+#view-dashboard .dashboard-mini-kpi{height:auto!important;min-height:0!important;min-width:0;padding:10px!important;border:1px solid #e2e8ec;border-radius:12px;box-shadow:none;overflow:hidden}
+#view-dashboard .dashboard-mini-kpi:not(.finance){aspect-ratio:1;display:flex!important;flex-direction:column;justify-content:space-between}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-heading{justify-content:flex-start;gap:5px}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-heading-title{font-size:clamp(11px,3.2vw,14px);line-height:1.2}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-date-label{font-size:10px}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-icon{width:22px;height:22px;flex-basis:22px}
+#view-dashboard .dashboard-mini-kpi:not(.finance) .dashboard-count-total{background:none!important;padding:0!important;font-size:30px;line-height:1.1;margin:0;align-self:center}
+#view-dashboard .dashboard-mini-kpi:not(.finance) .dashboard-count-caption{display:none!important}
+#view-dashboard .dashboard-mini-kpi :is(.dashboard-chart-legend,.dashboard-appointment-legend){display:flex!important;justify-content:space-around;gap:2px;padding:6px 0 0;margin:0;width:100%;border-top:1px solid #e5e7eb}
+#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item{display:flex!important;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:0;font-size:clamp(8px,2.5vw,11px);white-space:nowrap}
+#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item strong{font-size:15px}
+#view-dashboard .dashboard-mini-kpi.finance{grid-column:1/-1;display:grid!important;grid-template-columns:minmax(0,1fr);gap:8px;aspect-ratio:auto}
+#view-dashboard .finance .dashboard-count-total{position:static!important;text-align:left;font-size:26px;overflow-wrap:anywhere}
+#view-dashboard .finance .dashboard-fee-rows{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+#view-dashboard .finance .dashboard-fee-row{min-width:0;display:block}
+#view-dashboard .finance .dashboard-fee-row-copy{min-width:0;width:100%}
+#view-dashboard .finance .dashboard-fee-row strong{display:block;font-size:14px;overflow-wrap:anywhere}
+#view-dashboard .finance .dashboard-fee-row-chart{display:none}
+#view-dashboard .dashboard-activity{margin-top:12px;padding:12px;box-shadow:none}
+#view-dashboard .dashboard-activity-bar{border-radius:0;box-shadow:none;min-height:48px;padding:8px 0;gap:9px}
+#view-dashboard .dashboard-activity-bar strong{font-size:13px}
+#view-dashboard .dashboard-activity-bar small{font-size:11px}
+}
