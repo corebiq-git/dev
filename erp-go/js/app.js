@@ -2681,7 +2681,7 @@
         document.getElementById('login-name').addEventListener('change',loginEmail);
         document.getElementById('login-form').addEventListener('submit',signIn);
         document.getElementById('erp-signout').addEventListener('click',signOut);
-        setTimeout(showLogin,1000);
+        setTimeout(function(){showLogin();document.querySelector('#login-form button').disabled=false;},600);
       }
       // Boot App
       loadDB();
