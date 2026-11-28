@@ -20,7 +20,7 @@
 
         const invoiceSealSelections = { left: '', right: '' };
         const invoiceSignatureSelections = { left: '', right: '' };
-        const invoiceSignatureAssets = {signature:{src:'../../../assets/sign.png',label:'Authorised signature'},thejaswi:{src:'../../../assets/sign-thejaswi.png',label:'Thejaswi signature'},shyn:{src:'../../../assets/sign-shyn.png',label:'Shyn signature'}};
+        const invoiceSignatureAssets = {thejaswi:{src:'../../../assets/sign-thejaswi.png',label:'Thejaswi signature'},shyn:{src:'../../../assets/sign-shyn.png',label:'Shyn signature'}};
         const invoiceSealTypes = new Set(['company', 'doctor', 'payment']);
         const invoiceSealProfile = {
             companyName: 'Company name not set',
