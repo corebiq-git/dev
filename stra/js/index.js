@@ -836,10 +836,11 @@ window.updateNotificationBell = function() {
  const button=document.getElementById('notification-button'), badge=document.getElementById('notif-badge');
  if(!button||!badge)return;
  const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
- const count=window.careActivityDate===today ? (Number(window.careActivityCount)||0) : 0;
+ const selected=window.selectedDashboardDate || today;
+ const count=window.careActivityDate===selected ? (Number(window.careActivityCount)||0) : 0;
  badge.textContent=String(count);badge.hidden=!count;
  button.classList.toggle('has-unread',count>0);
- button.setAttribute('aria-label',count+' daily activity records');button.title='Daily activity';
+ button.setAttribute('aria-label',count+' activity records for '+selected);button.title='Activity · '+selected.split('-').reverse().join('-');
 };
 setInterval(()=>window.updateNotificationBell(),60000);
 window.openAppUpdates = async function(){
