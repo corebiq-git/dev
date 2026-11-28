@@ -998,7 +998,7 @@ window.fetchDashboardData = async function() {
         
         for (const id of ['dashboardAttendancePresent','dashboardAttendanceAbsent','dashboardAttendanceHalfDay','dashboardAttendanceTotal','dashboardAppointmentTotal','dashboardAppointmentPending','dashboardAppointmentCompleted','dashboardAppointmentDonutTotal','dashboardFeeReceived','dashboardFeeDue']) { const el=document.getElementById(id); if(el)el.textContent='—'; }
         document.getElementById('dashboardActivityDate').textContent=selectedLabel;
-        document.getElementById('dashboardActivityList').textContent='Loading selected date…';
+        document.getElementById('dashboardActivityList').textContent='Loading selected date…';const activityCount=document.getElementById('dashboardActivityCount');if(activityCount)activityCount.textContent='';
         window.careActivityDate=selectedDate;window.careActivityCount=0;window.updateNotificationBell?.();
         const [appointmentsSnapshot, attendanceSnapshot, transactionsSnapshot] = await request;
         if (requestSequence !== dashboardRequestSequence) return;
@@ -1116,16 +1116,22 @@ window.fetchDashboardData = async function() {
         const list=document.getElementById('dashboardActivityList');
         document.getElementById('dashboardActivityDate').textContent=selectedDate.split('-').reverse().join('-');
         list.replaceChildren();
-        for(const item of activity.slice(0,10)){
+        const countEl=document.getElementById('dashboardActivityCount');if(countEl)countEl.textContent=activity.length+' records';
+        let visible=5;
+        const renderActivity=()=>{
+        list.replaceChildren();
+        for(const item of activity.slice(0,visible)){
             const row=document.createElement('button');row.type='button';row.className='dashboard-activity-bar';
-            const icon=document.createElement('i');icon.setAttribute('data-lucide',item.icon);
+            const icon=document.createElement('span');icon.className='activity-icon';const glyph=document.createElementNS('http://www.w3.org/2000/svg','svg');glyph.setAttribute('viewBox','0 0 24 24');glyph.setAttribute('fill','none');glyph.setAttribute('stroke','currentColor');glyph.setAttribute('stroke-width','1.7');glyph.setAttribute('stroke-linecap','round');glyph.setAttribute('stroke-linejoin','round');glyph.setAttribute('aria-hidden','true');const shape=document.createElementNS(glyph.namespaceURI,'path');shape.setAttribute('d',item.icon==='wallet'?'M4 6h15a2 2 0 0 1 2 2v12H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13 M21 11h-6v5h6':item.icon==='user-check'?'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M16 11l2 2 4-4':'M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2 M8 15l3 3 5-5');glyph.append(shape);icon.append(glyph);row.dataset.kind=item.icon;
             const copy=document.createElement('span');const title=document.createElement('strong');title.textContent=item.title;
             const meta=document.createElement('small');meta.textContent=[item.branch,millis(item.time)?new Date(millis(item.time)).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):''].filter(Boolean).join(' · ');
-            copy.append(title,meta);row.append(icon,copy);row.onclick=()=>window.switchView(item.target,null);list.append(row);
+            copy.append(title,meta);const arrow=document.createElement('span');arrow.className='activity-chevron';arrow.setAttribute('aria-hidden','true');arrow.textContent='›';row.append(icon,copy,arrow);row.onclick=()=>window.switchView(item.target,null);list.append(row);
         }
         if(!activity.length)list.textContent='No activity for the selected date.';
         if(!transactionsSnapshot){const note=document.createElement('p');note.textContent='Transaction activity unavailable.';list.append(note);}
-        window.applyLucideIcons?.(list);
+        if(activity.length>5){const more=document.createElement('button');more.type='button';more.className='activity-more';more.textContent=visible===5?'Show more activity':'Show less';more.onclick=()=>{visible=visible===5?activity.length:5;renderActivity();};list.append(more);}
+        };
+        renderActivity();
         window.careActivityDate=selectedDate;window.careActivityCount=activity.length;window.updateNotificationBell?.();
     } catch (error) {
         if (requestSequence !== dashboardRequestSequence) return;
