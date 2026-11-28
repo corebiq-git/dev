@@ -1081,9 +1081,7 @@ window.fetchDashboardData = async function() {
         const billableAppointments = appointments.filter(item =>
             String(item.status || '').toLowerCase() !== 'cancelled'
         );
-        const totalFee = billableAppointments.reduce((sum, item) =>
-            sum + (Number(item.fee ?? item.totalFee) || 0), 0
-        );
+
         const totalReceived = billableAppointments.reduce((sum, item) =>
             sum + (Number(item.advance) || 0), 0
         );
@@ -1096,7 +1094,6 @@ window.fetchDashboardData = async function() {
         const formatDashboardMoney = amount => window.formatCorebiqCurrency
             ? window.formatCorebiqCurrency(amount)
             : `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        document.getElementById('dashboardFeeTotal').textContent = formatDashboardMoney(totalFee);
         document.getElementById('dashboardFeeReceived').textContent = formatDashboardMoney(totalReceived);
         document.getElementById('dashboardFeeDue').textContent = formatDashboardMoney(totalDue);
         const feeChartMax = Math.max(totalReceived, totalDue, 0);
@@ -1125,7 +1122,7 @@ window.fetchDashboardData = async function() {
         if(!activity.length)list.textContent='No activity for the selected date.';
         if(!transactionsSnapshot){const note=document.createElement('p');note.textContent='Transaction activity unavailable.';list.append(note);}
         window.applyLucideIcons?.(list);
-        if(selectedDate===window.getLocalDateString()){window.careActivityCount=activity.length;window.updateNotificationBell?.();}
+        if(selectedDate===window.getLocalDateString()){window.careActivityDate=selectedDate;window.careActivityCount=activity.length;window.updateNotificationBell?.();}
     } catch (error) {
         if (requestSequence !== dashboardRequestSequence) return;
         console.error('Dashboard Load Error:', error);
