@@ -9,11 +9,11 @@ import {
 
 export const DOCUMENT_ID_CONFIG = Object.freeze([
     { collection: 'appointments', prefix: 'APT' },
-    { collection: 'branches', prefix: 'BRA' },
+    { collection: 'branches', prefix: 'BRN' },
     { collection: 'daily_attendance', prefix: 'ATT' },
-    { collection: 'ledgers', prefix: 'LD/COREBIQ', separator: '/', minDigits: 3, sourceField: 'ledgerNo' },
+    { collection: 'ledgers', prefix: 'LDR', sourceField: 'ledgerNo' },
     { collection: 'patients', prefix: 'PAT' },
-    { collection: 'staff', prefix: 'STA' },
+    { collection: 'staff', prefix: 'STF' },
     { collection: 'therapists', prefix: 'THE' },
     { collection: 'transactions', prefix: 'TRA' }
 ]);
@@ -43,7 +43,8 @@ async function initializeCounter(db, collectionName, prefix) {
     const existingDocuments = await getDocs(collection(db, collectionName));
     const lastIssued = existingDocuments.docs.reduce((highest, snapshot) => {
         const source = sourceField ? snapshot.data()[sourceField] : snapshot.id;
-        const number = parseDocumentId(source, prefix, separator, minDigits);
+        const legacy = {branches:['BRA','-',4],staff:['STA','-',4],ledgers:['LD/COREBIQ','/',3]}[collectionName];
+        const number = parseDocumentId(source, prefix, separator, minDigits) ?? (legacy ? parseDocumentId(source, ...legacy) : null);
         return number === null ? highest : Math.max(highest, number);
     }, 0);
 
@@ -70,6 +71,7 @@ export async function initializeDocumentIdCounters(db) {
 }
 
 export async function reserveNextDocumentIds(db, collectionName, prefix, count = 1, canInitialize = false) {
+    prefix = DOCUMENT_ID_CONFIG.find(item => item.collection === collectionName)?.prefix || prefix;
     if (!Number.isInteger(count) || count < 1 || count > 500) {
         throw new Error('Document ID reservation count must be between 1 and 500.');
     }
@@ -104,6 +106,7 @@ export async function reserveNextDocumentIds(db, collectionName, prefix, count =
 }
 
 export async function getNextDocumentIdPreview(db, collectionName, prefix, canInitialize = false) {
+    prefix = DOCUMENT_ID_CONFIG.find(item => item.collection === collectionName)?.prefix || prefix;
     const counterRef = doc(db, 'id_counters', collectionName);
     if (!(await getDoc(counterRef)).exists()) {
         if (!canInitialize) {
@@ -125,6 +128,7 @@ export async function getNextDocumentIdPreview(db, collectionName, prefix, canIn
 }
 
 export async function advanceDocumentIdCounter(db, collectionName, prefix, ids, canInitialize = false) {
+    prefix = DOCUMENT_ID_CONFIG.find(item => item.collection === collectionName)?.prefix || prefix;
     const { separator, minDigits } = getDocumentIdFormat(collectionName);
     const highestImported = ids
         .map(id => parseDocumentId(id, prefix, separator, minDigits))
