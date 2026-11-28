@@ -667,15 +667,14 @@
           <div class="stack erp-dashboard">
             <section class="dash-welcome"><div><p>Business workspace</p><h1>Welcome M/s Lotus Enterprises.</h1><p>Here is your business overview.</p></div><time datetime="${TODAY_ISO}">${esc(fmtDate(TODAY_ISO))}</time></section>
             <!-- Period Filter Bar + Export Summary -->
-            <div class="card card-pad flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center gap-1 flex-wrap">
-                <span class="text-xs font-bold text-muted" style="margin-right:4px;">PERIOD:</span>
+            <div class="card dash-filter">
+              <div class="dash-period" role="group" aria-label="Reporting period">
                 ${['daily', 'monthly', 'yearly'].map(p => `
                   <button onclick="ERPG.setFilter('period','${p}')" class="btn btn-sm ${state.filters.period === p ? 'btn-primary' : 'btn-outline'}" style="text-transform:capitalize;">${p}</button>
                 `).join('')}
               </div>
-              <button onclick="ERPG.exportDashboardSummary()" class="btn btn-sm btn-charcoal">
-                ${ICONS.download} Export Summary
+              <button onclick="ERPG.exportDashboardSummary()" class="btn btn-sm btn-charcoal dash-export" aria-label="Export summary" title="Export summary">
+                ${ICONS.download}<span>Export</span>
               </button>
             </div>
 

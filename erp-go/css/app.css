@@ -924,3 +924,17 @@
 .dash-activity-copy small { color:#626965; margin-top:4px; font-size:11px; }
 @media(min-width:768px){.dash-welcome{flex-direction:row;align-items:center;justify-content:space-between;padding:26px}.erp-dashboard .kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr));}.erp-dashboard .kpi-card{padding:16px}.erp-dashboard .kpi-value{font-size:22px}}
 @media(min-width:1100px){.dash-insights{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+
+/* Persistent app header and compact single-row dashboard filters */
+html,body { overflow-x:clip; }
+.app-shell,.content-col { overflow:visible; }
+.content-col { min-width:0; }
+.top-header { display:block!important; position:sticky!important; top:0; z-index:35; flex-shrink:0; background:#fff; border-bottom:1px solid #e0e4e1; }
+.top-header-inner { min-height:58px; height:auto; }
+.dash-filter { display:flex; align-items:center; gap:6px; padding:8px; min-width:0; flex-wrap:nowrap; }
+.dash-period { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; flex:1; min-width:0; }
+.erp-dashboard .dash-filter .btn { min-width:0; min-height:40px; padding:7px 4px; font-size:12px; white-space:nowrap; justify-content:center; }
+.dash-export { flex:0 0 40px; }
+.dash-export span { display:none; }
+@media(max-width:767px){.top-header-inner{padding:0 10px;gap:6px}.header-left{flex:1}.header-right{gap:4px}.header-right .sync-pill{display:none}.header-left .corebiq-badge{display:none}.header-right #erp-signout{font-size:11px;padding:6px 8px}.header-left .brand-mark{flex-shrink:0}.header-left #header-sub{max-width:145px}}
+@media(min-width:768px){.dash-period{flex:0 1 330px}.dash-export{flex:0 0 auto;margin-left:auto}.dash-export span{display:inline}.erp-dashboard .dash-export{padding:7px 14px}}
