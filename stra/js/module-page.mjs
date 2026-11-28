@@ -9,8 +9,8 @@ const addTargets = {
     'view-bank-ledger': '.ledger-head .ledger-btn.primary',
     'view-attendance': 'button[onclick*="openAttModal"]',
     'view-my-tasks': '#task-new-button',
-    'view-staff': '#staff-form input:not([type="hidden"]):not([readonly])',
-    'view-therapist': '#therapist-form input:not([type="hidden"]):not([readonly])',
+    'view-staff': '#staff-add-popup',
+    'view-therapist': '#therapist-add-popup',
     'view-ledgers': '#lName',
     'view-users': '#editUserEmail'
 };
