@@ -1,5 +1,5 @@
 // COREBIQ STRACARE offline shell - network-first for live application code.
-const CACHE = "corebiq-v66";
+const CACHE = "corebiq-v67";
 const CORE = [
     "./", "./index.html", "./login.html",
     "./components/splash-screen.html", "./components/header.html", "./js/index.js", "./manifest.webmanifest",
@@ -58,7 +58,7 @@ self.addEventListener("fetch", event => {
         /\.(?:html?|m?js|css|json|webmanifest)$/i.test(url.pathname);
     if (liveCode) {
         event.respondWith(
-            fetch(request).then(response => {
+            fetch(request, {cache:"no-cache"}).then(response => {
                 if (response.ok) {
                     const copy = response.clone();
                     event.waitUntil(caches.open(CACHE).then(cache => cache.put(request, copy)));
