@@ -1528,3 +1528,12 @@ document.addEventListener('DOMContentLoaded', () => {
         1000
     );
 });
+window.hardRefreshApp = async function(){
+ const button=document.getElementById('hard-refresh-button');
+ if(!button||button.disabled)return;
+ if(!navigator.onLine){alert('Connect to the internet before refreshing.');return;}
+ if(!confirm('Refresh app files? Unsaved form changes may be lost.'))return;
+ button.disabled=true;button.setAttribute('aria-busy','true');
+ try{if('serviceWorker' in navigator){const reg=await navigator.serviceWorker.getRegistration();if(reg)await reg.update();}if('caches' in window){const keys=await caches.keys();await Promise.all(keys.filter(k=>/^corebiq-v\d+$/.test(k)).map(k=>caches.delete(k)));}}catch(error){console.warn('App cache refresh:',error);}
+ const url=new URL(location.href);url.searchParams.set('_refresh',Date.now().toString());location.replace(url.href);
+};
