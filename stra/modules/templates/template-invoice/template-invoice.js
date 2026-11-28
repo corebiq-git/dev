@@ -19,6 +19,8 @@
         window.showToast = showToast;
 
         const invoiceSealSelections = { left: '', right: '' };
+        const invoiceSignatureSelections = { left: '', right: '' };
+        const invoiceSignatureAssets = {signature:{src:'../../../assets/sign.png',label:'Authorised signature'},thejaswi:{src:'../../../assets/sign-thejaswi.png',label:'Thejaswi signature'},shyn:{src:'../../../assets/sign-shyn.png',label:'Shyn signature'}};
         const invoiceSealTypes = new Set(['company', 'doctor', 'payment']);
         const invoiceSealProfile = {
             companyName: 'Company name not set',
@@ -69,11 +71,16 @@
         function renderInvoiceSeals() {
             const sealArea = document.getElementById('invoice-seal-area');
             const slots = ['left', 'right']
-                .filter(position => invoiceSealSelections[position])
+                .filter(position => invoiceSealSelections[position] || invoiceSignatureSelections[position])
                 .map(position => {
                     const slot = document.createElement('div');
                     slot.className = `invoice-seal-slot invoice-seal-slot-${position}`;
-                    slot.appendChild(createInvoiceSeal(invoiceSealSelections[position]));
+                    if(invoiceSignatureSelections[position]){
+                        const asset=invoiceSignatureAssets[invoiceSignatureSelections[position]];
+                        const box=document.createElement('div');box.className='seal-box-signature';
+                        const image=document.createElement('img');image.src=new URL(asset.src,import.meta.url).href;image.alt=asset.label;box.append(image);slot.append(box);
+                    }
+                    if(invoiceSealSelections[position]) slot.appendChild(createInvoiceSeal(invoiceSealSelections[position]));
                     return slot;
                 });
             if (!slots.length) {
@@ -94,6 +101,12 @@
                 throw new Error(`Unsupported invoice seal: ${sealType}`);
             }
             invoiceSealSelections[position] = sealType;
+            renderInvoiceSeals();
+        };
+
+        window.selectInvoiceSignature = (position, value) => {
+            if (!Object.hasOwn(invoiceSignatureSelections,position) || (value && !Object.hasOwn(invoiceSignatureAssets,value))) return;
+            invoiceSignatureSelections[position]=value;
             renderInvoiceSeals();
         };
 
