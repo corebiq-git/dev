@@ -1,0 +1,3 @@
+# ERP-GO — COREBIQ
+
+Deploy the entire erpgo folder under the repository root. Serve via HTTPS or localhost. Open /erpgo/ once online to install the service worker; subsequent visits can use the cached app shell. Google Fonts and external WhatsApp/Maps links require connectivity (system font fallbacks remain available). Original business logic, inline SVGs and dynamic inline styles are retained unchanged. Data remains in browser localStorage; this is not a cloud backend or secure server-side authentication. Export a backup before moving to a different origin. New GO icons are based on the existing text brand mark. Update the cache version in sw.js when releasing changes.
