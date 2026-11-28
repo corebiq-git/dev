@@ -621,6 +621,33 @@
       /* =======================================================================
          7. MODULE 1: MANAGEMENT DASHBOARD (#17, #21)
          ======================================================================= */
+
+      function dashboardCashflow() {
+        const period = state.filters.period;
+        const monthly = period === 'yearly';
+        const count = monthly ? 12 : period === 'daily' ? 7 : TODAY.getDate();
+        const dates = Array.from({length:count}, (_,i) => monthly ? new Date(TODAY.getFullYear(),i,1) : period === 'daily' ? new Date(TODAY.getFullYear(),TODAY.getMonth(),TODAY.getDate()-6+i) : new Date(TODAY.getFullYear(),TODAY.getMonth(),i+1));
+        const key = d => monthly ? toISODate(d).slice(0,7) : toISODate(d);
+        const sum = (rows,d) => rows.filter(r => String(r.date).slice(0,monthly?7:10) === key(d)).reduce((a,r)=>a+(Number(r.amount)||0),0);
+        const incoming = dates.map(d=>sum(state.db.collections,d));
+        const outgoing = dates.map(d=>sum(state.db.expenses,d));
+        const max = Math.max(1,...incoming,...outgoing);
+        const x = i => 36+i*310/Math.max(1,count-1);
+        const y = n => 112-n/max*88;
+        const line = values => values.map((v,i)=>x(i)+','+y(v)).join(' ');
+        return `<section class="card dash-panel"><div class="dash-heading"><div><h2>Cash flow</h2><p>Recorded collections and operating expenses · ${period==='daily'?'Last 7 days':period==='monthly'?'Month to date':'This year'}</p></div></div>
+          <div class="dash-legend"><span><i></i> Collections</span><span><i></i> Expenses</span></div>
+          <svg class="dash-chart" viewBox="0 0 360 144" role="img" aria-label="Collections and operating expenses line graph">
+          ${[0,.5,1].map(v=>`<line x1="36" x2="346" y1="${y(v*max)}" y2="${y(v*max)}" stroke="#e4e7e6"/><text x="32" y="${y(v*max)+3}" text-anchor="end">${v===0?'0':max>=1000?(v*max/1000).toFixed(1)+'k':Math.round(v*max)}</text>`).join('')}
+          <polyline points="${line(incoming)}" fill="none" stroke="#059669" stroke-width="2" stroke-linejoin="round"/><polyline points="${line(outgoing)}" fill="none" stroke="#626765" stroke-width="2" stroke-linejoin="round"/>
+          ${dates.map((d,i)=>`<circle cx="${x(i)}" cy="${y(incoming[i])}" r="2" fill="#059669"><title>${key(d)}: ${fmtINR(incoming[i])}</title></circle><circle cx="${x(i)}" cy="${y(outgoing[i])}" r="2" fill="#626765"><title>${key(d)}: ${fmtINR(outgoing[i])}</title></circle>`).join('')}
+          ${dates.map((d,i)=>i===0||i===count-1||i%Math.ceil(count/5)===0?`<text x="${x(i)}" y="132" text-anchor="middle">${monthly?MONTHS[d.getMonth()]:d.getDate()+' '+MONTHS[d.getMonth()]}</text>`:'').join('')}</svg>
+          <p class="dash-note">Operating cash movement only; excludes unrecorded payments and opening balances.</p></section>`;
+      }
+      function dashboardActivities(orders) {
+        const rows = [...orders.map(o=>({date:o.date,title:'Sales order',detail:o.id,amount:o.total})),...state.db.collections.map(o=>({date:o.date,title:'Collection received',detail:o.id,amount:o.amount})),...state.db.expenses.map(o=>({date:o.date,title:'Operating expense',detail:o.category,amount:-o.amount}))].filter(o=>matchesPeriod(o.date,state.filters.period)).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,6);
+        return `<section class="card dash-panel"><div class="dash-heading"><div><h2>Recent activities</h2><p>Latest recorded transactions</p></div></div>${rows.length?rows.map(o=>`<div class="dash-activity"><div class="dash-activity-icon">${o.amount<0?'↗':'↙'}</div><div class="dash-activity-copy"><strong>${esc(o.title)}</strong><small>${esc(o.detail)} · ${esc(fmtDate(o.date))}</small></div><strong>${fmtINR(o.amount)}</strong></div>`).join(''):'<p class="dash-note">No recorded activities for this period.</p>'}</section>`;
+      }
       function renderDashboard() {
         const orders = getFilteredOrders();
         const totalSales = orders.reduce((s, o) => s + o.total, 0);
@@ -641,7 +668,8 @@
         };
 
         return `
-          <div class="stack">
+          <div class="stack erp-dashboard">
+            <section class="dash-welcome"><div><p>Business workspace</p><h1>Welcome M/s Lotus Enterprises.</h1><p>Here is your business overview.</p></div><time datetime="${TODAY_ISO}">${esc(fmtDate(TODAY_ISO))}</time></section>
             <!-- Period Filter Bar + Export Summary -->
             <div class="card card-pad flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-1 flex-wrap">
@@ -707,6 +735,7 @@
               <button onclick="ERPG.quickAction('gps')" class="btn btn-charcoal">${ICONS.mapPin} GPS Check-In</button>
             </div>
 
+            <div class="dash-insights">${dashboardCashflow()}${dashboardActivities(orders)}</div>
             <!-- Live Salesman Orders Feed (#21) -->
             <div class="card">
               <div class="card-header">
