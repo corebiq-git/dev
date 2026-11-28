@@ -989,3 +989,14 @@ h1,h2,h3,h4,.font-heading{letter-spacing:-.025em;font-weight:600}
 
 /* Lotus company identity */
 .lotus-name,.erp-auth-sub.lotus-name{color:#047857;font-weight:600}
+
+/* Neutral animated navigation indicators */
+.bnav-btn,.side-btn{color:#777;transition:color .2s ease,background-color .2s ease}
+.bnav-btn.active,.side-btn.active{color:#171717;font-weight:600;background:transparent}
+.bnav-btn svg,.side-btn-left svg{box-sizing:content-box;padding:6px;border-radius:8px;transition:background-color .22s ease,transform .22s cubic-bezier(.2,.8,.2,1),color .2s ease}
+.bnav-btn.active svg,.side-btn.active .side-btn-left svg{background:#eaeaea;color:#171717;animation:nav-icon-select .24s cubic-bezier(.2,.8,.2,1)}
+.bnav-btn:not(.locked):active svg,.side-btn:not(.locked):active .side-btn-left svg{transform:scale(.9)}
+.bnav-btn{gap:2px}
+.side-btn-left{gap:9px}
+@keyframes nav-icon-select{from{transform:scale(.88);background:#f5f5f5}to{transform:scale(1);background:#eaeaea}}
+@media(prefers-reduced-motion:reduce){.bnav-btn,.side-btn,.bnav-btn svg,.side-btn-left svg{animation:none!important;transition:none!important}}

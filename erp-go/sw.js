@@ -1,5 +1,5 @@
-const CACHE = 'erpgo-f6552a61b50a-v10';
-const SHELL = ['./', './index.html', './css/app.css?v=10', './css/auth.css?v=10', './js/app.js?v=10', './js/pwa.js?v=10', './manifest.webmanifest', './assets/icons/icon-192.png', './assets/icons/icon-512.png', './assets/icons/maskable-512.png', './assets/icons/favicon.ico', './assets/icons/icon-32.png', './assets/icons/icon-180.png', './assets/logo.png'];
+const CACHE = 'erpgo-f6552a61b50a-v11';
+const SHELL = ['./', './index.html', './css/app.css?v=11', './css/auth.css?v=11', './js/app.js?v=11', './js/pwa.js?v=11', './manifest.webmanifest', './assets/icons/icon-192.png', './assets/icons/icon-512.png', './assets/icons/maskable-512.png', './assets/icons/favicon.ico', './assets/icons/icon-32.png', './assets/icons/icon-180.png', './assets/logo.png'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('erpgo-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {
