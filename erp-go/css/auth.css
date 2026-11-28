@@ -1,0 +1,24 @@
+/* Mobile-first splash and demo sign-in */
+.erp-auth-screen[hidden]{display:none!important}
+body:not(.erp-signed-in) .app-shell,body:not(.erp-signed-in) .bottom-nav{display:none!important}
+.erp-auth-screen{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 18px;background:#f6f8f7;color:#202322;font-family:var(--font-body)}
+.erp-splash-logo{width:100px;height:100px;object-fit:contain;border-radius:12px}
+#erp-splash h1{font-size:28px;margin:14px 0 4px}
+#erp-splash p,.erp-auth-footer{font-size:12px;color:#69716d}
+.erp-loading{width:88px;height:3px;background:#dce2de;margin-top:24px;overflow:hidden;border-radius:2px}
+.erp-loading:after{content:'';display:block;width:40%;height:100%;background:#059669;animation:erp-load 1s ease-in-out infinite}
+@keyframes erp-load{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+@media(prefers-reduced-motion:reduce){.erp-loading:after{animation:none}}
+.erp-login-card{width:100%;max-width:420px;padding:24px 20px;background:#fff;border:1px solid #e0e5e2;border-radius:10px}
+.erp-login-logo{width:64px;height:64px;object-fit:contain;margin-bottom:12px}
+.erp-auth-kicker,.erp-auth-sub{color:#626965;font-size:14px}
+.erp-login-card h1{font-family:var(--font-body);font-size:26px;font-weight:600;letter-spacing:-.04em;line-height:1.2;margin:5px 0 8px}
+#login-form{display:grid;gap:8px;margin-top:24px}
+#login-form label{font-size:13px;font-weight:600;margin-top:5px}
+#login-form input,#login-form select{width:100%;min-height:46px;padding:10px 12px;border:1px solid #cdd3cf;border-radius:5px;background:#fff;font-size:16px}
+#login-form input[readonly]{background:#f0f2f1;color:#515854}
+#login-form input:focus,#login-form select:focus{outline:2px solid #059669;outline-offset:1px}
+.erp-login-button{min-height:46px;background:#252826;color:white;border-radius:5px;font-size:15px;font-weight:600}
+#login-error{color:#b42318;font-size:13px}
+.erp-auth-note,.erp-auth-footer{text-align:center;margin-top:18px;font-size:12px;color:#626965}
+@media(min-width:768px){.erp-login-card{padding:32px}}

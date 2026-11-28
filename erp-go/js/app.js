@@ -464,7 +464,7 @@
       }
 
       function getActiveUser() {
-        return state.db.users.find(u => u.id === state.activeUserId) || state.db.users[0];
+        return state.db.users.find(u => u.id === state.activeUserId) || (signedIn ? demoAccounts().find(u=>u.id===state.activeUserId) : null) || state.db.users[0];
       }
 
       function getCustomer(id) { return state.db.customers.find(c => c.id === id); }
@@ -533,12 +533,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      function switchRole(userId) {
-        state.activeUserId = userId;
-        const u = getActiveUser();
-        renderApp();
-        showToast(`Switched to ${u.name} (${u.role})`, 'info');
-      }
+      function switchRole(userId) { signOut(); }
 
       function triggerManualSync() {
         saveDB();
@@ -608,6 +603,7 @@
       }
 
       function renderApp() {
+        if (!signedIn) return;
         renderShell();
         const main = document.getElementById('app-main');
         if (!main) return;
@@ -2243,6 +2239,7 @@
       }
 
       function openSettingsModal() {
+        if (!signedIn || getActiveUser().role !== 'Admin') { showToast('Settings are restricted to Admin.', 'warning'); return; }
         const kb = SafeStorage.sizeKB(DB_KEY);
         openModal(`
           <div class="modal-head">
@@ -2633,8 +2630,61 @@
       window.triggerManualSync = triggerManualSync;
       window.openSettingsModal = openSettingsModal;
 
+ 
+      let signedIn = false;
+      function demoAccounts() {
+        const admin = {dashboard:true,catalogues:true,salesApp:true,purchase:true,reports:true,viewProfit:true};
+        return [
+          {id:'LOT-ADMIN-1',name:'Shabeer',email:'shabeer@lotus.com',role:'Admin',permissions:{...admin}},
+          {id:'LOT-ADMIN-2',name:'Nawas',email:'nawas@lotus.com',role:'Admin',permissions:{...admin}},
+          ...(state.db.salesmen||[]).map(s=>({id:'LOT-'+s.id,name:s.name,email:s.name.toLowerCase().replace(/[^a-z0-9]+/g,'.')+'@lotus.com',role:'Salesman',salesmanId:s.id,permissions:{dashboard:false,catalogues:true,salesApp:true,purchase:false,reports:false,viewProfit:false}})),
+          {id:'LOT-ACC',name:'Accounts Staff',email:'accounts@lotus.com',role:'Accountant',permissions:{dashboard:true,catalogues:true,salesApp:false,purchase:true,reports:true,viewProfit:true}},
+          {id:'LOT-AUD',name:'Auditor',email:'auditor@lotus.com',role:'Auditor',permissions:{dashboard:true,catalogues:false,salesApp:false,purchase:false,reports:false,viewProfit:false}}
+        ];
+      }
+      function loginOptions() {
+        const role=document.getElementById('login-role').value;
+        const names=document.getElementById('login-name');
+        names.innerHTML=demoAccounts().filter(u=>u.role===role).map(u=>'<option value="'+esc(u.id)+'">'+esc(u.name)+'</option>').join('');
+        loginEmail();
+      }
+      function loginEmail() {
+        const u=demoAccounts().find(u=>u.id===document.getElementById('login-name').value);
+        document.getElementById('login-email').value=u?u.email:'';
+        document.getElementById('login-error').textContent='';
+      }
+      function showLogin() {
+        signedIn=false;
+        document.body.classList.remove('erp-signed-in');
+        document.getElementById('erp-login').hidden=false;
+        document.getElementById('erp-splash').hidden=true;
+        document.getElementById('login-password').value='123456';
+        loginOptions();
+      }
+      function signIn(e) {
+        e.preventDefault();
+        const u=demoAccounts().find(u=>u.id===document.getElementById('login-name').value && u.role===document.getElementById('login-role').value);
+        if(!u||document.getElementById('login-password').value!=='123456'){document.getElementById('login-error').textContent='Invalid demo credentials.';return;}
+        state.db.users=(state.db.users||[]).filter(x=>x.id!==u.id);
+        state.db.users.push(u);
+        state.activeUserId=u.id;
+        state.activeTab=u.role==='Salesman'?'salesApp':'dashboard';
+        signedIn=true;
+        document.getElementById('erp-login').hidden=true;
+        document.getElementById('login-password').value='';
+        document.body.classList.add('erp-signed-in');
+        renderApp();
+      }
+      function signOut(){closeModal();state.cart.items=[];showLogin();}
+      function bootLogin(){
+        document.getElementById('login-role').addEventListener('change',loginOptions);
+        document.getElementById('login-name').addEventListener('change',loginEmail);
+        document.getElementById('login-form').addEventListener('submit',signIn);
+        document.getElementById('erp-signout').addEventListener('click',signOut);
+        setTimeout(showLogin,1000);
+      }
       // Boot App
       loadDB();
-      renderApp();
+      bootLogin();
     })();
   

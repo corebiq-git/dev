@@ -16,8 +16,11 @@
   <link rel="icon" href="./assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/icon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/icon-180.png" />
+  <link rel="stylesheet" href="./css/auth.css" />
 </head>
 <body>
+  <section id="erp-splash" class="erp-auth-screen" aria-label="Loading ERP-GO"><img src="./assets/icons/icon-192.png" alt="ERP-GO" class="erp-splash-logo"><h1>ERP-GO</h1><p>Powered by COREBIQ</p><div class="erp-loading"></div></section>
+  <section id="erp-login" class="erp-auth-screen" hidden><div class="erp-login-card"><img src="./assets/icons/icon-192.png" alt="ERP-GO" class="erp-login-logo"><p class="erp-auth-kicker">Welcome back to</p><h1>Business workspace</h1><p class="erp-auth-sub">M/s Lotus Enterprises</p><form id="login-form"><label for="login-role">Login as</label><select id="login-role"><option value="Admin">Admin</option><option value="Salesman">Sales</option><option value="Accountant">Accounts</option><option value="Auditor">Auditor</option></select><label for="login-name">Name</label><select id="login-name" required></select><label for="login-email">Email</label><input id="login-email" type="email" readonly><label for="login-password">Password</label><input id="login-password" type="password" required autocomplete="current-password"><p id="login-error" role="alert"></p><button type="submit" class="erp-login-button">Sign in</button></form><p class="erp-auth-note">Demo workspace · Local device storage</p><p class="erp-auth-footer">Powered by COREBIQ</p></div></section>
   <div class="app-shell">
     <!-- ==================== DESKTOP SIDEBAR ==================== -->
     <aside class="sidebar">
@@ -71,9 +74,7 @@
               <span class="desktop-only">Synced</span>
             </button>
 
-            <select id="role-switcher" onchange="switchRole(this.value)" class="role-select" aria-label="Switch Role">
-              <!-- Populated dynamically -->
-            </select>
+            <button id="erp-signout" class="btn btn-sm btn-outline" type="button">Sign out</button>
 
             <button onclick="openSettingsModal()" class="icon-btn" title="Settings, RBAC Permissions & Backup" aria-label="Settings">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
