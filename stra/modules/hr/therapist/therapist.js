@@ -154,9 +154,7 @@
 
             document.getElementById('saveTherapistBtn').innerHTML = '<span class="material-symbols-rounded">save</span> Update';
             
-            const mainContent = document.getElementById('main-content');
-            if(mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-            else window.scrollTo({ top: 0, behavior: 'smooth' });
+            const dialog=document.getElementById('therapist-dialog');if(dialog&&!dialog.open)dialog.showModal();
         }
 
         window.deleteTherapist = async function(docId) {
@@ -225,6 +223,7 @@
                 }
 
                 window.clearTherapistForm();
+                document.getElementById('therapist-dialog')?.close();
                 window.loadTherapists(); 
 
             } catch (error) {
