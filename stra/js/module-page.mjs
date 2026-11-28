@@ -10,6 +10,7 @@ const addTargets = {
     'view-attendance': 'button[onclick*="openAttModal"]',
     'view-my-tasks': '#task-new-button',
     'view-staff': '#staff-add-popup',
+    'view-payroll': '#payroll-add',
     'view-therapist': '#therapist-add-popup',
     'view-ledgers': '#lName',
     'view-users': '#editUserEmail'
