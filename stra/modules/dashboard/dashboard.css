@@ -874,3 +874,18 @@
 #view-dashboard .finance .dashboard-fee-row strong{font-size:clamp(12px,2.8vw,18px);white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
 #view-dashboard #dashboardFeeReceived{color:#08765c}#view-dashboard #dashboardFeeDue{color:#b42332}
 @media(max-width:768px){#view-dashboard .dashboard-mini-kpi:not(.finance){aspect-ratio:auto;min-height:145px!important}#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item{white-space:normal;text-align:center}#view-dashboard .dashboard-activity{margin-bottom:80px}}
+
+/* Equal-width KPI status columns; prevent intrinsic text overflow. */
+#view-dashboard .dashboard-calendar-kpi-row .dashboard-mini-kpi:is(.attendance,.appointments){min-width:0;box-sizing:border-box;overflow:hidden;padding:clamp(8px,2vw,16px)!important;height:auto!important;min-height:150px!important;display:flex!important;flex-direction:column;align-items:stretch;gap:8px}
+#view-dashboard .dashboard-mini-kpi:is(.attendance,.appointments) .dashboard-count-heading{width:100%;min-width:0;justify-content:center;gap:6px}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-heading-copy{min-width:0;max-width:100%}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-heading-title{font-size:clamp(11px,3vw,16px);overflow-wrap:anywhere;white-space:normal}
+#view-dashboard .dashboard-mini-kpi .dashboard-count-chart-area{display:block!important;min-height:0;width:100%;margin:0;padding:0;min-width:0;flex:0 0 auto}
+#view-dashboard .dashboard-mini-kpi .dashboard-attendance-chart{display:block!important;width:100%;min-width:0;padding:0;margin:0}
+#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#view-dashboard .dashboard-mini-kpi .dashboard-appointment-legend{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#view-dashboard .dashboard-mini-kpi :is(.dashboard-chart-legend,.dashboard-appointment-legend){box-sizing:border-box;width:100%;margin:0;padding:8px 0 0;gap:2px;border-top:1px solid #e5e7eb}
+#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0;width:100%;gap:4px;white-space:normal;overflow-wrap:anywhere;font-size:clamp(9px,2.3vw,13px);line-height:1.2}
+#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item svg{width:18px;height:18px;flex:none}
+#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item strong{margin:0!important;font-size:clamp(13px,3vw,20px);line-height:1.2}
+#view-dashboard .dashboard-mini-kpi :is(.dashboard-attendance-bar,.dashboard-appointment-donut){display:none!important}
