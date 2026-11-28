@@ -74,7 +74,7 @@ import { db } from "../../../js/firebase-config.js";
 
                     // Fallbacks to prevent crashes
                     const safeName = data.name || 'Unknown';
-                    const safeId = data.empId || 'STA-0000';
+                    const safeId = data.empId || docId;
                     const safeRole = data.role || 'N/A';
                     const safeBranch = data.branch || 'N/A';
                     const safeContact = data.mobile || data.contact || 'N/A';
@@ -190,7 +190,7 @@ import { db } from "../../../js/firebase-config.js";
                     alert("Staff updated successfully!");
                 } else {
                     const [generatedId] = await reserveNextDocumentIds(
-                        db, 'staff', 'STA', 1, window.currentUser?.role === 'admin'
+                        db, 'staff', 'STF', 1, window.currentUser?.role === 'admin'
                     );
                     payload.id = generatedId;
                     payload.empId = generatedId;
