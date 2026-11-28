@@ -163,7 +163,7 @@
                             </span>
                         </div>
 
-                        <div class="dashboard-fee-rows" role="img" aria-label="Received and pending fee figures with proportional lines">
+                        <div class="dashboard-fee-rows" aria-label="Appointment fee summary"><div class="dashboard-fee-row"><span class="dashboard-fee-row-copy"><span class="dashboard-fee-row-label">Revenue</span><strong id="dashboardFeeRevenue">—</strong></span></div>
                             <div class="dashboard-fee-row">
                                 <span class="dashboard-fee-row-copy">
                                     <span class="dashboard-fee-row-label"><i class="dashboard-chart-dot received"></i>Received</span>
@@ -176,7 +176,7 @@
                             </div>
                             <div class="dashboard-fee-row">
                                 <span class="dashboard-fee-row-copy">
-                                    <span class="dashboard-fee-row-label"><i class="dashboard-chart-dot due"></i>Pending</span>
+                                    <span class="dashboard-fee-row-label"><i class="dashboard-chart-dot due"></i>Due</span>
                                     <strong id="dashboardFeeDue">₹0.00</strong>
                                 </span>
                                 <svg class="dashboard-fee-row-chart" viewBox="0 0 120 22" preserveAspectRatio="none" aria-hidden="true">
@@ -184,8 +184,7 @@
                                     <path class="dashboard-fee-row-line pending" id="dashboardFeeChartPendingLine" d="M4 3 V18 H4"></path>
                                 </svg>
                             </div>
-                        </div>
-                    </article>
+                        </div><p id="dashboardFeeWarning" role="status" hidden></p></article>
                 </section>
                 </div>
 
