@@ -182,6 +182,7 @@ window.applyRoleVisibility = function() {
         '#nav-usage-btn',
         '[data-target="view-users"]',
         '[data-target="view-razorpay"]',
+        '[data-target="view-payroll"]',
         '[onclick*="view-users"]',
         '[onclick*="usage.html"]'
     ];
@@ -246,6 +247,7 @@ window.buildSidebarNavigation = function() {
         'view-therapist': 'HR',
         'view-staff': 'HR',
         'view-attendance': 'HR',
+        'view-payroll': 'HR',
         'view-calc': 'Tools',
         'view-corebiq-ai': 'Tools',
         'view-invoice': 'Templates',
@@ -364,6 +366,7 @@ window.buildTopNavigation = function() {
         'view-therapist': 'HR',
         'view-staff': 'HR',
         'view-attendance': 'HR',
+        'view-payroll': 'HR',
         'view-email': 'Email',
         'view-calc': 'Tools',
         'view-corebiq-ai': 'Tools',
@@ -1216,7 +1219,7 @@ window.switchView = async function(targetId, navElement) {
         navElement = null;
     }
     if (targetId === 'view-developer' && role !== 'developer' && role !== 'admin') return;
-    if (targetId === 'view-razorpay' && role !== 'admin') return;
+    if (['view-razorpay','view-payroll'].includes(targetId) && role !== 'admin') return;
 
 
     if (targetId === 'view-calc') {
