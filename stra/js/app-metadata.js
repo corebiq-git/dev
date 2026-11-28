@@ -19,6 +19,7 @@ export const APP_METADATA = Object.freeze({
         'view-calender': 'modules/crm/calender/calender.html',
         'view-staff': 'modules/hr/staff/staff.html',
         'view-attendance': 'modules/hr/attendance/attendance.html',
+        'view-payroll': 'modules/hr/payroll/payroll.html',
         'view-users': 'modules/settings/users/users.html',
         'view-developer': 'modules/settings/developer/developer.html',
         'view-company': 'modules/settings/company/company.html',
