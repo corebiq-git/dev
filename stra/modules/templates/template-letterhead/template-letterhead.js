@@ -36,7 +36,7 @@ import { printA4Document, downloadA4JpegDocument, downloadA4PdfDocument, downloa
         };
         window.chooseLetterheadSignature = function(signatureType) {
             closeLetterheadMenus();
-            const signatureNames = { signature: 'existing signature', thejaswi: 'Thejaswi signature', shyn: 'Shyn signature' };
+            const signatureNames = { thejaswi: 'Thejaswi signature', shyn: 'Shyn signature' };
             if (!signatureNames[signatureType]) throw new Error(`Unsupported letterhead signature: ${signatureType}`);
             pendingLetterheadDocumentPart = { part: 'signature', value: signatureType };
             document.getElementById('letterheadPlacementTitle').textContent = `Place ${signatureNames[signatureType]}`;
@@ -218,7 +218,6 @@ import { printA4Document, downloadA4JpegDocument, downloadA4PdfDocument, downloa
                 seal.className = 'seal-box-signature';
                 const image = document.createElement('img');
                 const signatureAssets = {
-                    signature: { src: '../../../assets/sign.png', label: 'Authorised signature' },
                     thejaswi: { src: '../../../assets/sign-thejaswi.png', label: 'Thejaswi signature' },
                     shyn: { src: '../../../assets/sign-shyn.png', label: 'Shyn signature' }
                 };
