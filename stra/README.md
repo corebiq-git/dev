@@ -1,4 +1,4 @@
-# CM | BIZODIT — Revised Auth Starter
+# CM | CARE — Revised Auth Starter
 
 Authentication is separate at `auth/signin.html`.
 
