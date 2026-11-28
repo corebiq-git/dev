@@ -986,3 +986,6 @@ h1,h2,h3,h4,.font-heading{letter-spacing:-.025em;font-weight:600}
 @media(max-width:959px){.sidebar{display:flex;transform:translateX(-105%);visibility:hidden;transition:transform .2s ease,visibility .2s;width:min(320px,85vw);z-index:40}.drawer-open .sidebar{transform:translateX(0);visibility:visible}.drawer-open{overflow:hidden}.header-left{gap:7px}.header-left .header-app-logo{display:none}#drawer-toggle{width:42px;height:42px;flex-shrink:0}.header-left #header-sub{font-size:11px!important}}
 @media(min-width:960px){.content-col{padding-left:280px}.drawer-shade{display:none!important}}
 @media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
+
+/* Lotus company identity */
+.lotus-name,.erp-auth-sub.lotus-name{color:#047857;font-weight:600}

@@ -666,7 +666,7 @@
 
         return `
           <div class="stack erp-dashboard">
-            <section class="dash-welcome"><div><p>Business workspace</p><h1>Welcome M/s Lotus Enterprises.</h1><p>Here is your business overview.</p></div><time datetime="${TODAY_ISO}">${esc(fmtDate(TODAY_ISO))}</time></section>
+            <section class="dash-welcome"><div><p>Business workspace</p><h1>Welcome M/s <span class="lotus-name">Lotus Enterprises</span>.</h1><p>Here is your business overview.</p></div><time datetime="${TODAY_ISO}">${esc(fmtDate(TODAY_ISO))}</time></section>
             <!-- Period Filter Bar + Export Summary -->
             <div class="card dash-filter">
               <div class="dash-period" role="group" aria-label="Reporting period">
