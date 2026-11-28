@@ -1234,3 +1234,5 @@ input.clean-input:focus {
 @media screen and (max-width:640px) {
  #invoice-container:not(.pdf-export-mode) .invoice-signature-grid {padding-top:20px;}
 }
+
+#invoice-container .invoice-seal-slot{flex-direction:column;align-items:flex-start;gap:2mm;break-inside:avoid}#invoice-container .invoice-seal-slot-right{align-items:flex-end}#invoice-container .seal-box-signature img{display:block;width:25.4mm;max-width:100%;height:25.4mm;object-fit:contain} @media print{#invoice-container .seal-box-signature{break-inside:avoid}}
