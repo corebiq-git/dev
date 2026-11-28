@@ -996,6 +996,10 @@ window.fetchDashboardData = async function() {
         document.getElementById('dashboardFeeSummaryHeading').textContent = selectedLabel;
         
         
+        for (const id of ['dashboardAttendancePresent','dashboardAttendanceAbsent','dashboardAttendanceHalfDay','dashboardAttendanceTotal','dashboardAppointmentTotal','dashboardAppointmentPending','dashboardAppointmentCompleted','dashboardAppointmentDonutTotal','dashboardFeeReceived','dashboardFeeDue']) { const el=document.getElementById(id); if(el)el.textContent='—'; }
+        document.getElementById('dashboardActivityDate').textContent=selectedLabel;
+        document.getElementById('dashboardActivityList').textContent='Loading selected date…';
+        window.careActivityDate=selectedDate;window.careActivityCount=0;window.updateNotificationBell?.();
         const [appointmentsSnapshot, attendanceSnapshot, transactionsSnapshot] = await request;
         if (requestSequence !== dashboardRequestSequence) return;
 
@@ -1122,7 +1126,7 @@ window.fetchDashboardData = async function() {
         if(!activity.length)list.textContent='No activity for the selected date.';
         if(!transactionsSnapshot){const note=document.createElement('p');note.textContent='Transaction activity unavailable.';list.append(note);}
         window.applyLucideIcons?.(list);
-        if(selectedDate===window.getLocalDateString()){window.careActivityDate=selectedDate;window.careActivityCount=activity.length;window.updateNotificationBell?.();}
+        window.careActivityDate=selectedDate;window.careActivityCount=activity.length;window.updateNotificationBell?.();
     } catch (error) {
         if (requestSequence !== dashboardRequestSequence) return;
         console.error('Dashboard Load Error:', error);
