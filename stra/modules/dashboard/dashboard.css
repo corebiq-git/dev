@@ -865,3 +865,12 @@
 #view-dashboard .dashboard-activity-bar strong{font-size:13px}
 #view-dashboard .dashboard-activity-bar small{font-size:11px}
 }
+
+#view-dashboard .dashboard-quick-tools-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:100%;max-width:520px;margin-inline:auto}
+#view-dashboard .dashboard-quick-tool{width:100%;min-width:0;max-width:none;height:auto;min-height:0;aspect-ratio:1;padding:6px;box-sizing:border-box}
+#view-dashboard .finance .dashboard-fee-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+#view-dashboard .finance .dashboard-fee-row{display:block;min-width:0}
+#view-dashboard .finance .dashboard-fee-row-chart{display:none}
+#view-dashboard .finance .dashboard-fee-row strong{font-size:clamp(12px,2.8vw,18px);white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
+#view-dashboard #dashboardFeeReceived{color:#08765c}#view-dashboard #dashboardFeeDue{color:#b42332}
+@media(max-width:768px){#view-dashboard .dashboard-mini-kpi:not(.finance){aspect-ratio:auto;min-height:145px!important}#view-dashboard .dashboard-mini-kpi .dashboard-chart-legend-item{white-space:normal;text-align:center}#view-dashboard .dashboard-activity{margin-bottom:80px}}
