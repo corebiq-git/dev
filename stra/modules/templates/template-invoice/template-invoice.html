@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Care | Invoice Template</title>
     <meta name="theme-color" content="#0B1F4B">
-    <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+    <link rel="icon" type="image/png" href="../../../assets/app-icon.png">
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -257,8 +257,8 @@
     </div>
 
     <div class="invoice-seal-controls" aria-label="Invoice signature options">
-        <label class="invoice-seal-control"><span>Left Footer Sign</span><select aria-label="left footer signature" onchange="window.selectInvoiceSignature('left',this.value)"><option value="">None</option><option value="signature">Existing Signature</option><option value="thejaswi">Thejaswi</option><option value="shyn">Shyn</option></select></label>
-        <label class="invoice-seal-control"><span>Right Footer Sign</span><select aria-label="right footer signature" onchange="window.selectInvoiceSignature('right',this.value)"><option value="">None</option><option value="signature">Existing Signature</option><option value="thejaswi">Thejaswi</option><option value="shyn">Shyn</option></select></label>
+        <label class="invoice-seal-control"><span>Left Footer Sign</span><select aria-label="left footer signature" onchange="window.selectInvoiceSignature('left',this.value)"><option value="">None</option><option value="thejaswi">Thejaswi</option><option value="shyn">Shyn</option></select></label>
+        <label class="invoice-seal-control"><span>Right Footer Sign</span><select aria-label="right footer signature" onchange="window.selectInvoiceSignature('right',this.value)"><option value="">None</option><option value="thejaswi">Thejaswi</option><option value="shyn">Shyn</option></select></label>
     </div>
     <div class="invoice-toolbar" role="toolbar" aria-label="Invoice actions">
         <button onclick="window.parent.postMessage({type:'corebiq:invoice:back'}, window.location.origin === 'null' ? '*' : window.location.origin)" class="m3-btn m3-btn-secondary" title="Back to appointments" aria-label="Back to appointments">
