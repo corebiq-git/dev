@@ -1,4 +1,4 @@
-# CM | CARE — Revised Auth Starter
+# COREBIQ | CARE — Revised Auth Starter
 
 Authentication is separate at `auth/signin.html`.
 
