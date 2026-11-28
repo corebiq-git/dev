@@ -108,14 +108,14 @@ export async function reserveNextDocumentIds(db, collectionName, prefix, count =
 export async function getNextDocumentIdPreview(db, collectionName, prefix, canInitialize = false) {
     prefix = DOCUMENT_ID_CONFIG.find(item => item.collection === collectionName)?.prefix || prefix;
     const counterRef = doc(db, 'id_counters', collectionName);
-    if (!(await getDoc(counterRef)).exists()) {
+    let counter = await getDoc(counterRef);
+    if (!counter.exists()) {
         if (!canInitialize) {
             throw new Error(`Sequential IDs for ${collectionName} are not initialized. Ask an administrator to open the dashboard once.`);
         }
         await initializeCounter(db, collectionName, prefix);
+        counter = await getDoc(counterRef);
     }
-
-    const counter = await getDoc(counterRef);
     if (!counter.exists()) {
         throw new Error(`Sequential IDs for ${collectionName} are not initialized.`);
     }
