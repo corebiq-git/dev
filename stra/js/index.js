@@ -832,11 +832,13 @@ window.COREBIQ_UPDATES_READ_KEY = 'corebiq-updates-viewed-version';
 window.updateNotificationBell = function() {
  const button=document.getElementById('notification-button'), badge=document.getElementById('notif-badge');
  if(!button||!badge)return;
- const count=Number(window.careActivityCount)||0;
+ const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const count=window.careActivityDate===today ? (Number(window.careActivityCount)||0) : 0;
  badge.textContent=String(count);badge.hidden=!count;
  button.classList.toggle('has-unread',count>0);
  button.setAttribute('aria-label',count+' daily activity records');button.title='Daily activity';
 };
+setInterval(()=>window.updateNotificationBell(),60000);
 window.openAppUpdates = async function(){
  if(window.currentUser?.role==='developer')return window.switchView('view-developer',null);
  await window.switchView('view-dashboard',null);
