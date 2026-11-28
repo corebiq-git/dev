@@ -522,6 +522,7 @@
       ];
 
       function navigateTo(tabId) {
+        closeDrawer();
         const user = getActiveUser();
         const t = NAV_TABS.find(x => x.id === tabId);
         if (t && !user.permissions[t.perm]) {
@@ -2674,8 +2675,13 @@
         document.body.classList.add('erp-signed-in');
         renderApp();
       }
-      function signOut(){closeModal();state.cart.items=[];showLogin();}
+      function signOut(){closeDrawer();closeModal();state.cart.items=[];showLogin();}
+      function closeDrawer(){document.body.classList.remove('drawer-open');document.getElementById('drawer-shade').hidden=true;document.getElementById('drawer-toggle').setAttribute('aria-expanded','false');}
       function bootLogin(){
+        const toggle=document.getElementById('drawer-toggle');
+        toggle.addEventListener('click',()=>{if(document.body.classList.contains('drawer-open')){closeDrawer();return;}document.body.classList.add('drawer-open');document.getElementById('drawer-shade').hidden=false;toggle.setAttribute('aria-expanded','true');});
+        document.getElementById('drawer-shade').addEventListener('click',closeDrawer);
+        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
         document.getElementById('login-role').addEventListener('change',loginOptions);
         document.getElementById('login-name').addEventListener('change',loginEmail);
         document.getElementById('login-form').addEventListener('submit',signIn);

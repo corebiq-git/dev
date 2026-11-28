@@ -22,3 +22,5 @@ body:not(.erp-signed-in) .app-shell,body:not(.erp-signed-in) .bottom-nav{display
 #login-error{color:#b42318;font-size:13px}
 .erp-auth-note,.erp-auth-footer{text-align:center;margin-top:18px;font-size:12px;color:#626965}
 @media(min-width:768px){.erp-login-card{padding:32px}}
+
+.erp-auth-screen{background:#fafafa;color:#171717}.erp-login-card{border-color:#e5e5e5}.erp-login-button{background:#171717}.erp-login-card h1{font-family:var(--font-body)}

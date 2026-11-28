@@ -956,3 +956,33 @@ html,body { overflow-x:clip; }
 .dash-activity-icon svg{width:18px;height:18px}
 @media(max-width:767px){.app-main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}.header-right #erp-signout{width:42px;padding:0}.header-right #erp-signout span{display:none}.header-left .brand-title{font-size:18px!important}.header-left #header-sub{font-size:12px!important;max-width:none}.header-left{gap:9px}}
 @media(min-width:768px){.header-app-logo{display:none}}
+
+/* ChatGPT-inspired neutral workspace; preserve semantic financial colours */
+:root{--font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;--font-heading:var(--font-body);--bg-surface:#fafafa;--bg-card:#fff;--bg-subtle:#f2f2f2;--border:#e5e5e5;--border-strong:#d4d4d4;--charcoal:#171717;--charcoal-hover:#303030;--text-primary:#171717;--text-secondary:#454545;--text-muted:#666;--shadow-sm:none;--shadow-md:none}
+html,body{font-size:14px;line-height:1.5}
+h1,h2,h3,h4,.font-heading{letter-spacing:-.025em;font-weight:600}
+.sidebar{background:#f9f9f9;width:280px}
+.sidebar-brand{height:72px;border:0;padding:0 20px}
+.sidebar-logo{width:38px;height:38px;object-fit:contain;border-radius:7px}
+.sidebar-nav{padding:12px;gap:5px}
+.side-btn{font-size:15px;font-weight:500;color:#171717;min-height:52px;padding:12px;border:1px solid transparent;border-radius:9px}
+.side-btn-left{gap:14px}
+.side-btn svg{width:23px;height:23px;stroke-width:2}
+.side-btn.active{background:#eaeaea;color:#171717;border-color:transparent}
+.side-btn:hover{background:#efefef;color:#171717}
+.sidebar-footer{background:transparent;padding:18px}
+.top-header{box-shadow:none;border-color:#e5e5e5}
+.header-right .icon-btn,.header-right #erp-signout,#drawer-toggle{border:0;background:transparent;color:#171717}
+.bnav-btn{color:#555;font-weight:500}
+.bnav-btn.active{background:#efefef;color:#171717}
+.dash-welcome{background:#f0f0f0;border-color:#e5e5e5}
+.card,.kpi-card{box-shadow:none}
+.erp-dashboard .btn-primary,.erp-dashboard .btn-charcoal,.btn-primary,.btn-charcoal{background:#171717;color:#fff}
+.btn-primary:hover,.btn-charcoal:hover{background:#303030}
+.btn-soft-emerald,.erp-dashboard .btn-soft-emerald{background:#ededed;color:#171717}
+.btn-outline,.erp-dashboard .btn-outline{border-color:#d4d4d4;color:#171717}
+.drawer-shade[hidden]{display:none!important}
+.drawer-shade{position:fixed;inset:0;background:#0005;z-index:39}
+@media(max-width:959px){.sidebar{display:flex;transform:translateX(-105%);visibility:hidden;transition:transform .2s ease,visibility .2s;width:min(320px,85vw);z-index:40}.drawer-open .sidebar{transform:translateX(0);visibility:visible}.drawer-open{overflow:hidden}.header-left{gap:7px}.header-left .header-app-logo{display:none}#drawer-toggle{width:42px;height:42px;flex-shrink:0}.header-left #header-sub{font-size:11px!important}}
+@media(min-width:960px){.content-col{padding-left:280px}.drawer-shade{display:none!important}}
+@media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
