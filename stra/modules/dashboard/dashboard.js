@@ -996,9 +996,9 @@ window.fetchDashboardData = async function() {
         document.getElementById('dashboardFeeSummaryHeading').textContent = selectedLabel;
         
         
-        for (const id of ['dashboardAttendancePresent','dashboardAttendanceAbsent','dashboardAttendanceHalfDay','dashboardAttendanceTotal','dashboardAppointmentTotal','dashboardAppointmentPending','dashboardAppointmentCompleted','dashboardAppointmentDonutTotal','dashboardFeeReceived','dashboardFeeDue']) { const el=document.getElementById(id); if(el)el.textContent='—'; }
+        for (const id of ['dashboardAttendancePresent','dashboardAttendanceAbsent','dashboardAttendanceHalfDay','dashboardAttendanceTotal','dashboardAppointmentTotal','dashboardAppointmentPending','dashboardAppointmentCompleted','dashboardAppointmentDonutTotal','dashboardFeeRevenue','dashboardFeeReceived','dashboardFeeDue']) { const el=document.getElementById(id); if(el)el.textContent='—'; }
         document.getElementById('dashboardActivityDate').textContent=selectedLabel;
-        document.getElementById('dashboardActivityList').textContent='Loading selected date…';const activityCount=document.getElementById('dashboardActivityCount');if(activityCount)activityCount.textContent='';
+        document.getElementById('dashboardActivityList').textContent='Loading selected date…';const feeWarning=document.getElementById('dashboardFeeWarning');if(feeWarning)feeWarning.hidden=true;const activityCount=document.getElementById('dashboardActivityCount');if(activityCount)activityCount.textContent='';
         window.careActivityDate=selectedDate;window.careActivityCount=0;window.updateNotificationBell?.();
         const [appointmentsSnapshot, attendanceSnapshot, transactionsSnapshot] = await request;
         if (requestSequence !== dashboardRequestSequence) return;
@@ -1086,26 +1086,24 @@ window.fetchDashboardData = async function() {
             String(item.status || '').toLowerCase() !== 'cancelled'
         );
 
-        const totalReceived = billableAppointments.reduce((sum, item) =>
-            sum + (Number(item.advance) || 0), 0
-        );
-        // Selected-date unpaid charges only; historical cumulative balances are not additive.
-        const totalDue = billableAppointments.reduce((sum, item) => {
-            const fee = Number(item.fee ?? item.totalFee ?? 0);
-            const advance = Number(item.advance ?? 0);
-            return sum + (Number.isFinite(fee) && Number.isFinite(advance) ? Math.max(0, fee - advance) : 0);
-        }, 0);
+        // Appointment-date cohort: allocate recorded advances to the current appointment fee only.
+        // Excess may represent prior dues or an erroneous entry; never count it as current fee revenue.
+        const paise = value => { const n=Number(value ?? 0); return Number.isFinite(n)&&n>=0&&Number.isSafeInteger(Math.round(n*100))?Math.round(n*100):null; };
+        let revenue=0,received=0,due=0,invalid=0,excess=0;
+        for(const item of billableAppointments){
+            const fee=paise(item.fee ?? item.totalFee),advance=paise(item.advance);
+            if(fee===null||advance===null){invalid++;continue;}
+            revenue+=fee;
+            const allocated=Math.min(fee,advance);
+            received+=allocated;due+=fee-allocated;
+            if(advance>fee)excess++;
+        }
         const formatDashboardMoney = amount => window.formatCorebiqCurrency
-            ? window.formatCorebiqCurrency(amount)
-            : `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        document.getElementById('dashboardFeeReceived').textContent = formatDashboardMoney(totalReceived);
-        document.getElementById('dashboardFeeDue').textContent = formatDashboardMoney(totalDue);
-        const feeChartMax = Math.max(totalReceived, totalDue, 0);
-        const feeChartEndX = amount => 4 + (feeChartMax > 0 ? Math.max(amount, 0) / feeChartMax : 0) * 112;
-        const receivedEndX = feeChartEndX(totalReceived);
-        const pendingEndX = feeChartEndX(totalDue);
-        document.getElementById('dashboardFeeChartReceivedLine').setAttribute('d', `M4 3 V18 H${receivedEndX}`);
-        document.getElementById('dashboardFeeChartPendingLine').setAttribute('d', `M4 3 V18 H${pendingEndX}`);
+            ? window.formatCorebiqCurrency(amount/100)
+            : '₹'+(amount/100).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+        for(const [id,value] of [['dashboardFeeRevenue',revenue],['dashboardFeeReceived',received],['dashboardFeeDue',due]])document.getElementById(id).textContent=invalid?'—':formatDashboardMoney(value);
+        const warning=document.getElementById('dashboardFeeWarning');
+        if(warning){warning.hidden=!(invalid||excess);warning.textContent=invalid?invalid+' appointment(s) have invalid fee data. Totals unavailable.':excess+' appointment(s) have advances above their fee. Excess excluded; reconcile receipts and prior dues.';}
         const activity = [
             ...appointments.map(x=>({title:'Appointment · '+(x.status||'Pending'), branch:x.branch, time:x.updatedAt||x.createdAt, target:'view-appointments', icon:'calendar-check'})),
             ...[...attendanceByEmployee.values()].map(x=>({title:'Attendance · '+(x.status||'Recorded'), branch:x.branch, time:x.updatedAt||x.createdAt, target:'view-attendance', icon:'user-check'})),
