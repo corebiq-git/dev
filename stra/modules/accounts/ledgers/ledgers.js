@@ -171,7 +171,7 @@ import { db } from '../../../js/firebase-config.js';
                 
                 try {
                     document.getElementById('lNo').value = await getNextDocumentIdPreview(
-                        db, 'ledgers', 'LD/COREBIQ', window.currentUser?.role === 'admin'
+                        db, 'ledgers', 'LDR', window.currentUser?.role === 'admin'
                     );
                 } catch (error) {
                     console.error('Unable to preview the next ledger number:', error);
@@ -250,7 +250,7 @@ import { db } from '../../../js/firebase-config.js';
                     alert("Ledger updated!");
                 } else {
                     [ledgerNo] = await reserveNextDocumentIds(
-                        db, 'ledgers', 'LD/COREBIQ', 1, window.currentUser?.role === 'admin'
+                        db, 'ledgers', 'LDR', 1, window.currentUser?.role === 'admin'
                     );
                     payload.ledgerNo = ledgerNo;
                     payload.createdAt = new Date();
@@ -296,7 +296,7 @@ import { db } from '../../../js/firebase-config.js';
             document.getElementById('saveLedgerBtn').innerHTML = `<span class="material-symbols-rounded">save</span> Save Ledger`;
             try {
                 document.getElementById('lNo').value = await getNextDocumentIdPreview(
-                    db, 'ledgers', 'LD/COREBIQ', window.currentUser?.role === 'admin'
+                    db, 'ledgers', 'LDR', window.currentUser?.role === 'admin'
                 );
             } catch (error) {
                 console.error('Unable to preview the next ledger number:', error);
