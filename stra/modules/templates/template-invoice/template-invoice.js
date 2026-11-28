@@ -78,7 +78,7 @@
                     if(invoiceSignatureSelections[position]){
                         const asset=invoiceSignatureAssets[invoiceSignatureSelections[position]];
                         const box=document.createElement('div');box.className='seal-box-signature';
-                        const image=document.createElement('img');image.src=new URL(asset.src,import.meta.url).href;image.alt=asset.label;box.append(image);slot.append(box);
+                        const image=document.createElement('img');image.src=new URL(asset.src,document.baseURI).href;image.alt=asset.label;box.append(image);slot.append(box);
                     }
                     if(invoiceSealSelections[position]) slot.appendChild(createInvoiceSeal(invoiceSealSelections[position]));
                     return slot;
@@ -517,8 +517,7 @@
             const downloadButton = document.getElementById('download-invoice-btn');
             downloadButton?.classList.remove('download-requested');
             if (typeof html2pdf !== 'function') {
-                showToast("PDF download is unavailable. Use View / Print instead.", true);
-                return;
+                try { const {downloadA4PdfDocument}=await import('../../../js/a4-word-export.js'); prepareInvoiceOutput(); await waitForInvoiceAssets(); await downloadA4PdfDocument(document.getElementById('invoice-container'),getSafeInvoiceFileName('pdf')); } catch(error){showToast('PDF download failed. Use View / Print to save as PDF.',true);} finally {clearInvoiceOutputState();} return;
             }
             const element = document.getElementById('invoice-container');
             const invoiceNo = document.getElementById('invoice-no').innerText.trim();
@@ -697,7 +696,7 @@
             const quantityInput = firstRow?.querySelector('.qty-input');
             const rateInput = firstRow?.querySelector('.rate-input');
             set('invoice-no', appointment.invoiceNo || appointment.billNo || (appointment.id ? `INV-${appointment.id}` : ''));
-            set('invoice-date', formatInvoiceDate(appointment.billDate || new Date()));
+            set('invoice-date', formatInvoiceDate(appointment.billDate || appointment.date || new Date()));
             set('client-name', appointment.patientName || appointment.name);
             set('client-address', appointment.location || appointment.address);
             set('client-phone', appointment.mobile || appointment.mobileNo || appointment.phone);
@@ -750,6 +749,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (window.invoicePayload) {
                 applyAppointmentData(window.invoicePayload.appointment || {});
+                if(window.invoicePayload.company) window.applyCompanyProfile(window.invoicePayload.company);
+                if(window.invoicePayload.companyProfileError) showToast(window.invoicePayload.companyProfileError,true);
                 if (window.invoicePayload.invoiceLinkError) showToast(window.invoicePayload.invoiceLinkError, true);
                 if (window.invoicePayload.patientLinkError) showToast(window.invoicePayload.patientLinkError, true);
             } else {
@@ -799,3 +800,5 @@
                 window.location.origin === 'null' ? '*' : window.location.origin
             );
         }, { once: true });
+
+window.downloadPDF=downloadPDF;window.calculateTotals=calculateTotals;
